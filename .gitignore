@@ -12,10 +12,11 @@ node_modules/
 # Test artifacts
 coverage/
 
-# Local env — the Cloudflare token and dev-stage URLs live here, never in git
+# Local env — the Cloudflare token (.env.production) and dev-stage URLs
+# (apps/web/.env) live here, never in git. Only the examples are tracked.
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
 # Editor / OS
 .DS_Store
