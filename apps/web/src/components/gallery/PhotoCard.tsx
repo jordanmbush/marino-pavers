@@ -1,5 +1,5 @@
 import { MapPin } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   SIZES,
   categoryLabel,
@@ -28,8 +28,17 @@ export const PhotoCard = ({
   onOpen,
   eager = false,
 }: Props) => {
+  const img = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
   const alt = item.title || `${categoryLabel(item.category)} project`;
+
+  // The grid is prerendered, so the browser starts fetching the image from
+  // the static HTML and can finish before React hydrates. A `load` that fired
+  // before `onLoad` was attached is lost; `complete` says whether it did.
+  useEffect(() => {
+    const el = img.current;
+    if (el?.complete && el.naturalWidth > 0) setLoaded(true);
+  }, []);
 
   return (
     <figure className="group relative overflow-hidden rounded-tile border border-basalt/10 shadow-paver">
@@ -44,6 +53,7 @@ export const PhotoCard = ({
           style={{ backgroundImage: `url(${item.image.placeholder})` }}
         >
           <img
+            ref={img}
             src={fallbackSrc(mediaBase, item)}
             srcSet={srcSet(mediaBase, item)}
             sizes={SIZES.gridThird}

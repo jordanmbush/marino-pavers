@@ -113,5 +113,8 @@ show it to the client at `https://dev.marinopavers.com`.
   `false` for every field the request left out, which is how a one-field
   save once wiped a photo's title. `editableItemSchema` is built from
   default-free fields for that reason; the stored schema adds the defaults.
+- **React's `onLoad` misses images that finished loading before hydration.**
+  Islands are prerendered, so an eager `<img>` can be complete before React
+  attaches the listener; `PhotoCard` also checks `img.complete` on mount.
 - **TypeScript stays on 6.0.x.** TS 7 ships no JS API yet; typescript-eslint and
   `astro check` can't run on it.
