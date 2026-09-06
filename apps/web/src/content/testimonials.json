@@ -1,0 +1,26 @@
+[
+  {
+    "id": "dana-rob",
+    "order": 1,
+    "quote": "Three summers of monsoons later and the patio still sits perfectly flat — not one paver has shifted. You can tell the base work was done right.",
+    "name": "Dana & Rob P.",
+    "city": "Scottsdale",
+    "project": "Travertine patio"
+  },
+  {
+    "id": "marcus",
+    "order": 2,
+    "quote": "They ripped out a cracked concrete driveway and laid herringbone pavers that make the whole house look new. The crew was on time every single day.",
+    "name": "Marcus L.",
+    "city": "Chandler",
+    "project": "Paver driveway"
+  },
+  {
+    "id": "priya",
+    "order": 3,
+    "quote": "Ditched the grass we could never keep alive for turf and a fire pit. Our water bill dropped, and the backyard finally gets used. Wish we’d done it sooner.",
+    "name": "Priya S.",
+    "city": "Gilbert",
+    "project": "Turf & fire pit"
+  }
+]

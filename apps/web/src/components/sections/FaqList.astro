@@ -1,0 +1,30 @@
+---
+import { Minus, Plus } from "lucide-react";
+import type { Faq } from "@/services/content";
+
+/** No-JS accordion on native <details>/<summary> — keyboard-accessible, works before hydration. */
+type Props = { items: Faq[] };
+
+const { items } = Astro.props;
+---
+
+<div class="border-t border-basalt/12">
+  {
+    items.map((item) => (
+      <details class="group border-b border-basalt/12 py-2">
+        <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-4 [&::-webkit-details-marker]:hidden">
+          <span class="font-display-wide text-lg font-extrabold text-basalt">
+            {item.question}
+          </span>
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-tile border border-basalt/15 text-basalt transition-colors group-open:bg-cherokee group-open:text-bone">
+            <Plus className="h-4 w-4 group-open:hidden" />
+            <Minus className="hidden h-4 w-4 group-open:block" />
+          </span>
+        </summary>
+        <p class="max-w-2xl pb-4 leading-relaxed text-basalt/70">
+          {item.answer}
+        </p>
+      </details>
+    ))
+  }
+</div>

@@ -1,0 +1,36 @@
+---
+import Icon from "@/components/ui/Icon.astro";
+import Reveal from "@/components/ui/Reveal.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { getProcess } from "@/services/content";
+
+const steps = await getProcess();
+---
+
+<section class="bg-sand-light">
+  <div class="shell py-20 lg:py-28">
+    <SectionHeading
+      eyebrow="How it goes"
+      title="From first walkthrough to warranty."
+      lead="Five steps, one crew, no mystery. You’ll always know what’s happening in your yard and what comes next."
+    />
+
+    <ol class="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
+      {
+        steps.map((step, i) => (
+          <Reveal tag="li" delay={i * 90} class="relative flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+              <span class="font-display-wide text-3xl font-extrabold text-cherokee">
+                {String(step.order).padStart(2, "0")}
+              </span>
+              <span class="h-px flex-1 bg-basalt/15" />
+              <Icon name={step.icon} class="h-5 w-5 text-basalt/50" />
+            </div>
+            <h3 class="text-xl leading-tight">{step.title}</h3>
+            <p class="text-sm leading-relaxed text-basalt/65">{step.body}</p>
+          </Reveal>
+        ))
+      }
+    </ol>
+  </div>
+</section>

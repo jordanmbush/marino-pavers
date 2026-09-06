@@ -1,0 +1,52 @@
+---
+import { ArrowLeft } from "lucide-react";
+import Site from "@/layouts/Site.astro";
+import Button from "@/components/ui/Button.astro";
+import Eyebrow from "@/components/ui/Eyebrow.astro";
+import { nav } from "@/content/site";
+---
+
+<Site
+  title="Page not found — Marino Pavers"
+  description="That page washed out."
+  noindex
+>
+  <section
+    class="relative flex min-h-[70vh] items-center overflow-hidden bg-sand"
+  >
+    <div
+      class="pointer-events-none absolute inset-0 herringbone opacity-[0.07]"
+      aria-hidden="true"
+    >
+    </div>
+    <div class="relative shell flex flex-col items-start gap-6 py-24">
+      <Eyebrow>Error 404</Eyebrow>
+      <h1 class="text-[2.75rem] leading-[0.98] sm:text-6xl lg:text-8xl">
+        This path leads<br />
+        <span class="text-cherokee">nowhere.</span>
+      </h1>
+      <p class="max-w-md text-lg leading-relaxed text-basalt/70">
+        Looks like this one washed out. Every other path on the site is on solid
+        ground — head back and pick one.
+      </p>
+
+      <div class="mt-2 flex flex-wrap gap-4">
+        <Button href="/" size="lg">
+          <ArrowLeft className="h-4 w-4" />
+          Back home
+        </Button>
+        <Button href="/contact" variant="outline" size="lg">Get a quote</Button>
+      </div>
+
+      <nav class="mt-6 flex flex-wrap gap-x-6 gap-y-2" aria-label="Site pages">
+        {
+          nav.map((item) => (
+            <Button href={item.href} variant="ghost" size="sm">
+              {item.label}
+            </Button>
+          ))
+        }
+      </nav>
+    </div>
+  </section>
+</Site>

@@ -1,0 +1,85 @@
+---
+import { CalendarDays, ShieldCheck, Star } from "lucide-react";
+import Button from "@/components/ui/Button.astro";
+import { site } from "@/content/site";
+import PaverField from "./PaverField.astro";
+
+const trust = [
+  { Icon: ShieldCheck, label: "Licensed, bonded & insured" },
+  { Icon: Star, label: "4.9★ · 180+ reviews" },
+  { Icon: CalendarDays, label: `Est. ${site.foundedYear}` },
+];
+---
+
+<section class="relative overflow-hidden bg-sand">
+  <div
+    class="shell grid items-center gap-12 py-14 lg:grid-cols-[1.02fr_0.98fr] lg:py-24"
+  >
+    <div class="relative z-10 flex flex-col gap-6">
+      <span
+        class="flex animate-rise items-center gap-3 eyebrow text-cherokee"
+        style="animation-delay: 0ms"
+      >
+        <span class="h-px w-10 bg-cherokee/50"></span>
+        Pavers · Turf · Outdoor Living
+      </span>
+
+      <h1
+        class="animate-rise text-[2.7rem] leading-[0.98] sm:text-6xl lg:text-[4.25rem]"
+        style="animation-delay: 90ms"
+      >
+        Outdoor spaces<br />
+        <span class="text-cherokee">built to outlast</span><br />
+        the desert.
+      </h1>
+
+      <p
+        class="max-w-lg animate-rise text-lg leading-relaxed text-basalt/70"
+        style="animation-delay: 180ms"
+      >
+        Marino Pavers designs and installs custom patios, driveways, pool decks,
+        and artificial turf across the Valley — engineered from the base up to
+        take Arizona heat, monsoon, and time.
+      </p>
+
+      <div
+        class="mt-2 flex animate-rise flex-wrap gap-4"
+        style="animation-delay: 260ms"
+      >
+        <Button href="/contact" size="lg">Get a free quote</Button>
+        <Button href="/our-work" variant="outline" size="lg"
+          >See our work</Button
+        >
+      </div>
+
+      <ul
+        class="mt-4 flex animate-rise flex-wrap gap-x-6 gap-y-3"
+        style="animation-delay: 340ms"
+      >
+        {
+          trust.map(({ Icon, label }) => (
+            <li class="flex items-center gap-2 text-sm text-basalt/70">
+              <Icon className="h-4 w-4 text-cherokee" strokeWidth={2.2} />
+              {label}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div
+      class="relative h-[300px] animate-rise sm:h-[420px] lg:h-[560px]"
+      style="animation-delay: 140ms"
+    >
+      <PaverField class="rounded-tile" />
+      <div
+        class="absolute bottom-5 left-5 rounded-tile border border-basalt/10 bg-bone/95 px-4 py-3 shadow-paver backdrop-blur"
+      >
+        <span class="eyebrow text-cherokee">Herringbone lay</span>
+        <p class="mt-1 font-display-wide text-sm font-extrabold text-basalt">
+          Driveway · Scottsdale
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

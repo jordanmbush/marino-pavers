@@ -1,0 +1,37 @@
+[
+  {
+    "id": "consult",
+    "order": 1,
+    "icon": "clipboard-list",
+    "title": "Free consult & quote",
+    "body": "We walk your space, take measurements, bring material samples, and hand you an itemized bid — no pressure, no vague ballparks."
+  },
+  {
+    "id": "design",
+    "order": 2,
+    "icon": "pencil-ruler",
+    "title": "Design & materials",
+    "body": "Together we settle the layout, pattern, paver line, and colors, so you can picture the finished space before a shovel touches dirt."
+  },
+  {
+    "id": "base",
+    "order": 3,
+    "icon": "layers",
+    "title": "Site prep & base",
+    "body": "The part cheap installers rush. We excavate, grade for drainage, and compact the aggregate base in lifts — the foundation everything rides on."
+  },
+  {
+    "id": "install",
+    "order": 4,
+    "icon": "hammer",
+    "title": "Precision install",
+    "body": "We lay your pattern, make clean cuts on the borders, compact the field, lock the joints with polymeric sand, and clean up as we go."
+  },
+  {
+    "id": "warranty",
+    "order": 5,
+    "icon": "shield-check",
+    "title": "Walkthrough & warranty",
+    "body": "We walk the finished job with you, leave the site cleaner than we found it, and back the work with a two-year workmanship warranty."
+  }
+]

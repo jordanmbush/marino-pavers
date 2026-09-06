@@ -1,0 +1,49 @@
+# Every push and pull request: the same gates Husky runs locally, plus a
+# build that must stay static. This is what "free CI" on a public repo buys.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Type-check, lint, test, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run type-check
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run test
+
+      - name: Build the site
+        run: npm run build
+
+      - name: Assert the build is static
+        run: |
+          test -f apps/web/dist/index.html || { echo "::error::no index.html — did the build change output mode?"; exit 1; }
+          test -f apps/web/dist/404.html || { echo "::error::no 404.html"; exit 1; }
+          test -f apps/web/dist/sitemap-index.xml || { echo "::error::no sitemap"; exit 1; }
+          if grep -q "/admin" apps/web/dist/sitemap-0.xml; then echo "::error::/admin leaked into the sitemap"; exit 1; fi
+          if ls apps/web/dist/_worker.js apps/web/dist/entry.mjs >/dev/null 2>&1; then echo "::error::an SSR adapter crept in"; exit 1; fi
+
+      - run: npm audit --omit=dev --audit-level=high

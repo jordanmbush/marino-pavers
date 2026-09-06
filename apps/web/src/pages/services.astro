@@ -1,0 +1,123 @@
+---
+import { Check } from "lucide-react";
+import Site from "@/layouts/Site.astro";
+import CtaBand from "@/components/sections/CtaBand.astro";
+import FaqList from "@/components/sections/FaqList.astro";
+import Icon from "@/components/ui/Icon.astro";
+import PageHero from "@/components/ui/PageHero.astro";
+import Reveal from "@/components/ui/Reveal.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { cn } from "@/components/ui/cn";
+import { getFaqs, getServices } from "@/services/content";
+
+const services = await getServices();
+const faqs = await getFaqs();
+
+// Material swatch gradients that pair with each service panel until the
+// client's own photos take their place.
+const swatches = [
+  ["#CBB58A", "#9C8158"],
+  ["#4E4336", "#211C17"],
+  ["#71755B", "#585B45"],
+  ["#EDE3D2", "#C7AB7C"],
+  ["#D0B98C", "#A98B5E"],
+  ["#CD854A", "#8E3421"],
+];
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
+  })),
+};
+---
+
+<Site
+  title="Services — Paver Patios, Driveways, Turf & More | Marino Pavers"
+  description="Paver patios, driveways, pool decks, artificial turf, walkways and outdoor living builds across greater Phoenix. One crew, engineered base work, two-year warranty."
+  jsonLd={faqJsonLd}
+>
+  <PageHero
+    eyebrow="Services"
+    title="Everything that turns bare dirt into a destination."
+    lead="Six specialties, one crew. Whether it’s a single walkway or a full backyard build, the base work and finish detail are the same — done right."
+  />
+
+  <div class="bg-sand">
+    <div class="shell flex flex-col gap-24 py-20 lg:gap-28 lg:py-28">
+      {
+        services.map((service, i) => {
+          const [from, to] = swatches[i % swatches.length]!;
+          const flip = i % 2 === 1;
+          return (
+            <Reveal
+              id={service.id}
+              class="grid scroll-mt-28 items-center gap-10 lg:grid-cols-2 lg:gap-16"
+            >
+              <div
+                class={cn(
+                  "relative order-first aspect-[5/4] overflow-hidden rounded-tile border border-basalt/10 shadow-paver",
+                  flip && "lg:order-last",
+                )}
+                style={`background-image: linear-gradient(135deg, ${from}, ${to});`}
+              >
+                <div class="absolute inset-0 herringbone opacity-25 mix-blend-overlay" />
+                <span class="absolute bottom-5 left-5 rounded-tile bg-bone/90 px-3 py-1.5 eyebrow text-basalt">
+                  {service.tagline}
+                </span>
+              </div>
+
+              <div class="flex flex-col gap-5">
+                <div class="flex items-center gap-4">
+                  <span class="flex h-12 w-12 items-center justify-center rounded-tile bg-basalt text-bone">
+                    <Icon name={service.icon} class="h-5 w-5" />
+                  </span>
+                  <span class="eyebrow text-cherokee">
+                    {String(service.order).padStart(2, "0")} / {service.tagline}
+                  </span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl">{service.title}</h2>
+                <p class="max-w-xl leading-relaxed text-basalt/70">
+                  {service.description}
+                </p>
+                <ul class="mt-2 grid gap-3 sm:grid-cols-2">
+                  {service.features.map((feature) => (
+                    <li class="flex items-start gap-2.5 text-sm text-basalt/80">
+                      <Check
+                        className="mt-0.5 h-4 w-4 shrink-0 text-cherokee"
+                        strokeWidth={2.4}
+                      />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href={`/our-work?category=${service.category}`}
+                  class="mt-2 eyebrow text-cherokee hover:text-cherokee-dark"
+                >
+                  See {service.title.toLowerCase()} we’ve built →
+                </a>
+              </div>
+            </Reveal>
+          );
+        })
+      }
+    </div>
+  </div>
+
+  <section class="bg-sand-light">
+    <div class="shell grid gap-12 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:py-28">
+      <SectionHeading
+        eyebrow="Good questions"
+        title="Answers before you ask."
+        lead="The things Valley homeowners want to know before they commit."
+      />
+      <FaqList items={faqs} />
+    </div>
+  </section>
+
+  <CtaBand />
+</Site>

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "base-work",
+    "order": 1,
+    "icon": "hard-hat",
+    "title": "Base work, never skipped",
+    "body": "The layers you can’t see are the ones that fail. We excavate, grade, and compact in lifts on every job — no shortcuts under the pretty part."
+  },
+  {
+    "id": "own-crew",
+    "order": 2,
+    "icon": "users",
+    "title": "Our crew, never subbed",
+    "body": "The people who quote your job are the people who build it. We don’t hand your yard to the lowest day-labor bidder."
+  },
+  {
+    "id": "straight-talk",
+    "order": 3,
+    "icon": "handshake",
+    "title": "Straight talk, itemized",
+    "body": "Every quote is line-itemed so you know exactly what you’re paying for. No vague ballparks, no surprise change orders."
+  },
+  {
+    "id": "warranty",
+    "order": 4,
+    "icon": "shield-check",
+    "title": "Warrantied, in writing",
+    "body": "Two-year workmanship warranty on top of the manufacturer’s paver warranty. We stand behind the work long after the trucks leave."
+  }
+]

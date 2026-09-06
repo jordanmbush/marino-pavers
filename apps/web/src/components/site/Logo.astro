@@ -1,0 +1,55 @@
+---
+import { cn } from "@/components/ui/cn";
+
+/**
+ * Brand mark: four paver bricks in a basketweave — the simplest pattern a
+ * mason lays — with a single clay-red accent brick. Wordmark set in the
+ * display face over a mono locale line.
+ */
+type Props = { tone?: "dark" | "light"; class?: string; asLink?: boolean };
+
+const { tone = "dark", class: className, asLink = true } = Astro.props;
+const brick = tone === "light" ? "#F3ECDE" : "#211C17";
+const accent = tone === "light" ? "#CD854A" : "#A8432B";
+const text = tone === "light" ? "text-bone" : "text-basalt";
+const sub = tone === "light" ? "text-sand/60" : "text-basalt/50";
+const Wrapper = asLink ? "a" : "span";
+const wrapperProps = asLink
+  ? { href: "/", "aria-label": "Marino Pavers — home", class: "inline-flex" }
+  : { class: "inline-flex" };
+---
+
+<Wrapper {...wrapperProps}>
+  <span class={cn("flex items-center gap-3", className)}>
+    <svg
+      width="34"
+      height="34"
+      viewBox="0 0 32 32"
+      fill="none"
+      aria-hidden="true"
+      class="shrink-0"
+    >
+      <rect x="4" y="4" width="11" height="5" rx="1" fill={brick}></rect>
+      <rect x="4" y="10" width="11" height="5" rx="1" fill={brick}></rect>
+      <rect x="17" y="4" width="5" height="11" rx="1" fill={accent}></rect>
+      <rect x="23" y="4" width="5" height="11" rx="1" fill={brick}></rect>
+      <rect x="4" y="17" width="5" height="11" rx="1" fill={brick}></rect>
+      <rect x="10" y="17" width="5" height="11" rx="1" fill={brick}></rect>
+      <rect x="17" y="17" width="11" height="5" rx="1" fill={brick}></rect>
+      <rect x="17" y="23" width="11" height="5" rx="1" fill={brick}></rect>
+    </svg>
+    <span class="flex flex-col leading-none">
+      <span
+        class={cn(
+          "font-display-wide text-[1.15rem] font-extrabold tracking-[0.02em]",
+          text,
+        )}
+      >
+        MARINO
+      </span>
+      <span class={cn("mt-1 eyebrow text-[0.6rem] tracking-[0.3em]", sub)}
+        >Pavers · Phoenix</span
+      >
+    </span>
+  </span>
+</Wrapper>

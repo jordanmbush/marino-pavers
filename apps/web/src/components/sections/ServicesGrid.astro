@@ -1,0 +1,28 @@
+---
+import Reveal from "@/components/ui/Reveal.astro";
+import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { getServices } from "@/services/content";
+import ServiceCard from "./ServiceCard.astro";
+
+const services = await getServices();
+---
+
+<section class="bg-sand">
+  <div class="shell py-20 lg:py-28">
+    <SectionHeading
+      eyebrow="What we build"
+      title="Six ways to live better outside."
+      lead="Every surface engineered for the desert, laid by our own crews — never subbed out to the lowest bidder."
+    />
+
+    <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {
+        services.map((service, i) => (
+          <Reveal delay={(i % 3) * 90}>
+            <ServiceCard service={service} />
+          </Reveal>
+        ))
+      }
+    </div>
+  </div>
+</section>

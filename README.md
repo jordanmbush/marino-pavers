@@ -1,42 +1,51 @@
-<img src="https://og.sznm.dev/api/generate?heading=vite-react-tailwind-starter&text=React+vite+template+with+TailwindCSS+and+TypeScript+setup.&template=color&center=true&height=330" />
+# Marino Pavers
 
-This is a project bootstrapped with [`@vitejs/app`](https://vitejs.dev/guide/#scaffolding-your-first-vite-project) (`react-ts`), added with [TailwindCSS](https://tailwindcss.com) and [TypeScript](https://www.typescriptlang.org) setup.
+The marketing site for [marinopavers.com](https://marinopavers.com): a static
+Astro build on S3 + CloudFront, with a hidden admin page where the client
+manages project photos. Conventions and architecture live in
+[CLAUDE.md](./CLAUDE.md).
 
-- ⚡ blazing fast dev server and build
-- 🔗 route management added (`react-router-dom` configured)
+## Requirements
 
-[**Live Demo**](https://vite-react-tailwind-starter.sznm.dev/)
+- Node 24 (`.nvmrc`), npm
+- AWS CLI with the `marino-pavers` SSO profile (`aws sso login --profile marino-pavers`)
+- `cloudflared` for the dev tunnel (`brew install cloudflared`)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/import/git?s=https://github.com/sozonome/vite-react-tailwind-starter) [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/sozonome/vite-react-tailwind-starter)
-
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/sozonome/vite-react-tailwind-starter)
-
-## Getting Started
-
-You can either click [`Use this template`](https://github.com/sozonome/vite-react-tailwind-starter/generate) button on this repository and clone the repo or use npx degit like so:
+## Develop
 
 ```bash
-npx degit sozonome/vite-react-tailwind-starter <app_name>
+npm install
+npm run dev              # http://localhost:4321 — gallery empty until pointed at a stage
+npm run tunnel -- --dev  # also expose it at https://dev.marinopavers.com
 ```
 
-```
-pnpm i
-```
+To see real photos locally, deploy the dev stage once and copy its outputs
+into `apps/web/.env` (see `apps/web/.env.example`).
 
-Then, run the development server:
+## Verify
 
 ```bash
-pnpm dev
+npm run type-check && npm run lint && npm run test && npm run build
 ```
 
-## Deployment
+## Deploy
 
-- build command: `pnpm build`
-- output directory: `dist`
+```bash
+npm run deploy:dev                      # CloudFront URL, no domain
+bash scripts/create-admin.sh you@example.com dev   # invite the photo admin
+```
 
-## References
+Production deploys from `main` through GitHub Actions. One-time setup:
+`bash scripts/setup-github-oidc.sh`, then add the `CLOUDFLARE_API_TOKEN` and
+`CLOUDFLARE_ZONE_ID` secrets and the `CLOUDFLARE_ACCOUNT_ID` variable to the
+repo. A manual production deploy works too, with the same three exported.
 
-- [vite](https://vitejs.dev)
-  - [avoid manual import](https://vitejs.dev/guide/features.html#jsx)
-- [TailwindCSS](https://tailwindcss.com/)
-- [TypeScript](https://www.typescriptlang.org)
+## Layout
+
+```
+apps/web/            Astro site (pages, layouts, components, content, services)
+packages/domain/     photo-library model shared by the site and the Lambdas
+packages/functions/  process-image + admin-api Lambdas
+sst.config.ts        infrastructure
+scripts/             tunnel, admin invite, OIDC setup
+```
