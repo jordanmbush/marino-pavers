@@ -18,6 +18,9 @@ import tailwindcss from "@tailwindcss/vite";
  */
 const SITE = "https://marinopavers.com";
 
+/** Dev server port; see `server.port` below. */
+const DEV_PORT = 4330;
+
 /** Routes that exist but must never be indexed or listed. */
 const HIDDEN_ROUTES = ["/admin"];
 
@@ -37,8 +40,16 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    // Fail if the port is taken instead of sliding to the next free one. The
+    // tunnel is pinned to DEV_PORT, so a silent slide would leave it pointing
+    // at nothing — or at whichever other project grabbed the port.
+    server: { strictPort: true },
   },
   server: {
+    // Not Astro's default 4321: other Astro projects on this machine use it,
+    // and the tunnel must never route the client to one of those by mistake.
+    // Keep in sync with scripts/tunnel.sh and ~/.cloudflared/marino-dev.yml.
+    port: DEV_PORT,
     // The Cloudflare tunnel (scripts/tunnel.sh) fronts the dev server at this
     // hostname; Vite refuses unknown hosts unless they are listed.
     allowedHosts: ["dev.marinopavers.com", ".marinopavers.com"],

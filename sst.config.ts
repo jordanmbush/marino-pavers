@@ -37,7 +37,7 @@ const DOMAIN = "marinopavers.com";
 const REGION = "us-west-1";
 
 /** Origins the admin API answers CORS for on non-production stages. */
-const DEV_ORIGINS = ["http://localhost:4321", "https://dev.marinopavers.com"];
+const DEV_ORIGINS = ["http://localhost:4330", "https://dev.marinopavers.com"];
 
 export default $config({
   app(input) {

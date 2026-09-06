@@ -15,7 +15,7 @@ manages project photos. Conventions and architecture live in
 
 ```bash
 npm install
-npm run dev              # http://localhost:4321 — gallery empty until pointed at a stage
+npm run dev              # http://localhost:4330 — gallery empty until pointed at a stage
 npm run tunnel -- --dev  # also expose it at https://dev.marinopavers.com
 ```
 
