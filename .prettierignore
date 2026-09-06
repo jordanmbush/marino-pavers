@@ -1,0 +1,7 @@
+dist/
+.astro/
+.sst/
+node_modules/
+coverage/
+package-lock.json
+sst-env.d.ts

@@ -1,0 +1,35 @@
+---
+import Eyebrow from "./Eyebrow.astro";
+
+/** Consistent header band for interior pages. */
+type Props = { eyebrow: string; title: string; lead?: string };
+
+const { eyebrow, title, lead } = Astro.props;
+---
+
+<section
+  class="relative overflow-hidden border-b border-basalt/10 bg-sand-light"
+>
+  <div
+    class="pointer-events-none absolute top-0 -right-16 hidden h-full w-1/3 herringbone opacity-[0.08] md:block"
+    aria-hidden="true"
+    style="mask-image: linear-gradient(to left, black, transparent); -webkit-mask-image: linear-gradient(to left, black, transparent);"
+  >
+  </div>
+  <div class="relative shell py-16 sm:py-20 lg:py-24">
+    <Eyebrow>{eyebrow}</Eyebrow>
+    <h1
+      class="mt-5 max-w-3xl text-[2.4rem] leading-[1.02] sm:text-5xl lg:text-6xl"
+    >
+      {title}
+    </h1>
+    {
+      lead && (
+        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-basalt/70">
+          {lead}
+        </p>
+      )
+    }
+    <slot />
+  </div>
+</section>

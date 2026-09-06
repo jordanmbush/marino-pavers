@@ -1,0 +1,162 @@
+---
+import { cn } from "@/components/ui/cn";
+
+/**
+ * A labelled cross-section of a proper paver installation — the layers most
+ * homeowners never see and most cheap installers skip. Doubles as a trust
+ * signal: this is what "engineered from the base up" actually means.
+ */
+type Props = { class?: string };
+
+const { class: className } = Astro.props;
+
+const LAYERS = [
+  {
+    n: "01",
+    name: "Pavers",
+    spec: "60mm concrete or clay",
+    note: "Set in your pattern — herringbone locks tightest for driveways.",
+  },
+  {
+    n: "02",
+    name: "Polymeric sand",
+    spec: "Swept & set joints",
+    note: "Binds the field, sheds monsoon runoff, blocks weeds and ants.",
+  },
+  {
+    n: "03",
+    name: "Bedding sand",
+    spec: "1 in. screeded",
+    note: "A true, level bed so every paver sits flush.",
+  },
+  {
+    n: "04",
+    name: "Aggregate base",
+    spec: "4–6 in. compacted ABC",
+    note: "Compacted in lifts — the structure that carries the load.",
+  },
+  {
+    n: "05",
+    name: "Graded subgrade",
+    spec: "Native soil, sloped",
+    note: "Cut, graded, and compacted to drain away from the house.",
+  },
+];
+
+// deterministic aggregate speckle
+const dots = Array.from({ length: 90 }, (_, i) => {
+  const col = i % 15;
+  const row = Math.floor(i / 15);
+  return {
+    cx: 30 + col * 27 + ((row % 2) * 13 - (i % 3) * 4),
+    cy: 150 + row * 15 + (i % 4) * 2,
+    r: 2 + (i % 3),
+  };
+});
+const sandLines = Array.from({ length: 44 }, (_, i) => i * 10);
+const pavers = Array.from({ length: 7 }, (_, i) => ({
+  x: 6 + i * 62,
+  tone: ["#C7AB7C", "#B4935F", "#CBB58A", "#A8895C"][i % 4]!,
+}));
+---
+
+<div
+  class={cn(
+    "grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]",
+    className,
+  )}
+>
+  <div
+    class="overflow-hidden rounded-tile border border-bone/10 bg-basalt-950 p-4 shadow-paver-lg sm:p-6"
+  >
+    <svg
+      viewBox="0 0 440 340"
+      class="h-auto w-full"
+      role="img"
+      aria-label="Cross-section of a paver installation showing pavers, polymeric sand, bedding sand, compacted aggregate base, and graded subgrade."
+    >
+      <rect x="0" y="248" width="440" height="92" fill="#5B4B39"></rect>
+      <path
+        d="M0 248 Q 55 240 110 248 T 220 248 T 330 248 T 440 248"
+        fill="none"
+        stroke="#3D3123"
+        stroke-width="2"
+        opacity="0.5"></path>
+      <rect x="0" y="140" width="440" height="108" fill="#8B7350"></rect>
+      {
+        dots.map((d) => (
+          <circle cx={d.cx} cy={d.cy} r={d.r} fill="#6E5A3D" opacity="0.7" />
+        ))
+      }
+      <rect x="0" y="112" width="440" height="28" fill="#D2BB8C"></rect>
+      {
+        sandLines.map((x) => (
+          <line
+            x1={x}
+            y1="112"
+            x2={x + 6}
+            y2="140"
+            stroke="#BBA170"
+            stroke-width="1.5"
+            opacity="0.6"
+          />
+        ))
+      }
+      {
+        pavers.map((p) => (
+          <g>
+            <rect x={p.x} y="70" width="58" height="42" rx="2" fill={p.tone} />
+            <rect
+              x={p.x}
+              y="70"
+              width="58"
+              height="4"
+              rx="2"
+              fill="#ffffff"
+              opacity="0.22"
+            />
+            <rect x={p.x + 58} y="70" width="4" height="42" fill="#CBB693" />
+          </g>
+        ))
+      }
+      <path
+        d="M436 70 L440 70 L440 140 L430 140 L436 112 Z"
+        fill="#2E271F"
+        opacity="0.85"></path>
+      <text
+        x="14"
+        y="96"
+        font-family='"Space Mono", monospace'
+        font-size="12"
+        fill="#F3ECDE"
+        opacity="0.92"
+      >
+        60mm
+      </text>
+    </svg>
+  </div>
+
+  <ol class="flex flex-col">
+    {
+      LAYERS.map((layer, i) => (
+        <li
+          class={cn(
+            "flex gap-5 py-4",
+            i !== LAYERS.length - 1 && "border-b border-bone/10",
+          )}
+        >
+          <span class="pt-1 eyebrow text-ochre">{layer.n}</span>
+          <div class="flex flex-col gap-1">
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <span class="font-display-wide text-lg font-extrabold text-bone">
+                {layer.name}
+              </span>
+              <span class="font-mono text-xs text-sand/60">{layer.spec}</span>
+            </div>
+            <p class="text-sm leading-relaxed text-sand/70">{layer.note}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</div>

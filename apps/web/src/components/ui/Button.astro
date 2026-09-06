@@ -1,0 +1,20 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { buttonClasses, type ButtonStyle } from "./button-classes";
+
+/**
+ * A link styled as a button (the static site's only kind of button — there
+ * is nothing to submit). Pass `href`; everything else is an anchor attribute.
+ */
+type Props = ButtonStyle & HTMLAttributes<"a"> & { href: string };
+
+const { variant, size, class: className, href, ...rest } = Astro.props;
+---
+
+<a
+  href={href}
+  class={buttonClasses({ variant, size, class: className })}
+  {...rest}
+>
+  <slot />
+</a>

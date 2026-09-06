@@ -1,0 +1,76 @@
+# Deploy to production on a green CI run on main.
+#
+# Credentials: the job assumes the deploy role via GitHub OIDC
+# (scripts/setup-github-oidc.sh). No long-lived AWS keys exist anywhere.
+#
+# Required repo secrets — the deploy FAILS LOUDLY without them, by design:
+#   CLOUDFLARE_API_TOKEN   "Edit zone DNS" template, scoped to marinopavers.com
+#   CLOUDFLARE_ZONE_ID     the zone's id
+# and the repo VARIABLES:
+#   AWS_DEPLOY_ROLE_ARN    written by scripts/setup-github-oidc.sh
+#   CLOUDFLARE_ACCOUNT_ID  the Cloudflare account id (not secret)
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  # One deploy at a time. Overlapping merges QUEUE rather than cancel: killing
+  # `sst deploy` mid-flight abandons the Pulumi state lock.
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  id-token: write # OIDC
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy production
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Deploy exactly the commit CI validated.
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-west-1
+
+      - name: Deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
+          CLOUDFLARE_DEFAULT_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx sst deploy --stage production
+
+      - name: Smoke check
+        run: |
+          for path in / /services /our-work /about /contact /media/manifest.json; do
+            code="$(curl -s -o /dev/null -w '%{http_code}' "https://marinopavers.com${path}")"
+            echo "${code} ${path}"
+            case "$path" in
+              /media/manifest.json) [ "$code" = 200 ] || [ "$code" = 404 ] || exit 1 ;;
+              *) [ "$code" = 200 ] || exit 1 ;;
+            esac
+          done

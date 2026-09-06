@@ -1,0 +1,156 @@
+---
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { nav, serviceAreas, site } from "@/content/site";
+import { getServices } from "@/services/content";
+import Logo from "./Logo.astro";
+
+const services = await getServices();
+const year = new Date().getFullYear();
+const areas = serviceAreas.slice(0, -1).join(", ");
+const lastArea = serviceAreas[serviceAreas.length - 1];
+---
+
+<footer class="mt-auto bg-basalt-950 text-sand">
+  <div
+    class="shell grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]"
+  >
+    <div class="flex flex-col gap-5">
+      <Logo tone="light" />
+      <p class="max-w-xs text-sm leading-relaxed text-sand/65">
+        Custom paver patios, driveways, pool decks, artificial turf, and outdoor
+        living — engineered from the base up for the Arizona desert.
+      </p>
+      <div class="flex gap-3">
+        <a
+          href={site.social.instagram}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Marino Pavers on Instagram"
+          class="flex h-10 w-10 items-center justify-center rounded-tile border border-bone/15 text-sand/70 transition-colors hover:border-ochre hover:text-ochre"
+        >
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+          </svg>
+        </a>
+        <a
+          href={site.social.facebook}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Marino Pavers on Facebook"
+          class="flex h-10 w-10 items-center justify-center rounded-tile border border-bone/15 text-sand/70 transition-colors hover:border-ochre hover:text-ochre"
+        >
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+            ></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <h4 class="eyebrow text-ochre-light">Services</h4>
+      <ul class="flex flex-col gap-2.5">
+        {
+          services.map((s) => (
+            <li>
+              <a
+                href={`/services#${s.id}`}
+                class="text-sm text-sand/70 transition-colors hover:text-bone"
+              >
+                {s.title}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <h4 class="eyebrow text-ochre-light">Explore</h4>
+      <ul class="flex flex-col gap-2.5">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="text-sm text-sand/70 transition-colors hover:text-bone"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <h4 class="eyebrow text-ochre-light">Get in touch</h4>
+      <ul class="flex flex-col gap-3 text-sm text-sand/70">
+        <li>
+          <a
+            href={site.phoneHref}
+            class="flex items-center gap-3 transition-colors hover:text-bone"
+          >
+            <Phone className="h-4 w-4 shrink-0 text-ochre" />
+            {site.phoneDisplay}
+          </a>
+        </li>
+        <li>
+          <a
+            href={site.emailHref}
+            class="flex items-center gap-3 transition-colors hover:text-bone"
+          >
+            <Mail className="h-4 w-4 shrink-0 text-ochre" />
+            {site.email}
+          </a>
+        </li>
+        <li class="flex items-center gap-3">
+          <MapPin className="h-4 w-4 shrink-0 text-ochre" />
+          {site.address.region}
+        </li>
+        <li class="flex items-center gap-3">
+          <Clock className="h-4 w-4 shrink-0 text-ochre" />
+          {site.hours}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="shell">
+    <p class="border-t border-bone/10 py-4 text-xs text-sand/50">
+      Serving {areas} &amp; {lastArea}.
+    </p>
+  </div>
+
+  <div class="border-t border-bone/10">
+    <div
+      class="shell flex flex-col gap-2 py-6 text-xs text-sand/50 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p>© {year} {site.name}. All rights reserved.</p>
+      <p class="font-mono tracking-wide">
+        Licensed · Bonded · Insured — {site.license}
+      </p>
+    </div>
+  </div>
+</footer>

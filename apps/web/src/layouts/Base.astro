@@ -1,0 +1,88 @@
+---
+import "@fontsource-variable/archivo/wdth.css";
+import "@fontsource-variable/plus-jakarta-sans";
+import "@fontsource/space-mono/400.css";
+import "@fontsource/space-mono/700.css";
+import "@/styles/global.css";
+import { serviceAreas, site } from "@/content/site";
+
+/**
+ * The SEO contract every page signs: a real title, a description, a canonical
+ * URL, Open Graph tags and LocalBusiness structured data — all in the HTML
+ * on disk, because there is no server to add them later.
+ */
+type Props = {
+  title: string;
+  description: string;
+  /** Keep crawlers out (the admin page). Also drops the page from the sitemap via astro.config. */
+  noindex?: boolean;
+  /** Extra JSON-LD for the page, merged after the LocalBusiness block. */
+  jsonLd?: Record<string, unknown>;
+};
+
+const { title, description, noindex = false, jsonLd } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+
+const localBusiness = {
+  "@context": "https://schema.org",
+  "@type": "HomeAndConstructionBusiness",
+  name: site.name,
+  url: site.url,
+  telephone: site.phoneHref.replace("tel:", ""),
+  email: site.email,
+  description: site.description,
+  foundingDate: String(site.foundedYear),
+  priceRange: "$$",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: site.address.locality,
+    addressRegion: site.address.state,
+    addressCountry: site.address.country,
+  },
+  areaServed: serviceAreas.map((name) => ({ "@type": "City", name })),
+  openingHours: "Mo-Fr 07:00-17:00",
+  sameAs: [site.social.instagram, site.social.facebook],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="theme-color" content="#211c17" />
+    <meta name="application-name" content={site.name} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary" />
+
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(localBusiness)}
+    />
+    {
+      jsonLd && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(jsonLd)}
+        />
+      )
+    }
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

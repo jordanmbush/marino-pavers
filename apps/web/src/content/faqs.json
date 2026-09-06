@@ -1,0 +1,38 @@
+[
+  {
+    "id": "cost",
+    "order": 1,
+    "question": "How much does a paver project cost?",
+    "answer": "Most residential paver projects in the Valley run between $14 and $28 per square foot installed, depending on the paver line, pattern complexity, demo, and site conditions. We give you an itemized quote after seeing the space — never a vague number over the phone."
+  },
+  {
+    "id": "timeline",
+    "order": 2,
+    "question": "How long does an installation take?",
+    "answer": "A typical patio or driveway takes three to seven working days from demo to cleanup. Larger outdoor-living builds run longer. We give you a firm schedule with the quote and keep you posted at every stage."
+  },
+  {
+    "id": "pavers-vs-concrete",
+    "order": 3,
+    "question": "Why pavers instead of poured concrete?",
+    "answer": "A concrete slab is a single sheet that cracks as the ground moves. Interlocking pavers flex with it, spread loads, and any single paver can be lifted and reset if it stains or settles — no ugly patch. They also stay cooler and look far better."
+  },
+  {
+    "id": "turf-heat",
+    "order": 4,
+    "question": "Does artificial turf get too hot in Phoenix?",
+    "answer": "Turf runs warmer than a living lawn in direct sun, but modern cool-tech yarns and lighter infills cut surface temps significantly, and it cools fast in shade or with a quick rinse. For full-sun play areas we’ll talk through the best product and layout."
+  },
+  {
+    "id": "hoa-permits",
+    "order": 5,
+    "question": "Do you handle HOA approvals and permits?",
+    "answer": "Yes. We build to code, pull permits where they’re required, and we’ll prepare the drawings and material specs your HOA needs for architectural review. It’s part of the job, not an upcharge surprise."
+  },
+  {
+    "id": "licensed",
+    "order": 6,
+    "question": "Are you licensed and insured?",
+    "answer": "Fully. We’re licensed, bonded, and insured in Arizona (ROC #327845), and every installation is backed by a two-year workmanship warranty on top of the manufacturer’s paver warranty."
+  }
+]

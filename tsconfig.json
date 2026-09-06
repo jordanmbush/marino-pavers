@@ -1,34 +1,13 @@
 {
+  // Root project: only the repo-level scripts. Each workspace type-checks
+  // itself (`npm run type-check` fans out). `sst.config.ts` is excluded on
+  // purpose: SST's vendored platform under `.sst/` doesn't compile with
+  // `verbatimModuleSyntax`, and the config is type-checked by SST itself on
+  // every `sst deploy`.
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
-    "skipLibCheck": true,
-    "esModuleInterop": false,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "allowImportingTsExtensions": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-    "incremental": true,
-    "jsx": "react-jsx",
-    "baseUrl": "src",
-    "paths": {
-      "@/*": ["./*"]
-    },
-
-    /* Linting */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "types": ["node"]
   },
-  "include": ["**/*.ts", "**/*.tsx", "vite.config.ts"],
-  "exclude": ["node_modules"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["scripts/**/*.ts"],
+  "exclude": ["node_modules", "apps", "packages", ".sst", "sst.config.ts"]
 }

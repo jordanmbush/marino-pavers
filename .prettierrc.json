@@ -1,0 +1,11 @@
+{
+  "plugins": ["prettier-plugin-astro", "prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./apps/web/src/styles/global.css",
+  "tailwindFunctions": ["cn", "cva"],
+  "overrides": [
+    {
+      "files": "*.astro",
+      "options": { "parser": "astro" }
+    }
+  ]
+}

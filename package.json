@@ -1,72 +1,61 @@
 {
-  "name": "vite-react-tailwind-starter",
+  "name": "marino-pavers",
   "version": "0.1.0",
   "private": true,
-  "author": "sozonome",
   "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview",
-    "lint": "eslint src --cache",
-    "lint:fix": "eslint src --fix && pnpm format",
-    "type-check": "tsc",
-    "turbo": "pnpm dlx turbo@2.0.9",
+    "dev": "npm run dev --workspace @marino/web",
+    "build": "npm run build --workspace @marino/web",
+    "preview": "npm run preview --workspace @marino/web",
+    "tunnel": "bash scripts/tunnel.sh",
+    "type-check": "npm run type-check --workspaces --if-present",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "test": "vitest run",
-    "test:ui": "vitest --ui --coverage",
-    "test:coverage": "vitest --coverage run",
-    "check:turbo": "pnpm turbo lint type-check test",
-    "format": "prettier --write src",
-    "up-interactive": "pnpm up -i",
-    "up-latest": "pnpm up-interactive -L",
-    "release": "standard-version",
-    "push-release": "git push --follow-tags origin main",
+    "test:watch": "vitest",
+    "deploy:dev": "sst deploy --stage dev",
+    "deploy:production": "sst deploy --stage production",
     "prepare": "husky"
   },
-  "dependencies": {
-    "@fontsource/plus-jakarta-sans": "^5.0.20",
-    "@theme-toggles/react": "^4.1.0",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.381.0",
-    "million": "3.1.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-helmet": "^6.1.0",
-    "react-router-dom": "^6.23.1",
-    "tailwind-merge": "^2.3.0"
-  },
   "devDependencies": {
-    "@commitlint/config-conventional": "^19.2.2",
-    "@tailwindcss/typography": "^0.5.13",
-    "@types/node": "^20.12.13",
-    "@types/react": "^18.3.2",
-    "@types/react-dom": "^18.3.0",
-    "@types/react-helmet": "^6.1.11",
-    "@vitejs/plugin-react-swc": "^3.7.0",
-    "@vitest/coverage-v8": "^1.6.0",
-    "@vitest/ui": "^1.6.0",
-    "autoprefixer": "^10.4.19",
-    "commitlint": "^19.3.0",
-    "eslint": "^8.57.0",
-    "eslint-config-sznm": "^2.0.3",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.5",
-    "postcss": "^8.4.38",
-    "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.6.0",
-    "rollup-plugin-visualizer": "^5.12.0",
-    "standard-version": "^9.5.0",
-    "tailwindcss": "^3.4.3",
-    "typescript": "5.4.5",
-    "vite": "^5.2.12",
-    "vite-plugin-checker": "^0.6.4",
-    "vite-plugin-pwa": "^0.20.0",
-    "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^1.6.0"
+    "@eslint/js": "^10.0.1",
+    "@typescript-eslint/parser": "^8.69.0",
+    "astro-eslint-parser": "^3.1.0",
+    "eslint": "^10.10.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^3.1.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "sst": "^4.17.1",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.69.0",
+    "vitest": "^4.1.10"
   },
-  "engines": {
-    "node": ">=20.14.x",
-    "pnpm": ">=9"
+  "overrides": {
+    "eslint": "$eslint",
+    "typescript": "$typescript"
   },
-  "packageManager": "pnpm@9.1.1"
+  "lint-staged": {
+    "*.{ts,tsx,mts,mjs,astro}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css}": [
+      "prettier --write"
+    ]
+  }
 }

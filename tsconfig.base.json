@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Base",
+  // Framework-agnostic compiler options shared by every workspace. Anything
+  // location-specific (paths, include/exclude, Astro's client types) stays in
+  // the consumer's own tsconfig so it resolves relative to that file.
+  //
+  // `typescript` is held at 6.0.x and must not go to 7. TypeScript 7 is the
+  // native compiler and 7.0 ships no JavaScript API, so typescript-eslint
+  // (peer `<6.1.0`) and `astro check` cannot run on it. Revisit once TS 7.1
+  // exposes the API and typescript-eslint widens its peer range.
+  "compilerOptions": {
+    "target": "es2024",
+    "lib": ["es2024", "dom", "dom.iterable"],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "jsx": "react-jsx"
+  }
+}

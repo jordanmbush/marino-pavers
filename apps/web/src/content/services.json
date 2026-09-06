@@ -1,0 +1,92 @@
+[
+  {
+    "id": "paver-patios",
+    "order": 1,
+    "icon": "layout-grid",
+    "title": "Paver Patios",
+    "tagline": "The outdoor room you actually use",
+    "description": "A patio sized and shaped for how you live outside — morning coffee, Friday dinners, the whole family at the holidays. Laid on an engineered base so it stays flat and true for decades.",
+    "features": [
+      "Travertine, concrete & clay pavers",
+      "Herringbone, ashlar & running-bond patterns",
+      "Built-in seat walls & planters",
+      "Drainage graded away from the house"
+    ],
+    "category": "patios"
+  },
+  {
+    "id": "driveways",
+    "order": 2,
+    "icon": "car",
+    "title": "Paver Driveways",
+    "tagline": "Curb appeal that carries the load",
+    "description": "A driveway is the first thing anyone sees — and the hardest-working surface on your property. Herringbone-laid pavers interlock to spread the weight of daily traffic without cracking like a concrete slab.",
+    "features": [
+      "Herringbone lay for maximum interlock",
+      "Reinforced base rated for vehicle loads",
+      "Individual pavers replaceable if stained",
+      "Crisp banding & border details"
+    ],
+    "category": "driveways"
+  },
+  {
+    "id": "artificial-turf",
+    "order": 3,
+    "icon": "sprout",
+    "title": "Artificial Turf",
+    "tagline": "Green year-round, zero water bills",
+    "description": "A lawn that stays green through a Phoenix August with no mowing, no overseeding, and no water. Pet- and kid-friendly turf on a draining base that handles monsoon downpours.",
+    "features": [
+      "Pet-rated with odor-control infill",
+      "Free-draining base for monsoon season",
+      "Cool-tech yarns for lower surface heat",
+      "Putting greens & play areas"
+    ],
+    "category": "turf"
+  },
+  {
+    "id": "pool-decks",
+    "order": 4,
+    "icon": "waves",
+    "title": "Pool Decks & Coping",
+    "tagline": "Cool underfoot, safe when wet",
+    "description": "Travertine and shell-stone pavers stay cooler than concrete and give a natural grip wet or dry — the right surface for bare feet around a Valley pool. Coping and deck laid as one clean field.",
+    "features": [
+      "Cool-to-touch travertine & shell stone",
+      "Slip-resistant when wet",
+      "Bullnose coping to match",
+      "Re-decks over old concrete"
+    ],
+    "category": "pool-decks"
+  },
+  {
+    "id": "walkways",
+    "order": 5,
+    "icon": "footprints",
+    "title": "Walkways & Steps",
+    "tagline": "The path that ties it together",
+    "description": "Front-entry approaches, side-yard runs, and garden paths that guide the eye and hold up to daily use. Steps and landings built to code with solid, even risers.",
+    "features": [
+      "Front entries & garden paths",
+      "Code-compliant steps & landings",
+      "Landscape lighting integration",
+      "Matched banding to your patio or drive"
+    ],
+    "category": "walkways"
+  },
+  {
+    "id": "outdoor-living",
+    "order": 6,
+    "icon": "flame",
+    "title": "Outdoor Living",
+    "tagline": "Kitchens, fire & shade",
+    "description": "The features that turn a backyard into a destination: built-in BBQ islands, fire pits and fireplaces, ramadas and pergolas for shade, and retaining walls that make a slope usable.",
+    "features": [
+      "BBQ islands & outdoor kitchens",
+      "Fire pits, fireplaces & fire tables",
+      "Ramadas, pergolas & shade structures",
+      "Retaining, seat & privacy walls"
+    ],
+    "category": "outdoor-living"
+  }
+]

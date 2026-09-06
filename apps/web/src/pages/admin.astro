@@ -1,0 +1,25 @@
+---
+import Base from "@/layouts/Base.astro";
+import Logo from "@/components/site/Logo.astro";
+import { AdminApp } from "@/components/admin/AdminApp";
+---
+
+<Base
+  title="Photo library — Marino Pavers"
+  description="Manage the photos shown on marinopavers.com."
+  noindex
+>
+  <div class="flex min-h-screen flex-col bg-sand text-basalt">
+    <header class="border-b border-basalt/10 bg-sand/85">
+      <div class="shell flex h-[4.5rem] items-center justify-between">
+        <Logo />
+        <a href="/our-work" class="eyebrow text-basalt/60 hover:text-basalt"
+          >View the site →</a
+        >
+      </div>
+    </header>
+    <main class="flex-1">
+      <AdminApp client:only="react" />
+    </main>
+  </div>
+</Base>

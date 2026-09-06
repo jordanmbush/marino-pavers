@@ -1,0 +1,26 @@
+---
+import { cn } from "./cn";
+
+/** The mono label with its leading rule: "Pavers · Turf · Outdoor Living". */
+type Props = { tone?: "dark" | "light"; class?: string; rule?: boolean };
+
+const { tone = "dark", class: className, rule = true } = Astro.props;
+const onDark = tone === "light";
+---
+
+<span
+  class={cn(
+    "flex items-center gap-3 eyebrow",
+    onDark ? "text-ochre-light" : "text-cherokee",
+    className,
+  )}
+>
+  {
+    rule && (
+      <span
+        class={cn("h-px w-8", onDark ? "bg-ochre-light/60" : "bg-cherokee/50")}
+      />
+    )
+  }
+  <slot />
+</span>

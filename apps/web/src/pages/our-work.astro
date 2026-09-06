@@ -1,0 +1,32 @@
+---
+import Site from "@/layouts/Site.astro";
+import { Gallery } from "@/components/gallery/Gallery";
+import CtaBand from "@/components/sections/CtaBand.astro";
+import PageHero from "@/components/ui/PageHero.astro";
+import { prefetchManifestItems } from "@/services/media";
+
+const items = await prefetchManifestItems();
+---
+
+<Site
+  title="Our Work — Paver & Turf Projects Across Phoenix | Marino Pavers"
+  description="Photos of paver patios, driveways, pool decks, artificial turf and outdoor living builds Marino Pavers has installed across greater Phoenix."
+>
+  <PageHero
+    eyebrow="Our work"
+    title="Laid across the Valley, one yard at a time."
+    lead="Patios, driveways, pool decks, and turf from Cave Creek to Queen Creek. Filter by what you’re planning."
+  />
+
+  <section class="bg-sand">
+    <div class="shell py-14 lg:py-20">
+      <Gallery client:load initialItems={items} showFilters />
+    </div>
+  </section>
+
+  <CtaBand
+    eyebrow="Your yard next"
+    title="See something you want in your own backyard?"
+    lead="Send us a photo of your space and a note on what you’re after. We’ll follow up with ideas and an honest quote."
+  />
+</Site>

@@ -1,24 +1,25 @@
-node_modules
-.DS_Store
-dist
-dist-ssr
-*.local
+# Build output
+dist/
+.astro/
 
-yarn-error.log*
-.pnpm-debug.log*
+# Infrastructure (SST's vendored platform + state)
+.sst/
+sst-env.d.ts
 
-# TS
-*.tsbuildinfo
+# Dependencies
+node_modules/
 
-# Turbo
-.turbo
-
-.vscode/settings.json
-
-stats.*
-
-# Test
+# Test artifacts
 coverage/
 
-# ESLint
+# Local env — the Cloudflare token (.env.production) and dev-stage URLs
+# (apps/web/.env) live here, never in git. Only the examples are tracked.
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.DS_Store
+*.tsbuildinfo
 .eslintcache
+.vscode/settings.json

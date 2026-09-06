@@ -1,0 +1,119 @@
+---
+import { Menu, Phone, X } from "lucide-react";
+import Button from "@/components/ui/Button.astro";
+import { cn } from "@/components/ui/cn";
+import { nav, site } from "@/content/site";
+import Logo from "./Logo.astro";
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string) =>
+  href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
+---
+
+<header
+  id="site-header"
+  class="sticky top-0 z-50 border-b border-basalt/10 bg-sand/85 backdrop-blur-md"
+>
+  <div class="shell flex h-[4.5rem] items-center justify-between gap-6">
+    <Logo />
+
+    <nav class="hidden items-center gap-8 lg:flex" aria-label="Primary">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? "page" : undefined}
+            class={cn(
+              "py-1 eyebrow text-[0.7rem] transition-colors",
+              isActive(item.href)
+                ? "text-cherokee"
+                : "text-basalt/60 hover:text-basalt",
+            )}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="hidden items-center gap-5 lg:flex">
+      <a
+        href={site.phoneHref}
+        class="flex items-center gap-2 eyebrow text-[0.7rem] text-basalt/70 transition-colors hover:text-basalt"
+      >
+        <Phone className="h-3.5 w-3.5" strokeWidth={2.4} />
+        {site.phoneDisplay}
+      </a>
+      <Button href="/contact" size="sm">Free quote</Button>
+    </div>
+
+    <button
+      type="button"
+      data-menu-toggle
+      class="flex h-10 w-10 items-center justify-center rounded-tile border border-basalt/15 text-basalt lg:hidden"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span data-icon-open><Menu className="h-5 w-5" /></span>
+      <span data-icon-close hidden><X className="h-5 w-5" /></span>
+    </button>
+  </div>
+
+  <div
+    id="mobile-menu"
+    data-menu-drawer
+    class="max-h-0 overflow-hidden border-t border-basalt/10 bg-sand transition-[max-height] duration-300 ease-out lg:hidden"
+  >
+    <div class="shell flex flex-col gap-1 py-4">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            aria-current={isActive(item.href) ? "page" : undefined}
+            class={cn(
+              "flex items-center justify-between border-b border-basalt/10 py-3 font-display-wide text-lg font-extrabold",
+              isActive(item.href) ? "text-cherokee" : "text-basalt",
+            )}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <div class="mt-4 flex flex-col gap-3">
+        <a
+          href={site.phoneHref}
+          class="flex items-center gap-2 eyebrow text-basalt/70"
+        >
+          <Phone className="h-4 w-4" strokeWidth={2.4} />
+          {site.phoneDisplay}
+        </a>
+        <Button href="/contact" class="w-full">Get a free quote</Button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById("site-header");
+  const toggle = header?.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const drawer = header?.querySelector<HTMLElement>("[data-menu-drawer]");
+  const iconOpen = header?.querySelector<HTMLElement>("[data-icon-open]");
+  const iconClose = header?.querySelector<HTMLElement>("[data-icon-close]");
+
+  if (toggle && drawer && iconOpen && iconClose) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      drawer.classList.toggle("max-h-0", !open);
+      drawer.classList.toggle("max-h-[26rem]", open);
+      iconOpen.hidden = open;
+      iconClose.hidden = !open;
+      // Lock body scroll while the drawer is open.
+      document.body.style.overflow = open ? "hidden" : "";
+    };
+    toggle.addEventListener("click", () => {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+  }
+</script>
