@@ -177,7 +177,7 @@ export default $config({
       },
     });
 
-    const web = new sst.aws.StaticSite("Web", {
+    const site = new sst.aws.StaticSite("Site", {
       path: "apps/web",
       build: {
         command: "npm run build",
@@ -223,7 +223,7 @@ export default $config({
 
     return {
       url: router.url,
-      site: web.url,
+      site: site.url,
       stage: $app.stage,
       mediaBucket: media.name,
       userPoolId: adminPool.id,

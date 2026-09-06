@@ -139,7 +139,7 @@ DEPLOY_POLICY="$(
         "arn:aws:iam::${ACCOUNT_ID}:role/Media*",
         "arn:aws:iam::${ACCOUNT_ID}:role/AdminApi*",
         "arn:aws:iam::${ACCOUNT_ID}:role/ProcessImage*",
-        "arn:aws:iam::${ACCOUNT_ID}:role/Web*"
+        "arn:aws:iam::${ACCOUNT_ID}:role/Site*"
       ]
     },
     {
