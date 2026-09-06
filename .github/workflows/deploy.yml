@@ -39,12 +39,12 @@ jobs:
        github.event.workflow_run.head_branch == 'main')
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # Deploy exactly the commit CI validated.
           ref: ${{ github.event.workflow_run.head_sha || github.ref }}
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           cache: npm
@@ -52,7 +52,7 @@ jobs:
       - run: npm ci
 
       - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
           role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
           aws-region: us-west-1
@@ -65,12 +65,16 @@ jobs:
         run: npx sst deploy --stage production
 
       - name: Smoke check
+        # The manifest only exists once a photo has been processed (or an
+        # empty one was seeded). Before that, S3 answers 403 for the missing
+        # key — CloudFront has no ListBucket on the media bucket, so it can't
+        # say 404 — and that is a healthy fresh stage, not a broken route.
         run: |
           for path in / /services /our-work /about /contact /media/manifest.json; do
             code="$(curl -s -o /dev/null -w '%{http_code}' "https://marinopavers.com${path}")"
             echo "${code} ${path}"
             case "$path" in
-              /media/manifest.json) [ "$code" = 200 ] || [ "$code" = 404 ] || exit 1 ;;
+              /media/manifest.json) case "$code" in 200 | 403 | 404) ;; *) exit 1 ;; esac ;;
               *) [ "$code" = 200 ] || exit 1 ;;
             esac
           done
