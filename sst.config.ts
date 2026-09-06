@@ -185,6 +185,39 @@ export default $config({
       },
       router: { instance: router },
       errorPage: "404.html",
+      /**
+       * A wrong URL must answer 404, not 403. With only `s3:GetObject`
+       * granted, S3 hides the difference between "missing" and "forbidden"
+       * and CloudFront passes the 403 through — which search engines read
+       * as a server fault. Granting the CloudFront service principal
+       * `s3:ListBucket` is exactly what lets S3 answer NoSuchKey instead.
+       * The bucket stays private; listing is granted to CloudFront only.
+       */
+      transform: {
+        assets: (args) => {
+          args.transform = {
+            ...args.transform,
+            policy: (policyArgs) => {
+              policyArgs.policy = $resolve([
+                policyArgs.policy,
+                policyArgs.bucket,
+              ]).apply(([policy, bucket]) => {
+                const doc =
+                  typeof policy === "string"
+                    ? JSON.parse(policy)
+                    : JSON.parse(JSON.stringify(policy));
+                doc.Statement.push({
+                  Effect: "Allow",
+                  Principal: { Service: "cloudfront.amazonaws.com" },
+                  Action: "s3:ListBucket",
+                  Resource: `arn:aws:s3:::${bucket}`,
+                });
+                return JSON.stringify(doc);
+              });
+            },
+          };
+        },
+      },
       // Baked into the build. The media URL must be absolute so pages can
       // pre-render the gallery; the API URL is empty on production so the
       // site calls its own origin and works from any hostname.

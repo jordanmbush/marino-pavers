@@ -105,5 +105,8 @@ show it to the client at `https://dev.marinopavers.com`.
   `Footer.astro`.
 - **`fileOptions` in `sst.config.ts` replaces SST's defaults** — keep the `**`
   catch-all first or files silently stop uploading.
+- **Unknown URLs answer 404 only because CloudFront has `s3:ListBucket`** on
+  the site bucket (`transform.assets` in `sst.config.ts`); without it S3 says 403. The body is S3's XML, not `404.html` — serving the branded page under
+  the Router is a follow-up (`/404.html` itself is reachable).
 - **TypeScript stays on 6.0.x.** TS 7 ships no JS API yet; typescript-eslint and
   `astro check` can't run on it.
