@@ -12,12 +12,12 @@ import tsConfigPaths from 'vite-tsconfig-paths';
 const pwaOptions: Partial<VitePWAOptions> = {
   registerType: 'autoUpdate',
   manifest: {
-    short_name: 'vite-react-tailwind-starter',
-    name: 'Vite React App Template',
+    short_name: 'Marino Pavers',
+    name: 'Marino Pavers — Phoenix Hardscape & Outdoor Living',
     lang: 'en',
     start_url: '/',
-    background_color: '#FFFFFF',
-    theme_color: '#FFFFFF',
+    background_color: '#E5D9C3',
+    theme_color: '#211C17',
     dir: 'ltr',
     display: 'standalone',
     prefer_related_applications: false,

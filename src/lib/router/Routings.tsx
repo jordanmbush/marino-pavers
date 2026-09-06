@@ -1,13 +1,3 @@
-/**
- * @note
- * for hook alternative of route element composition:
- * - https://reactrouter.com/docs/en/v6/upgrading/v5#use-useroutes-instead-of-react-router-config
- * - https://reactrouter.com/docs/en/v6/examples/route-objects
- *
- * might need to take notes on:
- * - https://reactrouter.com/docs/en/v6/upgrading/v5#note-on-link-to-values
- */
-
 import { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
@@ -15,9 +5,16 @@ import Page404 from '@/lib/pages/404';
 
 import { routes, privateRoutes } from './routes';
 
+/** Minimal, on-brand fallback while a lazy page chunk loads. */
+const PageFallback = () => (
+  <div className="flex min-h-[60vh] items-center justify-center bg-sand">
+    <span className="eyebrow animate-pulse text-basalt/40">Marino Pavers</span>
+  </div>
+);
+
 const Routings = () => {
   return (
-    <Suspense>
+    <Suspense fallback={<PageFallback />}>
       <Routes>
         {routes.map((routeProps) => (
           <Route {...routeProps} key={routeProps.path as string} />
