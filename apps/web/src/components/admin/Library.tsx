@@ -55,7 +55,7 @@ export const Library = ({ username, onSignOut }: Props) => {
               item={item}
               first={i === 0}
               last={i === items.length - 1}
-              onUpdate={(patch) => void update(item.id, patch)}
+              onUpdate={(patch) => update(item.id, patch)}
               onMove={(delta) => void move(item.id, delta)}
               onDelete={() => void remove(item.id)}
             />
