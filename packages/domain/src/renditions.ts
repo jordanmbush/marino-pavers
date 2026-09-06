@@ -1,5 +1,5 @@
 import { renditionKey } from "./keys";
-import { RENDITION_WIDTHS, type ReadyMediaItem } from "./media";
+import { RENDITION_WIDTHS, type MediaItem, type ReadyMediaItem } from "./media";
 
 /**
  * Which widths to render for an original, ascending. Never upscales: every
@@ -17,9 +17,10 @@ export const pickRenditionWidths = (originalWidth: number): number[] => {
 /** Absolute or root-relative URL of one rendition, given the media base. */
 export const renditionUrl = (
   mediaBase: string,
-  id: string,
+  item: Pick<MediaItem, "id" | "rotation">,
   width: number,
-): string => `${mediaBase.replace(/\/$/, "")}/${renditionKey(id, width)}`;
+): string =>
+  `${mediaBase.replace(/\/$/, "")}/${renditionKey(item.id, item.rotation, width)}`;
 
 export const largestWidth = (item: ReadyMediaItem): number =>
   item.image.widths[item.image.widths.length - 1]!;
@@ -27,12 +28,12 @@ export const largestWidth = (item: ReadyMediaItem): number =>
 /** The `srcset` attribute for an item: every rendition with its width descriptor. */
 export const srcSet = (mediaBase: string, item: ReadyMediaItem): string =>
   item.image.widths
-    .map((w) => `${renditionUrl(mediaBase, item.id, w)} ${w}w`)
+    .map((w) => `${renditionUrl(mediaBase, item, w)} ${w}w`)
     .join(", ");
 
 /** The default `src`: the largest rendition, for browsers that ignore srcset. */
 export const fallbackSrc = (mediaBase: string, item: ReadyMediaItem): string =>
-  renditionUrl(mediaBase, item.id, largestWidth(item));
+  renditionUrl(mediaBase, item, largestWidth(item));
 
 /**
  * `sizes` strings for the layouts the site uses. Named here so the gallery

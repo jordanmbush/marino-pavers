@@ -1,12 +1,21 @@
-import { ACCEPTED_UPLOAD_TYPES, type AcceptedUploadType } from "./media";
+import {
+  ACCEPTED_UPLOAD_TYPES,
+  type AcceptedUploadType,
+  type Rotation,
+} from "./media";
 
 /**
  * Where things live in the media bucket. Three prefixes, one file:
  *
- *   originals/{id}.{ext}          what the client uploaded, untouched
- *   renditions/{id}/{width}.webp  what the site serves
- *   items/{id}.json               one record per photo — the source of truth
- *   manifest.json                 the public read model, rebuilt from items/
+ *   originals/{id}.{ext}                what the client uploaded, untouched
+ *   renditions/{id}/r{rotation}/{w}.webp what the site serves
+ *   items/{id}.json                     one record per photo — the source of truth
+ *   manifest.json                       the public read model, rebuilt from items/
+ *
+ * Renditions are cached as immutable for a year, so a rendition key must
+ * never get new bytes. Rotating a photo therefore writes a fresh set under
+ * its own `r{rotation}` prefix; the stale set is removed once the item
+ * points at the new one.
  */
 
 export const ORIGINALS_PREFIX = "originals/";
@@ -20,11 +29,19 @@ export const extensionFor = (contentType: AcceptedUploadType): string =>
 export const originalKey = (id: string, ext: string): string =>
   `${ORIGINALS_PREFIX}${id}.${ext}`;
 
+/** Every rendition of one photo, whichever rotation they were made at. */
 export const renditionPrefix = (id: string): string =>
   `${RENDITIONS_PREFIX}${id}/`;
 
-export const renditionKey = (id: string, width: number): string =>
-  `${renditionPrefix(id)}${width}.webp`;
+/** The set of renditions made at one rotation. */
+export const renditionSetPrefix = (id: string, rotation: Rotation): string =>
+  `${renditionPrefix(id)}r${rotation}/`;
+
+export const renditionKey = (
+  id: string,
+  rotation: Rotation,
+  width: number,
+): string => `${renditionSetPrefix(id, rotation)}${width}.webp`;
 
 export const itemKey = (id: string): string => `${ITEMS_PREFIX}${id}.json`;
 

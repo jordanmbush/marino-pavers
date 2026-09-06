@@ -1,4 +1,5 @@
 import {
+  CopyObjectCommand,
   DeleteObjectCommand,
   DeleteObjectsCommand,
   GetObjectCommand,
@@ -27,6 +28,12 @@ export interface ObjectStore {
   deleteObject(key: string): Promise<void>;
   deleteByPrefix(prefix: string): Promise<void>;
   listKeys(prefix: string): Promise<string[]>;
+  /**
+   * Writes the object over itself, unchanged. To S3 that is a new object
+   * version, so every ObjectCreated notification fires again — it's how the
+   * admin API asks for an original to be processed a second time.
+   */
+  touchObject(key: string, contentType: string): Promise<void>;
   /** A URL the browser can PUT the file to, valid for `expiresSeconds`. */
   presignPut(
     key: string,
@@ -92,6 +99,21 @@ export const createS3Store = (
         }),
       );
     }
+  },
+
+  async touchObject(key, contentType) {
+    // A self-copy is refused unless the metadata is replaced; stamping the
+    // time makes the replacement real rather than a no-op S3 might reject.
+    await client.send(
+      new CopyObjectCommand({
+        Bucket: bucket,
+        CopySource: `${bucket}/${key.split("/").map(encodeURIComponent).join("/")}`,
+        Key: key,
+        MetadataDirective: "REPLACE",
+        ContentType: contentType,
+        Metadata: { "touched-at": new Date().toISOString() },
+      }),
+    );
   },
 
   async listKeys(prefix) {

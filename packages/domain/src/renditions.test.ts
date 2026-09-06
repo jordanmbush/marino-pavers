@@ -16,6 +16,7 @@ const item: ReadyMediaItem = {
   detail: "",
   featured: false,
   order: 0,
+  rotation: 0,
   original: {
     key: "originals/0123456789abcdef.jpg",
     contentType: "image/jpeg",
@@ -51,23 +52,29 @@ describe("pickRenditionWidths", () => {
 
 describe("urls", () => {
   it("joins the base without a double slash", () => {
-    expect(renditionUrl("/media/", item.id, 480)).toBe(
-      "/media/renditions/0123456789abcdef/480.webp",
+    expect(renditionUrl("/media/", item, 480)).toBe(
+      "/media/renditions/0123456789abcdef/r0/480.webp",
     );
-    expect(renditionUrl("https://cdn.example.com", item.id, 480)).toBe(
-      "https://cdn.example.com/renditions/0123456789abcdef/480.webp",
+    expect(renditionUrl("https://cdn.example.com", item, 480)).toBe(
+      "https://cdn.example.com/renditions/0123456789abcdef/r0/480.webp",
+    );
+  });
+
+  it("points at the set made for the item's rotation", () => {
+    expect(renditionUrl("/media", { ...item, rotation: 180 }, 480)).toBe(
+      "/media/renditions/0123456789abcdef/r180/480.webp",
     );
   });
 
   it("builds a srcset from every rendition", () => {
     expect(srcSet("/media", item)).toBe(
-      "/media/renditions/0123456789abcdef/480.webp 480w, /media/renditions/0123456789abcdef/960.webp 960w, /media/renditions/0123456789abcdef/1200.webp 1200w",
+      "/media/renditions/0123456789abcdef/r0/480.webp 480w, /media/renditions/0123456789abcdef/r0/960.webp 960w, /media/renditions/0123456789abcdef/r0/1200.webp 1200w",
     );
   });
 
   it("falls back to the largest rendition", () => {
     expect(fallbackSrc("/media", item)).toBe(
-      "/media/renditions/0123456789abcdef/1200.webp",
+      "/media/renditions/0123456789abcdef/r0/1200.webp",
     );
   });
 });

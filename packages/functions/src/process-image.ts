@@ -12,6 +12,7 @@ import sharp from "sharp";
 import { processImage } from "./lib/image";
 import {
   deleteItemAndDerived,
+  deleteStaleRenditions,
   readItem,
   rebuildManifest,
   writeItem,
@@ -82,11 +83,17 @@ const processOne = async (
     return;
   }
 
-  const processed = await processImage(original.body);
+  // The record comes first: it carries the rotation the client asked for.
+  // An original that is written again (see `touchObject`) lands here too,
+  // and gets a fresh set of renditions at whatever the record says now.
+  const existing = await readItem(store, id, logger);
+  const rotation = existing?.rotation ?? 0;
+
+  const processed = await processImage(original.body, rotation);
   await Promise.all(
     processed.renditions.map((rendition) =>
       store.putObject(
-        renditionKey(id, rendition.width),
+        renditionKey(id, rotation, rendition.width),
         rendition.body,
         "image/webp",
         RENDITION_CACHE,
@@ -95,7 +102,6 @@ const processOne = async (
   );
 
   const at = now().toISOString();
-  const existing = await readItem(store, id, logger);
   const item: MediaItem = {
     ...(existing ?? {
       id,
@@ -105,6 +111,7 @@ const processOne = async (
       detail: "",
       featured: false,
       order: 0,
+      rotation,
       original: {
         key,
         contentType: contentTypeFor(original.contentType, ext),
@@ -123,7 +130,8 @@ const processOne = async (
   };
   await writeItem(store, item);
   await rebuildManifest(store, now(), logger);
-  logger.info("processed", { id, widths: item.image?.widths });
+  await deleteStaleRenditions(store, id, rotation);
+  logger.info("processed", { id, rotation, widths: item.image?.widths });
 };
 
 export const createProcessImageHandler = ({

@@ -37,6 +37,7 @@ const pending = (): MediaItem => ({
   detail: "",
   featured: true,
   order: 0,
+  rotation: 0,
   original: { key: originalKey(ID, "png"), contentType: "image/png", bytes: 1 },
   createdAt: "2026-09-06T00:00:00.000Z",
   updatedAt: "2026-09-06T00:00:00.000Z",
@@ -61,7 +62,7 @@ describe("process-image handler", () => {
     })(event(originalKey(ID, "png")));
 
     for (const width of [480, 960, 1200]) {
-      const rendition = store.objects.get(renditionKey(ID, width));
+      const rendition = store.objects.get(renditionKey(ID, 0, width));
       expect(rendition?.contentType).toBe("image/webp");
       expect(rendition?.cacheControl).toContain("immutable");
     }
@@ -81,6 +82,47 @@ describe("process-image handler", () => {
       store.objects.get(MANIFEST_KEY)!.body.toString("utf8"),
     );
     expect(manifest.items.map((i: MediaItem) => i.id)).toEqual([ID]);
+  });
+
+  it("re-renders at the record's rotation and drops the stale set", async () => {
+    const store = createMemoryStore();
+    await writeItem(store, {
+      ...pending(),
+      rotation: 90,
+      updatedAt: "2026-09-06T01:00:00.000Z",
+    });
+    for (const width of [480, 960, 1200]) {
+      await store.putObject(
+        renditionKey(ID, 0, width),
+        Buffer.from("old"),
+        "image/webp",
+      );
+    }
+    await store.putObject(
+      originalKey(ID, "png"),
+      await png(1200, 900),
+      "image/png",
+    );
+
+    await createProcessImageHandler({
+      store,
+      now: () => NOW,
+      logger: silentLogger,
+    })(event(originalKey(ID, "png")));
+
+    const item = await readItem(store, ID, silentLogger);
+    expect(item?.status).toBe("ready");
+    expect(item?.rotation).toBe(90);
+    expect(item?.image).toMatchObject({
+      width: 900,
+      height: 1200,
+      widths: [480, 900],
+    });
+    const keys = await store.listKeys(`renditions/${ID}/`);
+    expect(keys).toEqual([
+      renditionKey(ID, 90, 480),
+      renditionKey(ID, 90, 900),
+    ]);
   });
 
   it("creates a record for an original that was never registered", async () => {
@@ -109,12 +151,12 @@ describe("process-image handler", () => {
   it("decodes url-encoded keys and ignores keys outside originals/", async () => {
     const store = createMemoryStore();
     await store.putObject(
-      renditionKey(ID, 480),
+      renditionKey(ID, 0, 480),
       Buffer.from("x"),
       "image/webp",
     );
     await createProcessImageHandler({ store, logger: silentLogger })(
-      event(renditionKey(ID, 480), "items/x.json"),
+      event(renditionKey(ID, 0, 480), "items/x.json"),
     );
     expect(store.objects.size).toBe(1);
     expect(store.objects.has(MANIFEST_KEY)).toBe(false);

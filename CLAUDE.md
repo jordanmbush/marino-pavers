@@ -59,7 +59,7 @@ the cap, split the module — there is no allowlist.
 ```
 /admin  →  POST /api/admin/uploads  →  presigned PUT to originals/{id}.jpg
         ←  pending item written to items/{id}.json
-S3 event →  process-image: renditions/{id}/{480,960,1440,2048}.webp
+S3 event →  process-image: renditions/{id}/r{rotation}/{480,960,1440,2048}.webp
                            + placeholder, dims  →  item ready  →  manifest.json
 site     →  GET /media/manifest.json (60 s cache)  →  <img srcset sizes>
 ```
@@ -108,5 +108,10 @@ show it to the client at `https://dev.marinopavers.com`.
 - **Unknown URLs answer 404 only because CloudFront has `s3:ListBucket`** on
   the site bucket (`transform.assets` in `sst.config.ts`); without it S3 says 403. The body is S3's XML, not `404.html` — serving the branded page under
   the Router is a follow-up (`/404.html` itself is reachable).
+- **zod 4 applies `.default()` even under `.partial()` / `.optional()`.** A
+  partial-update schema picked from a schema with defaults fills in `""` and
+  `false` for every field the request left out, which is how a one-field
+  save once wiped a photo's title. `editableItemSchema` is built from
+  default-free fields for that reason; the stored schema adds the defaults.
 - **TypeScript stays on 6.0.x.** TS 7 ships no JS API yet; typescript-eslint and
   `astro check` can't run on it.

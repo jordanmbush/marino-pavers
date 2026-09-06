@@ -12,6 +12,7 @@ const item: MediaItem = {
   detail: "Travertine · French pattern",
   featured: true,
   order: 0,
+  rotation: 0,
   original: { key: "originals/x.jpg", contentType: "image/jpeg", bytes: 1 },
   image: {
     width: 1800,
@@ -47,6 +48,24 @@ describe("ItemRow", () => {
     expect(html).toContain("checked=");
   });
 
+  it("shows the renditions made at the stored rotation", () => {
+    const html = renderToStaticMarkup(
+      <ItemRow item={{ ...item, rotation: 90 }} first last {...handlers} />,
+    );
+    expect(html).toContain("/renditions/0123456789abcdef/r90/480.webp");
+    // Stored and draft agree, so nothing is previewed turned.
+    expect(html).not.toMatch(/\brotate-(90|180)\b/);
+  });
+
+  it("offers a quarter turn each way", () => {
+    const html = renderToStaticMarkup(
+      <ItemRow item={item} first last {...handlers} />,
+    );
+    expect(html).toMatch(/<button[^>]*aria-label="Rotate left"[^>]*>/);
+    expect(html).toMatch(/<button[^>]*aria-label="Rotate right"[^>]*>/);
+    expect(html).not.toMatch(/aria-label="Rotate right"[^>]*disabled/);
+  });
+
   it("marks a pending item as processing", () => {
     const html = renderToStaticMarkup(
       <ItemRow
@@ -58,5 +77,9 @@ describe("ItemRow", () => {
     );
     expect(html).toContain("Processing…");
     expect(html).not.toContain("<img");
+    // Nothing to turn yet.
+    expect(html).toMatch(
+      /<button[^>]*disabled=""[^>]*aria-label="Rotate left"/,
+    );
   });
 });

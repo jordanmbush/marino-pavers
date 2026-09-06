@@ -18,6 +18,7 @@ const make = (id: string, overrides: Partial<MediaItem> = {}): MediaItem => ({
   detail: "",
   featured: false,
   order: 0,
+  rotation: 0,
   original: { key: `originals/${id}.jpg`, contentType: "image/jpeg", bytes: 1 },
   image: { width: 100, height: 100, widths: [100], placeholder: "data:," },
   createdAt: "2026-01-01T00:00:00.000Z",
