@@ -1,6 +1,13 @@
 import { describe, expect, it } from "vitest";
 import { isMediaId, newMediaId } from "./ids";
-import { isReady, manifestSchema, mediaItemSchema } from "./media";
+import {
+  draftOf,
+  editablePatch,
+  isReady,
+  manifestSchema,
+  mediaItemSchema,
+  type MediaItem,
+} from "./media";
 
 describe("mediaItemSchema", () => {
   it("fills defaults and accepts a pending item without an image", () => {
@@ -58,5 +65,43 @@ describe("ids", () => {
     const ids = new Set(Array.from({ length: 50 }, () => newMediaId()));
     expect(ids.size).toBe(50);
     for (const id of ids) expect(isMediaId(id)).toBe(true);
+  });
+});
+
+describe("editablePatch", () => {
+  const item: MediaItem = {
+    id: "0123456789abcdef",
+    status: "ready",
+    title: "Desert Ridge patio",
+    category: "patios",
+    city: "Phoenix",
+    detail: "",
+    featured: false,
+    order: 3,
+    original: { key: "originals/x.jpg", contentType: "image/jpeg", bytes: 1 },
+    image: { width: 100, height: 100, widths: [100], placeholder: "data:," },
+    createdAt: "2026-01-01T00:00:00.000Z",
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  };
+
+  it("is empty for an untouched draft", () => {
+    expect(editablePatch(item, draftOf(item))).toEqual({});
+  });
+
+  it("carries only the fields that changed", () => {
+    const draft = { ...draftOf(item), title: "Desert Ridge", featured: true };
+    expect(editablePatch(item, draft)).toEqual({
+      title: "Desert Ridge",
+      featured: true,
+    });
+  });
+
+  it("is empty again once a change is typed back", () => {
+    const draft = { ...draftOf(item), city: "Phoenix" };
+    expect(editablePatch(item, draft)).toEqual({});
+  });
+
+  it("never touches order — that belongs to move", () => {
+    expect(draftOf(item)).not.toHaveProperty("order");
   });
 });

@@ -128,3 +128,28 @@ export const editableItemSchema = mediaItemSchema
   .partial();
 
 export type EditableItem = z.infer<typeof editableItemSchema>;
+
+/** The fields a row edits, held as a draft until saved. */
+export type ItemDraft = Required<Omit<EditableItem, "order">>;
+
+export const draftOf = (item: MediaItem): ItemDraft => ({
+  title: item.title,
+  category: item.category,
+  city: item.city,
+  detail: item.detail,
+  featured: item.featured,
+});
+
+/** Where a draft differs from the stored item — empty when nothing changed. */
+export const editablePatch = (
+  item: MediaItem,
+  draft: ItemDraft,
+): EditableItem => {
+  const patch: EditableItem = {};
+  if (draft.title !== item.title) patch.title = draft.title;
+  if (draft.category !== item.category) patch.category = draft.category;
+  if (draft.city !== item.city) patch.city = draft.city;
+  if (draft.detail !== item.detail) patch.detail = draft.detail;
+  if (draft.featured !== item.featured) patch.featured = draft.featured;
+  return patch;
+};

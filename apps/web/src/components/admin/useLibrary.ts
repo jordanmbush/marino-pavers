@@ -66,8 +66,9 @@ export const useLibrary = (onAuthLost: () => void) => {
     return () => window.clearTimeout(timer);
   }, [pending, items, refresh]);
 
+  /** Resolves true once the change is stored; false means it wasn't, and `error` says why. */
   const update = useCallback(
-    async (id: string, patch: EditableItem) => {
+    async (id: string, patch: EditableItem): Promise<boolean> => {
       try {
         const saved = await client.updateItem(id, patch);
         setItems((current) =>
@@ -75,8 +76,10 @@ export const useLibrary = (onAuthLost: () => void) => {
             ? sortItems(current.map((item) => (item.id === id ? saved : item)))
             : current,
         );
+        return true;
       } catch (cause) {
         fail(cause);
+        return false;
       }
     },
     [client, fail],
