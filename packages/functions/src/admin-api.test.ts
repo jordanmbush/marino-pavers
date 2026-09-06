@@ -81,6 +81,7 @@ const ready = (id: string, overrides: Partial<MediaItem> = {}): MediaItem => ({
   detail: "",
   featured: false,
   order: 0,
+  rotation: 0,
   original: {
     key: originalKey(id, "jpg"),
     contentType: "image/jpeg",
@@ -277,6 +278,36 @@ describe("items", () => {
     expect(manifest.items[0].title).toBe("New title");
   });
 
+  it("leaves the fields a patch doesn't mention alone", async () => {
+    const { store, handler } = setup();
+    await writeItem(
+      store,
+      ready(ID_A, {
+        title: "Keep me",
+        featured: true,
+        order: 3,
+        rotation: 180,
+      }),
+    );
+    const result = await handler(
+      request({
+        method: "PATCH",
+        path: `/api/admin/items/${ID_A}`,
+        body: { city: "Mesa" },
+      }),
+    );
+    expect(result.statusCode).toBe(200);
+    expect(parse(result.body).item).toMatchObject({
+      title: "Keep me",
+      featured: true,
+      order: 3,
+      rotation: 180,
+      city: "Mesa",
+      status: "ready",
+    });
+    expect(store.touched).toEqual([]);
+  });
+
   it("does not publish a pending item when edited", async () => {
     const { store, handler } = setup();
     await writeItem(
@@ -292,6 +323,83 @@ describe("items", () => {
     );
     expect(result.statusCode).toBe(200);
     expect(store.objects.has(MANIFEST_KEY)).toBe(false);
+  });
+
+  it("sends a rotated photo back through the processor", async () => {
+    const { store, handler } = setup();
+    await writeItem(store, ready(ID_A));
+    await store.putObject(
+      originalKey(ID_A, "jpg"),
+      Buffer.from("o"),
+      "image/jpeg",
+    );
+    const result = await handler(
+      request({
+        method: "PATCH",
+        path: `/api/admin/items/${ID_A}`,
+        body: { rotation: 90, title: "Turned" },
+      }),
+    );
+    expect(result.statusCode).toBe(200);
+    const { item } = parse(result.body);
+    expect(item).toMatchObject({
+      status: "pending",
+      rotation: 90,
+      title: "Turned",
+    });
+    expect(item.image).toBeUndefined();
+    expect(await readItem(store, ID_A, silentLogger)).toEqual(item);
+    expect(store.touched).toEqual([originalKey(ID_A, "jpg")]);
+    // The manifest keeps naming the old renditions until the new ones exist.
+    expect(store.objects.has(MANIFEST_KEY)).toBe(false);
+  });
+
+  it("leaves the renditions alone when the rotation is unchanged", async () => {
+    const { store, handler } = setup();
+    await writeItem(store, ready(ID_A, { rotation: 180 }));
+    const result = await handler(
+      request({
+        method: "PATCH",
+        path: `/api/admin/items/${ID_A}`,
+        body: { rotation: 180 },
+      }),
+    );
+    expect(result.statusCode).toBe(200);
+    expect(parse(result.body).item.status).toBe("ready");
+    expect(store.touched).toEqual([]);
+    expect(store.objects.has(MANIFEST_KEY)).toBe(true);
+  });
+
+  it("records a rotation for a photo still being processed", async () => {
+    const { store, handler } = setup();
+    await writeItem(
+      store,
+      ready(ID_A, { status: "pending", image: undefined }),
+    );
+    const result = await handler(
+      request({
+        method: "PATCH",
+        path: `/api/admin/items/${ID_A}`,
+        body: { rotation: 270 },
+      }),
+    );
+    expect(result.statusCode).toBe(200);
+    expect((await readItem(store, ID_A, silentLogger))?.rotation).toBe(270);
+    expect(store.touched).toEqual([]);
+  });
+
+  it("rejects a rotation that is not a quarter turn", async () => {
+    const { store, handler } = setup();
+    await writeItem(store, ready(ID_A));
+    const result = await handler(
+      request({
+        method: "PATCH",
+        path: `/api/admin/items/${ID_A}`,
+        body: { rotation: 45 },
+      }),
+    );
+    expect(result.statusCode).toBe(400);
+    expect(parse(result.body).message).toContain("rotation");
   });
 
   it("reorders in bulk", async () => {
@@ -329,7 +437,7 @@ describe("items", () => {
       "image/jpeg",
     );
     await store.putObject(
-      renditionKey(ID_A, 10),
+      renditionKey(ID_A, 0, 10),
       Buffer.from("r"),
       "image/webp",
     );
@@ -339,7 +447,7 @@ describe("items", () => {
     expect(result.statusCode).toBe(200);
     expect(store.objects.has(itemKey(ID_A))).toBe(false);
     expect(store.objects.has(originalKey(ID_A, "jpg"))).toBe(false);
-    expect(store.objects.has(renditionKey(ID_A, 10))).toBe(false);
+    expect(store.objects.has(renditionKey(ID_A, 0, 10))).toBe(false);
     const manifest = parse(
       store.objects.get(MANIFEST_KEY)?.body.toString("utf8"),
     );

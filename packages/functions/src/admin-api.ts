@@ -91,6 +91,7 @@ const createUpload = async (
     detail: request.detail,
     featured: false,
     order: 0,
+    rotation: 0,
     original: {
       key,
       contentType: request.contentType,
@@ -154,13 +155,33 @@ const update = async (
   const existing = await readItem(ctx.store, id, ctx.logger);
   if (!existing) return error(404, "not_found", "No such photo.", ctx.cors);
 
-  const item: MediaItem = {
-    ...existing,
-    ...withoutUndefined(parsed.data),
-    updatedAt: ctx.now().toISOString(),
-  };
+  const changes = withoutUndefined(parsed.data);
+  const at = ctx.now().toISOString();
+
+  // A new rotation means new renditions. The item goes back to pending
+  // without its image, the original is written over itself so the
+  // processor runs again, and the manifest is left alone: it keeps naming
+  // the old set, which stays in the bucket until the new one replaces it.
+  // A still-pending item has nothing to re-render — its first run will
+  // read the rotation from the record.
+  const rerender =
+    isReady(existing) &&
+    changes.rotation !== undefined &&
+    changes.rotation !== existing.rotation;
+  const item: MediaItem = { ...existing, ...changes, updatedAt: at };
+  if (rerender) {
+    item.status = "pending";
+    delete item.image;
+  }
   await writeItem(ctx.store, item);
-  if (isReady(item)) await rebuildManifest(ctx.store, ctx.now(), ctx.logger);
+  if (rerender) {
+    await ctx.store.touchObject(
+      existing.original.key,
+      existing.original.contentType,
+    );
+  } else if (isReady(item)) {
+    await rebuildManifest(ctx.store, ctx.now(), ctx.logger);
+  }
   return json(200, { item }, ctx.cors);
 };
 

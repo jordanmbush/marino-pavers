@@ -2,12 +2,9 @@ import { ArrowDown, ArrowUp, Check, LoaderCircle, Trash2 } from "lucide-react";
 import { useState } from "react";
 import {
   MEDIA_CATEGORIES,
-  SIZES,
   draftOf,
   editablePatch,
-  isReady,
-  renditionUrl,
-  srcSet,
+  turn,
   type EditableItem,
   type ItemDraft,
   type MediaCategory,
@@ -17,7 +14,7 @@ import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
-import { mediaBase } from "@/services/media";
+import { Thumbnail } from "./Thumbnail";
 
 type Props = {
   item: MediaItem;
@@ -36,8 +33,9 @@ const CATEGORY_OPTIONS = MEDIA_CATEGORIES.map((c) => ({
 
 /**
  * One photo's editor. Edits sit in a draft until Save — the button wakes up
- * as soon as something differs from what's stored. Move and delete act at
- * once; they're actions, not edits.
+ * as soon as something differs from what's stored. Turning the photo is an
+ * edit too: it previews at once and re-renders on save. Move and delete act
+ * immediately; they're actions, not edits.
  */
 export const ItemRow = ({
   item,
@@ -50,8 +48,6 @@ export const ItemRow = ({
   const [draft, setDraft] = useState<ItemDraft>(() => draftOf(item));
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const base = mediaBase();
-  const ready = isReady(item);
   const patch = editablePatch(item, draft);
   const dirty = Object.keys(patch).length > 0;
 
@@ -88,27 +84,11 @@ export const ItemRow = ({
 
   return (
     <li className="grid gap-4 rounded-tile border border-basalt/10 bg-bone p-4 sm:grid-cols-[160px_1fr_auto]">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-tile bg-sand-dark sm:aspect-square">
-        {ready ? (
-          <img
-            src={renditionUrl(base, item.id, item.image.widths[0]!)}
-            srcSet={srcSet(base, item)}
-            sizes={SIZES.thumb}
-            alt=""
-            loading="lazy"
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center p-3 text-center font-mono text-[0.65rem] text-basalt/60">
-            Processing…
-          </div>
-        )}
-        {item.featured && (
-          <span className="absolute top-2 left-2 rounded-tile bg-cherokee px-2 py-0.5 eyebrow text-[0.55rem] text-bone">
-            Featured
-          </span>
-        )}
-      </div>
+      <Thumbnail
+        item={item}
+        rotation={draft.rotation}
+        onTurn={(delta) => edit({ rotation: turn(draft.rotation, delta) })}
+      />
 
       <div className="grid gap-3 sm:grid-cols-2">
         <Input

@@ -8,6 +8,7 @@ import {
 import { describe, expect, it } from "vitest";
 import {
   deleteItemAndDerived,
+  deleteStaleRenditions,
   listItems,
   readItem,
   rebuildManifest,
@@ -28,6 +29,7 @@ const item = (id: string, overrides: Partial<MediaItem> = {}): MediaItem => ({
   detail: "",
   featured: false,
   order: 0,
+  rotation: 0,
   original: {
     key: originalKey(id, "jpg"),
     contentType: "image/jpeg",
@@ -90,17 +92,43 @@ describe("item repository", () => {
       "image/jpeg",
     );
     await store.putObject(
-      renditionKey(ID_A, 480),
+      renditionKey(ID_A, 0, 480),
       Buffer.from("r"),
       "image/webp",
     );
     await store.putObject(
-      renditionKey(ID_A, 960),
+      renditionKey(ID_A, 90, 480),
       Buffer.from("r"),
       "image/webp",
     );
     await writeItem(store, item(ID_B));
     await deleteItemAndDerived(store, ID_A);
     expect([...store.objects.keys()]).toEqual([itemKey(ID_B)]);
+  });
+
+  it("keeps only the rendition set made at the current rotation", async () => {
+    const store = createMemoryStore();
+    for (const [rotation, width] of [
+      [0, 480],
+      [0, 960],
+      [90, 480],
+      [180, 480],
+    ] as const) {
+      await store.putObject(
+        renditionKey(ID_A, rotation, width),
+        Buffer.from("r"),
+        "image/webp",
+      );
+    }
+    await store.putObject(
+      renditionKey(ID_B, 0, 480),
+      Buffer.from("r"),
+      "image/webp",
+    );
+    await deleteStaleRenditions(store, ID_A, 90);
+    expect([...store.objects.keys()].sort()).toEqual([
+      renditionKey(ID_A, 90, 480),
+      renditionKey(ID_B, 0, 480),
+    ]);
   });
 });

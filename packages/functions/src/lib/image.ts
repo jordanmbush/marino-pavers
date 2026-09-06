@@ -1,4 +1,8 @@
-import { PLACEHOLDER_WIDTH, pickRenditionWidths } from "@marino/domain";
+import {
+  PLACEHOLDER_WIDTH,
+  pickRenditionWidths,
+  type Rotation,
+} from "@marino/domain";
 import sharp from "sharp";
 
 export type Rendition = { width: number; body: Buffer };
@@ -18,13 +22,19 @@ const isSideways = (orientation: number | undefined): boolean =>
   orientation !== undefined && orientation >= 5;
 
 /**
- * One original in, every rendition out. Rotation follows the EXIF tag and
- * happens before resizing, so a portrait phone photo is resized by its
- * displayed width. Metadata is stripped by default; only the first frame of
- * an animated or multi-page input is used.
+ * One original in, every rendition out. The image is first turned the way
+ * its EXIF tag says, then a further `rotation` clockwise — the client's
+ * correction on top of the camera's — and only then resized, so a portrait
+ * result is resized by its displayed width. Metadata is stripped by default;
+ * only the first frame of an animated or multi-page input is used.
  */
-export const processImage = async (input: Buffer): Promise<ProcessedImage> => {
-  const source = sharp(input, { animated: false, pages: 1 }).rotate();
+export const processImage = async (
+  input: Buffer,
+  rotation: Rotation = 0,
+): Promise<ProcessedImage> => {
+  // sharp allows one angled rotate per pipeline, plus the bare EXIF one.
+  const oriented = sharp(input, { animated: false, pages: 1 }).rotate();
+  const source = rotation === 0 ? oriented : oriented.rotate(rotation);
 
   let stored: { width?: number; height?: number; orientation?: number };
   try {
@@ -38,9 +48,12 @@ export const processImage = async (input: Buffer): Promise<ProcessedImage> => {
   if (!stored.width || !stored.height) {
     throw new Error("Image has no dimensions");
   }
-  const sideways = isSideways(stored.orientation);
-  const width = sideways ? stored.height : stored.width;
-  const height = sideways ? stored.width : stored.height;
+  // Each quarter turn swaps the axes; two swaps (EXIF sideways plus a 90°
+  // correction) put them back.
+  const swapped =
+    isSideways(stored.orientation) !== (rotation === 90 || rotation === 270);
+  const width = swapped ? stored.height : stored.width;
+  const height = swapped ? stored.width : stored.height;
 
   const renditions = await Promise.all(
     pickRenditionWidths(width).map(async (target) => ({

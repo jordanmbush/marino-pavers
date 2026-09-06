@@ -16,6 +16,7 @@ const readyItem = {
   city: "",
   detail: "",
   featured: false,
+  rotation: 0,
   order: 0,
   original: {
     key: "originals/0123456789abcdef.jpg",

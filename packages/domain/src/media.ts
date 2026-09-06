@@ -61,6 +61,22 @@ export const acceptedUploadTypeSchema = z.enum(acceptedTypes);
 
 export const MEDIA_ID_PATTERN = /^[a-f0-9]{16}$/;
 
+/** Quarter turns clockwise, applied after the EXIF orientation when renditions are made. */
+export const ROTATIONS = [0, 90, 180, 270] as const;
+
+export type Rotation = (typeof ROTATIONS)[number];
+
+export const rotationSchema = z.union([
+  z.literal(0),
+  z.literal(90),
+  z.literal(180),
+  z.literal(270),
+]);
+
+/** One quarter turn from `rotation`: clockwise for 1, anticlockwise for -1. */
+export const turn = (rotation: Rotation, delta: -1 | 1): Rotation =>
+  ROTATIONS[(ROTATIONS.indexOf(rotation) + delta + 4) % 4]!;
+
 export const mediaIdSchema = z.string().regex(MEDIA_ID_PATTERN);
 
 export const mediaImageSchema = z.object({
@@ -72,18 +88,41 @@ export const mediaImageSchema = z.object({
   placeholder: z.string(),
 });
 
+/**
+ * The fields the admin page may change, without defaults. The stored record
+ * adds them below; a partial update must not — an absent field there means
+ * "leave it alone", and a default would quietly write "" or false over what
+ * is stored.
+ */
+const editableFields = {
+  title: z.string().max(120),
+  category: mediaCategorySchema,
+  city: z.string().max(60),
+  /** A short material/pattern note, e.g. "Travertine · French pattern". */
+  detail: z.string().max(120),
+  /** Featured items surface on the home page. */
+  featured: z.boolean(),
+  /** Manual sort position, ascending. Ties fall back to newest first. */
+  order: z.int(),
+  /**
+   * How the client wants the photo turned, on top of what the camera's EXIF
+   * tag already says. Changing it re-renders every rendition, and the
+   * renditions live under a per-rotation prefix so the old ones can't be
+   * served from a long-lived cache.
+   */
+  rotation: rotationSchema,
+};
+
 export const mediaItemSchema = z.object({
   id: mediaIdSchema,
   status: z.enum(["pending", "ready"]),
-  title: z.string().max(120).default(""),
-  category: mediaCategorySchema,
-  city: z.string().max(60).default(""),
-  /** A short material/pattern note, e.g. "Travertine · French pattern". */
-  detail: z.string().max(120).default(""),
-  /** Featured items surface on the home page. */
-  featured: z.boolean().default(false),
-  /** Manual sort position, ascending. Ties fall back to newest first. */
-  order: z.int().default(0),
+  title: editableFields.title.default(""),
+  category: editableFields.category,
+  city: editableFields.city.default(""),
+  detail: editableFields.detail.default(""),
+  featured: editableFields.featured.default(false),
+  order: editableFields.order.default(0),
+  rotation: editableFields.rotation.default(0),
   original: z.object({
     key: z.string().min(1),
     contentType: acceptedUploadTypeSchema,
@@ -115,17 +154,8 @@ export const manifestSchema = z.object({
 
 export type Manifest = z.infer<typeof manifestSchema>;
 
-/** The fields the admin page may edit after upload. */
-export const editableItemSchema = mediaItemSchema
-  .pick({
-    title: true,
-    category: true,
-    city: true,
-    detail: true,
-    featured: true,
-    order: true,
-  })
-  .partial();
+/** What one update may carry: any of the editable fields, only those given. */
+export const editableItemSchema = z.object(editableFields).partial();
 
 export type EditableItem = z.infer<typeof editableItemSchema>;
 
@@ -138,6 +168,7 @@ export const draftOf = (item: MediaItem): ItemDraft => ({
   city: item.city,
   detail: item.detail,
   featured: item.featured,
+  rotation: item.rotation,
 });
 
 /** Where a draft differs from the stored item — empty when nothing changed. */
@@ -151,5 +182,6 @@ export const editablePatch = (
   if (draft.city !== item.city) patch.city = draft.city;
   if (draft.detail !== item.detail) patch.detail = draft.detail;
   if (draft.featured !== item.featured) patch.featured = draft.featured;
+  if (draft.rotation !== item.rotation) patch.rotation = draft.rotation;
   return patch;
 };

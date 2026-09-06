@@ -7,8 +7,10 @@ import {
   mediaItemSchema,
   parseItemKey,
   renditionPrefix,
+  renditionSetPrefix,
   type Manifest,
   type MediaItem,
+  type Rotation,
 } from "@marino/domain";
 import { consoleLogger, type Logger } from "./logger";
 import type { ObjectStore } from "./s3";
@@ -72,6 +74,23 @@ export const deleteItemAndDerived = async (
   await store.deleteObject(itemKey(id));
   await store.deleteByPrefix(renditionPrefix(id));
   await store.deleteByPrefix(`${ORIGINALS_PREFIX}${id}.`);
+};
+
+/**
+ * Removes every rendition of a photo except the set made at `keep`. Called
+ * after the item points at the new set, so nothing the manifest names is
+ * ever missing.
+ */
+export const deleteStaleRenditions = async (
+  store: ObjectStore,
+  id: string,
+  keep: Rotation,
+): Promise<void> => {
+  const current = renditionSetPrefix(id, keep);
+  const stale = (await store.listKeys(renditionPrefix(id))).filter(
+    (key) => !key.startsWith(current),
+  );
+  for (const key of stale) await store.deleteObject(key);
 };
 
 /**
