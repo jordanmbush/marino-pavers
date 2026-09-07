@@ -21,14 +21,15 @@ themselves, and a new photo shows on the site without a deploy.
 `eslint.config.mjs` is the spec; read its header before adding a boundary.
 `eslint.config.test.mjs` proves each boundary fires. The short version:
 
-| Layer            | Directory                                  | May import                       | Must not                                  |
-| ---------------- | ------------------------------------------ | -------------------------------- | ----------------------------------------- |
-| **Model**        | `packages/domain/`                         | zod                              | React, Astro, AWS SDK, sharp, the app     |
-| **Server ctrl.** | `packages/functions/`                      | domain, AWS SDK, sharp           | React, Astro, the app                     |
-| **Client ctrl.** | `apps/web/src/services/`                   | domain, `astro:content`, `fetch` | React, the view layer                     |
-| **Content**      | `apps/web/src/content/`                    | —                                | read only via `@/services/content`        |
-| **View**         | `apps/web/src/{pages,layouts,components}/` | services, domain, content        | `astro:content`, `fetch`, browser storage |
-| **Kit**          | `apps/web/src/components/ui/`              | nothing domain-shaped (types ok) | domain values, services, `fetch`          |
+| Layer            | Directory                                  | May import                       | Must not                                                           |
+| ---------------- | ------------------------------------------ | -------------------------------- | ------------------------------------------------------------------ |
+| **Model**        | `packages/domain/`                         | zod                              | React, Astro, AWS SDK, sharp, the app                              |
+| **Server ctrl.** | `packages/functions/`                      | domain, AWS SDK, sharp           | React, Astro, the app                                              |
+| **Client ctrl.** | `apps/web/src/services/`                   | domain, `astro:content`, `fetch` | React, the view layer                                              |
+| **Content**      | `apps/web/src/content/`                    | —                                | read only via `@/services/content`                                 |
+| **View**         | `apps/web/src/{pages,layouts,components}/` | services, domain, content        | `astro:content`, `fetch`, browser storage, `@/content/copy` values |
+| **Islands**      | `apps/web/src/**/*.tsx`                    | as View, copy arrives as a prop  | `@/services/i18n` (bundles every dictionary)                       |
+| **Kit**          | `apps/web/src/components/ui/`              | nothing domain-shaped (types ok) | domain values, services, `fetch`                                   |
 
 Two rules people trip over:
 
@@ -43,9 +44,11 @@ the cap, split the module — there is no allowlist.
 ## Where things are
 
 - `apps/web/` — the Astro site. `src/content/*.json` is the copy (services,
-  FAQs, testimonials…), validated by `src/content.config.ts`; `src/content/site.ts`
-  is the business facts and nav. ⚠️ Phone, email, license, socials and stats
-  there are **placeholders** until the client supplies real ones.
+  FAQs, testimonials…), validated by `src/content.config.ts`; `src/content/copy/`
+  is every other sentence on the site, one dictionary per language;
+  `src/content/site.ts` is the business facts and nav routes. ⚠️ Socials,
+  founding year and project count there are **placeholders** until the client
+  supplies real ones.
 - `packages/domain/` — the photo library as data: item and manifest schemas,
   bucket key layout, rendition math, sort order, the admin API contract.
 - `packages/functions/` — `process-image` (S3 event → sharp → renditions +
@@ -53,6 +56,44 @@ the cap, split the module — there is no allowlist.
 - `sst.config.ts` — all infrastructure. One CloudFront Router serves `/` (site
   bucket), `/media/*` (photo bucket: renditions + manifest only) and `/api/*`
   (admin Lambda).
+- `infra/redirects.ts` — the CloudFront Function code the Router runs before
+  routing: retired URLs (`/about`, `/contact` → `/`, `/our-work` → `/gallery`)
+  answer 301 at the edge. Its test executes the code, because a syntax error
+  there takes the whole distribution down. Retire a page → add a row.
+- `scripts/verify-build.sh` — what a correct `dist/` looks like: static, every
+  page in every language, canonical + hreflang, sitemap without `/admin`, no
+  dictionary in the browser bundle. CI runs it after the build.
+
+## Languages
+
+English at the root, Spanish under `/es/` — real prerendered pages, not a
+client-side swap, so each has its own `lang`, title, canonical and hreflang
+and the sitemap lists both. How it fits together:
+
+- `src/content/locales.ts` names the locales; `astro.config.ts` declares them
+  to Astro (`prefixDefaultLocale: false`) and to the sitemap.
+- Public pages live once in `src/pages/[...locale]/` and prerender per locale
+  via `localeParams()`. Components read `Astro.currentLocale` through
+  `i18n()` in `src/services/i18n.ts`, which returns `{ locale, t, href }`:
+  the dictionary and a link builder that adds the prefix. Never hardcode
+  `/es/` in a view.
+- `src/content/copy/en.ts` is the shape; `es.ts` is typed against it, so a
+  string without a translation is a compile error. The content JSON carries
+  sibling `en` / `es` blocks per entry (schema `localized()`), and the
+  content service flattens an entry to one language.
+- The dictionary is plain data with `{slot}` templates (`fill()` in
+  `src/services/locale.ts`) because the gallery island receives its slice as
+  a prop and Astro serializes island props. Lint enforces the split: views
+  never value-import `@/content/copy` (use `i18n()`), and `.tsx` never
+  imports `@/services/i18n`, so no dictionary ships to the browser.
+- `src/content/copy/copy.test.ts` checks what types can't: both dictionaries
+  have the same strings and the same `{slots}`, nothing is blank, and titles
+  and meta descriptions fit what search results show (70 / 160 chars).
+- `404.html` carries every language and a script shows the one the URL asked
+  for — CloudFront serves one 404 for every missing key. `/admin` is English
+  only; it is the client's tool.
+- The language switcher is plain links to the page's alternates; a script
+  carries `?category=` and `#anchor` across so a reader keeps their place.
 
 ## Photo pipeline
 
@@ -73,12 +114,28 @@ the browser.
 ```bash
 npm run type-check   # astro check + tsc, every workspace
 npm run lint         # the boundaries above
-npm run test         # domain, functions, web, and the lint-config suite
+npm run test         # domain, functions, web, infra, and the lint-config suite
 npm run build        # must stay static
+npm run verify:build # then prove it: pages, languages, sitemap, bundle
 ```
+
+The web suite runs on Astro's own Vite config (`getViteConfig`), so `.astro`
+components render in tests through the Container API — see
+`src/components/site/site.test.ts`. Two things the container needs told:
+the React renderer (`loadRenderers`) for any component with a Lucide icon,
+and the i18n **manifest** (not `astroConfig.i18n`, which it ignores) or
+`Astro.currentLocale` is always English.
 
 CI runs all of these on every push and PR. Husky runs lint-staged pre-commit
 and the full set pre-push.
+
+⚠️ Don't run `type-check` or `build` while `astro dev --background` is up.
+They share `apps/web/node_modules/.vite` and `.astro/` with the dev server:
+the optimizer cache gets rewritten under it (islands then fail to hydrate
+with "Failed to fetch dynamically imported module", a 504 on a `deps/*.js`
+chunk) and a content-config change mid-edit can leave every collection
+empty. Recover with `npx astro dev stop && npx astro dev --background` from
+`apps/web`.
 
 ## Infrastructure
 
@@ -87,7 +144,11 @@ SST v4 → S3 + CloudFront + Lambda + Cognito in AWS account `652346859306`
 SST's Cloudflare adapter writes the records on the production stage only.
 `npm run deploy:dev` needs nothing but the SSO login; production needs
 `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ZONE_ID`, `CLOUDFLARE_DEFAULT_ACCOUNT_ID`.
-GitHub Actions deploys `main` via OIDC (`scripts/setup-github-oidc.sh`).
+GitHub Actions deploys `main` via OIDC (`scripts/setup-github-oidc.sh`) and
+smoke-checks every public page in both languages plus the legacy 301s.
+The Router's `edge.viewerRequest.injection` is where those redirects live;
+SST pastes it at the top of its CloudFront Function, so a `return` there
+answers before any routing.
 
 Local dev against a deployed dev stage: copy `apps/web/.env.example` to
 `apps/web/.env` with the dev outputs, `npm run dev`, and `npm run tunnel` to

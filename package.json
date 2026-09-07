@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "npm run dev --workspace @marino/web",
     "build": "npm run build --workspace @marino/web",
+    "verify:build": "bash scripts/verify-build.sh",
     "preview": "npm run preview --workspace @marino/web",
     "tunnel": "bash scripts/tunnel.sh",
     "type-check": "npm run type-check --workspaces --if-present",
