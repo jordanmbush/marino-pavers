@@ -3,90 +3,166 @@
     "id": "paver-patios",
     "order": 1,
     "icon": "layout-grid",
-    "title": "Paver Patios",
-    "tagline": "The outdoor room you actually use",
-    "description": "A patio sized and shaped for how you live outside — morning coffee, Friday dinners, the whole family at the holidays. Laid on an engineered base so it stays flat and true for decades.",
-    "features": [
-      "Travertine, concrete & clay pavers",
-      "Herringbone, ashlar & running-bond patterns",
-      "Built-in seat walls & planters",
-      "Drainage graded away from the house"
-    ],
-    "category": "patios"
+    "category": "patios",
+    "en": {
+      "title": "Paver Patios",
+      "tagline": "The outdoor room you actually use",
+      "description": "A patio sized and shaped for how you live outside — morning coffee, Friday dinners, the whole family at the holidays. Laid on an engineered base so it stays flat and true for decades.",
+      "features": [
+        "Travertine, concrete & clay pavers",
+        "Herringbone, ashlar & running-bond patterns",
+        "Built-in seat walls & planters",
+        "Drainage graded away from the house"
+      ]
+    },
+    "es": {
+      "title": "Patios de adoquín",
+      "tagline": "El espacio exterior que sí va a usar",
+      "description": "Un patio con el tamaño y la forma de cómo vive afuera: el café de la mañana, las cenas del viernes, toda la familia en las fiestas. Colocado sobre una base bien construida para que se mantenga plano y firme por décadas.",
+      "features": [
+        "Adoquines de travertino, concreto y arcilla",
+        "Patrones espiga, ashlar y trabado",
+        "Muros de asiento y jardineras integrados",
+        "Drenaje con pendiente hacia afuera de la casa"
+      ]
+    }
   },
   {
     "id": "driveways",
     "order": 2,
     "icon": "car",
-    "title": "Paver Driveways",
-    "tagline": "Curb appeal that carries the load",
-    "description": "A driveway is the first thing anyone sees — and the hardest-working surface on your property. Herringbone-laid pavers interlock to spread the weight of daily traffic without cracking like a concrete slab.",
-    "features": [
-      "Herringbone lay for maximum interlock",
-      "Reinforced base rated for vehicle loads",
-      "Individual pavers replaceable if stained",
-      "Crisp banding & border details"
-    ],
-    "category": "driveways"
+    "category": "driveways",
+    "en": {
+      "title": "Paver Driveways",
+      "tagline": "Curb appeal that carries the load",
+      "description": "A driveway is the first thing anyone sees — and the hardest-working surface on your property. Herringbone-laid pavers interlock to spread the weight of daily traffic without cracking like a concrete slab.",
+      "features": [
+        "Herringbone lay for maximum interlock",
+        "Reinforced base rated for vehicle loads",
+        "Individual pavers replaceable if stained",
+        "Crisp banding & border details"
+      ]
+    },
+    "es": {
+      "title": "Entradas de adoquín",
+      "tagline": "Buena presencia que aguanta el peso",
+      "description": "La entrada para autos es lo primero que todos ven y la superficie que más trabaja en su propiedad. Los adoquines en patrón espiga se traban entre sí para repartir el peso del tráfico diario sin agrietarse como una losa de concreto.",
+      "features": [
+        "Patrón espiga para el máximo trabado",
+        "Base reforzada para el peso de vehículos",
+        "Adoquines reemplazables uno por uno si se manchan",
+        "Cenefas y bordes bien definidos"
+      ]
+    }
   },
   {
     "id": "artificial-turf",
     "order": 3,
     "icon": "sprout",
-    "title": "Artificial Turf",
-    "tagline": "Green year-round, zero water bills",
-    "description": "A lawn that stays green through a Phoenix August with no mowing, no overseeding, and no water. Pet- and kid-friendly turf on a draining base that handles monsoon downpours.",
-    "features": [
-      "Pet-rated with odor-control infill",
-      "Free-draining base for monsoon season",
-      "Cool-tech yarns for lower surface heat",
-      "Putting greens & play areas"
-    ],
-    "category": "turf"
+    "category": "turf",
+    "en": {
+      "title": "Artificial Turf",
+      "tagline": "Green year-round, zero water bills",
+      "description": "A lawn that stays green through a Phoenix August with no mowing, no overseeding, and no water. Pet- and kid-friendly turf on a draining base that handles monsoon downpours.",
+      "features": [
+        "Pet-rated with odor-control infill",
+        "Free-draining base for monsoon season",
+        "Cool-tech yarns for lower surface heat",
+        "Putting greens & play areas"
+      ]
+    },
+    "es": {
+      "title": "Pasto sintético",
+      "tagline": "Verde todo el año, cero recibo de agua",
+      "description": "Un césped que sigue verde en pleno agosto en Phoenix sin podar, sin resembrar y sin regar. Pasto apto para mascotas y niños sobre una base drenante que resiste los aguaceros del monzón.",
+      "features": [
+        "Apto para mascotas, con relleno que controla olores",
+        "Base de drenaje libre para la temporada de monzón",
+        "Fibras cool-tech que reducen el calor en la superficie",
+        "Greens de golf y áreas de juego"
+      ]
+    }
   },
   {
     "id": "pool-decks",
     "order": 4,
     "icon": "waves",
-    "title": "Pool Decks & Coping",
-    "tagline": "Cool underfoot, safe when wet",
-    "description": "Travertine and shell-stone pavers stay cooler than concrete and give a natural grip wet or dry — the right surface for bare feet around a Valley pool. Coping and deck laid as one clean field.",
-    "features": [
-      "Cool-to-touch travertine & shell stone",
-      "Slip-resistant when wet",
-      "Bullnose coping to match",
-      "Re-decks over old concrete"
-    ],
-    "category": "pool-decks"
+    "category": "pool-decks",
+    "en": {
+      "title": "Pool Decks & Coping",
+      "tagline": "Cool underfoot, safe when wet",
+      "description": "Travertine and shell-stone pavers stay cooler than concrete and give a natural grip wet or dry — the right surface for bare feet around a Valley pool. Coping and deck laid as one clean field.",
+      "features": [
+        "Cool-to-touch travertine & shell stone",
+        "Slip-resistant when wet",
+        "Bullnose coping to match",
+        "Re-decks over old concrete"
+      ]
+    },
+    "es": {
+      "title": "Decks y bordes de alberca",
+      "tagline": "Frescos al pisar, seguros mojados",
+      "description": "Los adoquines de travertino y shell stone se mantienen más frescos que el concreto y dan agarre natural, secos o mojados: la superficie correcta para andar descalzo alrededor de una alberca en el Valle. Borde y deck colocados como una sola superficie limpia.",
+      "features": [
+        "Travertino y shell stone frescos al tacto",
+        "Antiderrapantes cuando están mojados",
+        "Borde bullnose a juego",
+        "Recubrimos decks sobre concreto viejo"
+      ]
+    }
   },
   {
     "id": "walkways",
     "order": 5,
     "icon": "footprints",
-    "title": "Walkways & Steps",
-    "tagline": "The path that ties it together",
-    "description": "Front-entry approaches, side-yard runs, and garden paths that guide the eye and hold up to daily use. Steps and landings built to code with solid, even risers.",
-    "features": [
-      "Front entries & garden paths",
-      "Code-compliant steps & landings",
-      "Landscape lighting integration",
-      "Matched banding to your patio or drive"
-    ],
-    "category": "walkways"
+    "category": "walkways",
+    "en": {
+      "title": "Walkways & Steps",
+      "tagline": "The path that ties it together",
+      "description": "Front-entry approaches, side-yard runs, and garden paths that guide the eye and hold up to daily use. Steps and landings built to code with solid, even risers.",
+      "features": [
+        "Front entries & garden paths",
+        "Code-compliant steps & landings",
+        "Landscape lighting integration",
+        "Matched banding to your patio or drive"
+      ]
+    },
+    "es": {
+      "title": "Andadores y escalones",
+      "tagline": "El camino que une todo",
+      "description": "Accesos a la entrada principal, pasillos laterales y senderos de jardín que guían la vista y aguantan el uso diario. Escalones y descansos construidos según el código, con peraltes firmes y parejos.",
+      "features": [
+        "Entradas principales y senderos de jardín",
+        "Escalones y descansos según el código",
+        "Integración de iluminación de paisaje",
+        "Cenefas a juego con su patio o entrada"
+      ]
+    }
   },
   {
     "id": "outdoor-living",
     "order": 6,
     "icon": "flame",
-    "title": "Outdoor Living",
-    "tagline": "Kitchens, fire & shade",
-    "description": "The features that turn a backyard into a destination: built-in BBQ islands, fire pits and fireplaces, ramadas and pergolas for shade, and retaining walls that make a slope usable.",
-    "features": [
-      "BBQ islands & outdoor kitchens",
-      "Fire pits, fireplaces & fire tables",
-      "Ramadas, pergolas & shade structures",
-      "Retaining, seat & privacy walls"
-    ],
-    "category": "outdoor-living"
+    "category": "outdoor-living",
+    "en": {
+      "title": "Outdoor Living",
+      "tagline": "Kitchens, fire & walls",
+      "description": "The features that turn a backyard into a destination: built-in BBQ islands, fire pits and fireplaces, and retaining walls that make a slope usable.",
+      "features": [
+        "BBQ islands & outdoor kitchens",
+        "Fire pits, fireplaces & fire tables",
+        "Retaining, seat & privacy walls"
+      ]
+    },
+    "es": {
+      "title": "Vida al aire libre",
+      "tagline": "Cocinas, fuego y muros",
+      "description": "Los elementos que convierten un patio trasero en un destino: islas de asador integradas, fogatas y chimeneas, y muros de contención que hacen útil un terreno con pendiente.",
+      "features": [
+        "Islas de asador y cocinas exteriores",
+        "Fogatas, chimeneas y mesas de fuego",
+        "Muros de contención, de asiento y de privacidad"
+      ]
+    }
   }
 ]

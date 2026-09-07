@@ -3,50 +3,87 @@ import { ArrowLeft } from "lucide-react";
 import Site from "@/layouts/Site.astro";
 import Button from "@/components/ui/Button.astro";
 import Eyebrow from "@/components/ui/Eyebrow.astro";
+import { DEFAULT_LOCALE, LOCALES } from "@/content/locales";
 import { nav } from "@/content/site";
+import { i18n } from "@/services/i18n";
+import { alternatesOf } from "@/services/locale";
+
+/**
+ * One 404 for the whole site: CloudFront serves this file for any missing
+ * key, whichever language the URL was in. So the page carries its copy in
+ * every language, shows English by default, and a small script reveals the
+ * language the URL asked for. The head and the chrome stay English — the
+ * page is noindex, so nothing here is for search engines — and the language
+ * switcher offers each home page rather than a mirrored `/es/404`.
+ */
+const english = i18n(DEFAULT_LOCALE).t.notFound;
+const versions = LOCALES.map((locale) => i18n(locale));
 ---
 
 <Site
-  title="Page not found — Marino Pavers"
-  description="That page washed out."
+  title={english.title}
+  description={english.description}
+  alternates={alternatesOf("/")}
   noindex
 >
-  <section
-    class="relative flex min-h-[70vh] items-center overflow-hidden bg-sand"
-  >
-    <div
-      class="pointer-events-none absolute inset-0 herringbone opacity-[0.07]"
-      aria-hidden="true"
-    >
-    </div>
-    <div class="relative shell flex flex-col items-start gap-6 py-24">
-      <Eyebrow>Error 404</Eyebrow>
-      <h1 class="text-[2.75rem] leading-[0.98] sm:text-6xl lg:text-8xl">
-        This path leads<br />
-        <span class="text-cherokee">nowhere.</span>
-      </h1>
-      <p class="max-w-md text-lg leading-relaxed text-basalt/70">
-        Looks like this one washed out. Every other path on the site is on solid
-        ground — head back and pick one.
-      </p>
+  {
+    versions.map(({ locale, t, href }) => (
+      <section
+        data-locale={locale}
+        lang={locale}
+        hidden={locale !== DEFAULT_LOCALE}
+        class="relative flex min-h-[70vh] items-center overflow-hidden bg-sand"
+      >
+        <div
+          class="pointer-events-none absolute inset-0 herringbone opacity-[0.07]"
+          aria-hidden="true"
+        />
+        <div class="relative shell flex flex-col items-start gap-6 py-24">
+          <Eyebrow>{t.notFound.eyebrow}</Eyebrow>
+          <h1 class="text-[2.75rem] leading-[0.98] sm:text-6xl lg:text-8xl">
+            {t.notFound.titleStart}
+            <br />
+            <span class="text-cherokee">{t.notFound.titleAccent}</span>
+          </h1>
+          <p class="max-w-md text-lg leading-relaxed text-basalt/70">
+            {t.notFound.lead}
+          </p>
 
-      <div class="mt-2 flex flex-wrap gap-4">
-        <Button href="/" size="lg">
-          <ArrowLeft className="h-4 w-4" />
-          Back home
-        </Button>
-        <Button href="/contact" variant="outline" size="lg">Get a quote</Button>
-      </div>
-
-      <nav class="mt-6 flex flex-wrap gap-x-6 gap-y-2" aria-label="Site pages">
-        {
-          nav.map((item) => (
-            <Button href={item.href} variant="ghost" size="sm">
-              {item.label}
+          <div class="mt-2 flex flex-wrap gap-4">
+            <Button href={href("/")} size="lg">
+              <ArrowLeft className="h-4 w-4" />
+              {t.notFound.back}
             </Button>
-          ))
-        }
-      </nav>
-    </div>
-  </section>
+          </div>
+
+          <nav
+            class="mt-6 flex flex-wrap gap-x-6 gap-y-2"
+            aria-label={t.notFound.pages}
+          >
+            {nav.map((item) => (
+              <Button href={href(item.href)} variant="ghost" size="sm">
+                {t.nav[item.id]}
+              </Button>
+            ))}
+          </nav>
+        </div>
+      </section>
+    ))
+  }
 </Site>
+
+<script>
+  import { DEFAULT_LOCALE } from "@/content/locales";
+  import { splitLocale } from "@/services/locale";
+
+  // Show the language the missing URL was in: `/es/anything` reads Spanish.
+  const { locale } = splitLocale(location.pathname);
+  if (locale !== DEFAULT_LOCALE) {
+    document.documentElement.lang = locale;
+    for (const section of document.querySelectorAll<HTMLElement>(
+      "[data-locale]",
+    )) {
+      section.hidden = section.dataset.locale !== locale;
+    }
+  }
+</script>

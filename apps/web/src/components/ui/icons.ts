@@ -1,18 +1,14 @@
 import {
-  Award,
   Car,
   ClipboardList,
   Flame,
   Footprints,
   Hammer,
-  Handshake,
-  HardHat,
   LayoutGrid,
   Layers,
   PencilRuler,
   ShieldCheck,
   Sprout,
-  Users,
   Waves,
   type LucideIcon,
 } from "lucide-react";
@@ -31,8 +27,4 @@ export const ICONS = {
   layers: Layers,
   hammer: Hammer,
   "shield-check": ShieldCheck,
-  "hard-hat": HardHat,
-  users: Users,
-  handshake: Handshake,
-  award: Award,
 } satisfies Record<IconName, LucideIcon>;

@@ -3,17 +3,15 @@ import Icon from "@/components/ui/Icon.astro";
 import Reveal from "@/components/ui/Reveal.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import { getProcess } from "@/services/content";
+import { i18n } from "@/services/i18n";
 
-const steps = await getProcess();
+const { locale, t } = i18n(Astro.currentLocale);
+const steps = await getProcess(locale);
 ---
 
 <section class="bg-sand-light">
   <div class="shell py-20 lg:py-28">
-    <SectionHeading
-      eyebrow="How it goes"
-      title="From first walkthrough to warranty."
-      lead="Five steps, one crew, no mystery. You’ll always know what’s happening in your yard and what comes next."
-    />
+    <SectionHeading {...t.home.process} />
 
     <ol class="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
       {

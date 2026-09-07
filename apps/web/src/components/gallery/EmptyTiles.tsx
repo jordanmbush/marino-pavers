@@ -9,8 +9,10 @@ const TILES = [
   ["#C0563D", "#8E3421"],
 ] as const;
 
+type Props = { count?: number; message: string };
+
 /** What the grid shows before the client has uploaded anything. */
-export const EmptyTiles = ({ count = 3 }: { count?: number }) => (
+export const EmptyTiles = ({ count = 3, message }: Props) => (
   <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
     {TILES.slice(0, count).map(([from, to], i) => (
       <div
@@ -25,7 +27,7 @@ export const EmptyTiles = ({ count = 3 }: { count?: number }) => (
         <div className="absolute inset-0 herringbone opacity-20 mix-blend-overlay" />
         {i === 0 && (
           <p className="relative m-5 rounded-tile bg-bone/90 px-3 py-2 font-mono text-xs text-basalt">
-            Project photos are on their way.
+            {message}
           </p>
         )}
       </div>

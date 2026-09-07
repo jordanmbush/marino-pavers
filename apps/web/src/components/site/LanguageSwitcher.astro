@@ -1,0 +1,80 @@
+---
+import { cn } from "@/components/ui/cn";
+import { LOCALES, LOCALE_NAMES, type Locale } from "@/content/locales";
+import { i18n } from "@/services/i18n";
+
+/**
+ * EN / ES. Plain links to the same page in the other language — no script,
+ * no cookie, no redirect — so a crawler follows it and a person can bookmark
+ * the language they want. Desktop shows both languages with the current one
+ * marked; a phone's header bar only has room for a single square offering
+ * the other one, sized like the menu button beside it.
+ */
+type Props = { alternates: Record<Locale, string>; class?: string };
+
+const { alternates, class: className } = Astro.props;
+const { locale, t } = i18n(Astro.currentLocale);
+const others = LOCALES.filter((code) => code !== locale);
+---
+
+<nav
+  aria-label={t.header.language}
+  class={cn(
+    "hidden h-10 items-center gap-0.5 rounded-tile border border-basalt/15 p-1 lg:flex",
+    className,
+  )}
+>
+  {
+    LOCALES.map((code) => (
+      <a
+        href={alternates[code]}
+        data-language-link
+        lang={code}
+        hreflang={code}
+        aria-label={LOCALE_NAMES[code]}
+        aria-current={code === locale ? "true" : undefined}
+        class={cn(
+          "flex h-full items-center rounded-[2px] px-2.5 eyebrow text-[0.65rem] transition-colors",
+          code === locale
+            ? "bg-basalt text-bone"
+            : "text-basalt/60 hover:bg-basalt/8 hover:text-basalt",
+        )}
+      >
+        {code.toUpperCase()}
+      </a>
+    ))
+  }
+</nav>
+
+{
+  others.map((code) => (
+    <a
+      href={alternates[code]}
+      data-language-link
+      lang={code}
+      hreflang={code}
+      aria-label={LOCALE_NAMES[code]}
+      class={cn(
+        "flex h-10 w-10 items-center justify-center rounded-tile border border-basalt/15 eyebrow text-[0.65rem] text-basalt transition-colors hover:bg-basalt hover:text-bone lg:hidden",
+        className,
+      )}
+    >
+      {code.toUpperCase()}
+    </a>
+  ))
+}
+
+<script>
+  // The alternates are built from the pathname alone. Carry the rest of the
+  // current URL across on click — the gallery's `?category=` filter, a
+  // `#service` anchor — so switching language keeps the reader's place. The
+  // links work without this; it only makes them more precise.
+  for (const link of document.querySelectorAll<HTMLAnchorElement>(
+    "[data-language-link]",
+  )) {
+    link.addEventListener("click", () => {
+      const target = link.getAttribute("href") ?? "";
+      link.href = target + location.search + location.hash;
+    });
+  }
+</script>

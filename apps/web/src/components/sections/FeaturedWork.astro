@@ -2,8 +2,10 @@
 import { ArrowRight } from "lucide-react";
 import { Gallery } from "@/components/gallery/Gallery";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
+import { i18n } from "@/services/i18n";
 import { prefetchManifestItems } from "@/services/media";
 
+const { t, href } = i18n(Astro.currentLocale);
 const items = await prefetchManifestItems();
 ---
 
@@ -11,15 +13,15 @@ const items = await prefetchManifestItems();
   <div class="shell py-20 lg:py-28">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <SectionHeading
-        eyebrow="Recent work"
-        title="Built across the Valley."
-        lead="A few backyards, driveways, and pool decks we’ve wrapped up lately."
+        eyebrow={t.home.featured.eyebrow}
+        title={t.home.featured.title}
+        lead={t.home.featured.lead}
       />
       <a
-        href="/our-work"
+        href={href("/gallery")}
         class="group flex items-center gap-2 eyebrow text-cherokee hover:text-cherokee-dark"
       >
-        View all projects
+        {t.home.featured.link}
         <ArrowRight
           className="h-4 w-4 transition-transform group-hover:translate-x-1"
         />
@@ -27,7 +29,7 @@ const items = await prefetchManifestItems();
     </div>
 
     <div class="mt-14">
-      <Gallery client:visible initialItems={items} limit={3} />
+      <Gallery client:visible initialItems={items} limit={3} copy={t.gallery} />
     </div>
   </div>
 </section>

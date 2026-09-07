@@ -13,7 +13,7 @@ const base =
   "group inline-flex items-center justify-center gap-2 rounded-tile font-mono text-[0.82rem] font-bold uppercase tracking-[0.14em] transition-all duration-200 focus-visible:outline-cherokee disabled:cursor-not-allowed disabled:opacity-60";
 
 const variants: Record<ButtonVariant, string> = {
-  // Cherokee-red clay: the primary "get a quote" action
+  // Cherokee-red clay: the primary action
   primary:
     "bg-cherokee text-bone shadow-paver hover:-translate-y-0.5 hover:bg-cherokee-dark active:translate-y-0",
   // Basalt block

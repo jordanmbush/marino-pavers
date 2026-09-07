@@ -1,27 +1,40 @@
 ---
 import { Menu, Phone, X } from "lucide-react";
-import Button from "@/components/ui/Button.astro";
 import { cn } from "@/components/ui/cn";
+import type { Locale } from "@/content/locales";
 import { nav, site } from "@/content/site";
+import { i18n } from "@/services/i18n";
+import { splitLocale } from "@/services/locale";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
 import Logo from "./Logo.astro";
 
-const path = Astro.url.pathname.replace(/\/$/, "") || "/";
-const isActive = (href: string) =>
-  href === "/" ? path === "/" : path === href || path.startsWith(`${href}/`);
+type Props = { alternates: Record<Locale, string> };
+
+const { alternates } = Astro.props;
+const { t, href } = i18n(Astro.currentLocale);
+// Active state compares unprefixed routes, so `/es/services` lights "Servicios".
+const { path } = splitLocale(Astro.url.pathname);
+const isActive = (route: string) =>
+  route === "/" ? path === "/" : path === route || path.startsWith(`${route}/`);
 ---
 
 <header
   id="site-header"
   class="sticky top-0 z-50 border-b border-basalt/10 bg-sand/85 backdrop-blur-md"
 >
-  <div class="shell flex h-[4.5rem] items-center justify-between gap-6">
+  <div
+    class="shell flex h-[4.5rem] items-center justify-between gap-4 lg:gap-6"
+  >
     <Logo />
 
-    <nav class="hidden items-center gap-8 lg:flex" aria-label="Primary">
+    <nav
+      class="hidden items-center gap-8 lg:flex"
+      aria-label={t.header.primaryNav}
+    >
       {
         nav.map((item) => (
           <a
-            href={item.href}
+            href={href(item.href)}
             aria-current={isActive(item.href) ? "page" : undefined}
             class={cn(
               "py-1 eyebrow text-[0.7rem] transition-colors",
@@ -30,34 +43,37 @@ const isActive = (href: string) =>
                 : "text-basalt/60 hover:text-basalt",
             )}
           >
-            {item.label}
+            {t.nav[item.id]}
           </a>
         ))
       }
     </nav>
 
-    <div class="hidden items-center gap-5 lg:flex">
+    <div class="flex items-center gap-3 lg:gap-5">
       <a
         href={site.phoneHref}
-        class="flex items-center gap-2 eyebrow text-[0.7rem] text-basalt/70 transition-colors hover:text-basalt"
+        class="hidden items-center gap-2 eyebrow text-[0.7rem] text-basalt/70 transition-colors hover:text-basalt lg:flex"
       >
         <Phone className="h-3.5 w-3.5" strokeWidth={2.4} />
         {site.phoneDisplay}
       </a>
-      <Button href="/contact" size="sm">Free quote</Button>
-    </div>
 
-    <button
-      type="button"
-      data-menu-toggle
-      class="flex h-10 w-10 items-center justify-center rounded-tile border border-basalt/15 text-basalt lg:hidden"
-      aria-label="Open menu"
-      aria-expanded="false"
-      aria-controls="mobile-menu"
-    >
-      <span data-icon-open><Menu className="h-5 w-5" /></span>
-      <span data-icon-close hidden><X className="h-5 w-5" /></span>
-    </button>
+      <LanguageSwitcher alternates={alternates} />
+
+      <button
+        type="button"
+        data-menu-toggle
+        data-label-open={t.header.openMenu}
+        data-label-close={t.header.closeMenu}
+        class="flex h-10 w-10 items-center justify-center rounded-tile border border-basalt/15 text-basalt lg:hidden"
+        aria-label={t.header.openMenu}
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <span data-icon-open><Menu className="h-5 w-5" /></span>
+        <span data-icon-close hidden><X className="h-5 w-5" /></span>
+      </button>
+    </div>
   </div>
 
   <div
@@ -69,14 +85,14 @@ const isActive = (href: string) =>
       {
         nav.map((item) => (
           <a
-            href={item.href}
+            href={href(item.href)}
             aria-current={isActive(item.href) ? "page" : undefined}
             class={cn(
               "flex items-center justify-between border-b border-basalt/10 py-3 font-display-wide text-lg font-extrabold",
               isActive(item.href) ? "text-cherokee" : "text-basalt",
             )}
           >
-            {item.label}
+            {t.nav[item.id]}
           </a>
         ))
       }
@@ -88,7 +104,6 @@ const isActive = (href: string) =>
           <Phone className="h-4 w-4" strokeWidth={2.4} />
           {site.phoneDisplay}
         </a>
-        <Button href="/contact" class="w-full">Get a free quote</Button>
       </div>
     </div>
   </div>
@@ -102,9 +117,12 @@ const isActive = (href: string) =>
   const iconClose = header?.querySelector<HTMLElement>("[data-icon-close]");
 
   if (toggle && drawer && iconOpen && iconClose) {
+    // The labels are rendered in the page's language; read them off the button.
+    const labelOpen = toggle.dataset.labelOpen ?? "Open menu";
+    const labelClose = toggle.dataset.labelClose ?? "Close menu";
     const setOpen = (open: boolean) => {
       toggle.setAttribute("aria-expanded", String(open));
-      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      toggle.setAttribute("aria-label", open ? labelClose : labelOpen);
       drawer.classList.toggle("max-h-0", !open);
       drawer.classList.toggle("max-h-[26rem]", open);
       iconOpen.hidden = open;

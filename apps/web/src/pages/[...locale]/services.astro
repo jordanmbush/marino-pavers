@@ -9,9 +9,16 @@ import Reveal from "@/components/ui/Reveal.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import { cn } from "@/components/ui/cn";
 import { getFaqs, getServices } from "@/services/content";
+import { i18n } from "@/services/i18n";
+import { fill, localeParams } from "@/services/locale";
 
-const services = await getServices();
-const faqs = await getFaqs();
+/** Builds `/services` and `/es/services`; see `[...locale]/index.astro`. */
+export const getStaticPaths = () => localeParams();
+
+const { locale, t, href } = i18n(Astro.currentLocale);
+const page = t.servicesPage;
+const services = await getServices(locale);
+const faqs = await getFaqs(locale);
 
 // Material swatch gradients that pair with each service panel until the
 // client's own photos take their place.
@@ -35,16 +42,8 @@ const faqJsonLd = {
 };
 ---
 
-<Site
-  title="Services — Paver Patios, Driveways, Turf & More | Marino Pavers"
-  description="Paver patios, driveways, pool decks, artificial turf, walkways and outdoor living builds across greater Phoenix. One crew, engineered base work, two-year warranty."
-  jsonLd={faqJsonLd}
->
-  <PageHero
-    eyebrow="Services"
-    title="Everything that turns bare dirt into a destination."
-    lead="Six specialties, one crew. Whether it’s a single walkway or a full backyard build, the base work and finish detail are the same — done right."
-  />
+<Site title={page.title} description={page.description} jsonLd={faqJsonLd}>
+  <PageHero {...page.hero} />
 
   <div class="bg-sand">
     <div class="shell flex flex-col gap-24 py-20 lg:gap-28 lg:py-28">
@@ -95,10 +94,12 @@ const faqJsonLd = {
                   ))}
                 </ul>
                 <a
-                  href={`/our-work?category=${service.category}`}
+                  href={href(`/gallery?category=${service.category}`)}
                   class="mt-2 eyebrow text-cherokee hover:text-cherokee-dark"
                 >
-                  See {service.title.toLowerCase()} we’ve built →
+                  {fill(page.seeBuilt, {
+                    service: service.title.toLowerCase(),
+                  })}
                 </a>
               </div>
             </Reveal>
@@ -110,11 +111,7 @@ const faqJsonLd = {
 
   <section class="bg-sand-light">
     <div class="shell grid gap-12 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:py-28">
-      <SectionHeading
-        eyebrow="Good questions"
-        title="Answers before you ask."
-        lead="The things Valley homeowners want to know before they commit."
-      />
+      <SectionHeading {...page.faq} />
       <FaqList items={faqs} />
     </div>
   </section>

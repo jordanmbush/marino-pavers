@@ -1,10 +1,13 @@
 ---
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { nav, serviceAreas, site } from "@/content/site";
 import { getServices } from "@/services/content";
+import { i18n } from "@/services/i18n";
+import { fill } from "@/services/locale";
 import Logo from "./Logo.astro";
 
-const services = await getServices();
+const { locale, t, href } = i18n(Astro.currentLocale);
+const services = await getServices(locale);
 const year = new Date().getFullYear();
 const areas = serviceAreas.slice(0, -1).join(", ");
 const lastArea = serviceAreas[serviceAreas.length - 1];
@@ -17,15 +20,14 @@ const lastArea = serviceAreas[serviceAreas.length - 1];
     <div class="flex flex-col gap-5">
       <Logo tone="light" />
       <p class="max-w-xs text-sm leading-relaxed text-sand/65">
-        Custom paver patios, driveways, pool decks, artificial turf, and outdoor
-        living — engineered from the base up for the Arizona desert.
+        {t.footer.blurb}
       </p>
       <div class="flex gap-3">
         <a
           href={site.social.instagram}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Marino Pavers on Instagram"
+          aria-label={t.footer.instagram}
           class="flex h-10 w-10 items-center justify-center rounded-tile border border-bone/15 text-sand/70 transition-colors hover:border-ochre hover:text-ochre"
         >
           <svg
@@ -47,7 +49,7 @@ const lastArea = serviceAreas[serviceAreas.length - 1];
           href={site.social.facebook}
           target="_blank"
           rel="noopener noreferrer"
-          aria-label="Marino Pavers on Facebook"
+          aria-label={t.footer.facebook}
           class="flex h-10 w-10 items-center justify-center rounded-tile border border-bone/15 text-sand/70 transition-colors hover:border-ochre hover:text-ochre"
         >
           <svg
@@ -69,13 +71,13 @@ const lastArea = serviceAreas[serviceAreas.length - 1];
     </div>
 
     <div class="flex flex-col gap-4">
-      <h4 class="eyebrow text-ochre-light">Services</h4>
+      <h4 class="eyebrow text-ochre-light">{t.footer.services}</h4>
       <ul class="flex flex-col gap-2.5">
         {
           services.map((s) => (
             <li>
               <a
-                href={`/services#${s.id}`}
+                href={href(`/services#${s.id}`)}
                 class="text-sm text-sand/70 transition-colors hover:text-bone"
               >
                 {s.title}
@@ -87,16 +89,16 @@ const lastArea = serviceAreas[serviceAreas.length - 1];
     </div>
 
     <div class="flex flex-col gap-4">
-      <h4 class="eyebrow text-ochre-light">Explore</h4>
+      <h4 class="eyebrow text-ochre-light">{t.footer.explore}</h4>
       <ul class="flex flex-col gap-2.5">
         {
           nav.map((item) => (
             <li>
               <a
-                href={item.href}
+                href={href(item.href)}
                 class="text-sm text-sand/70 transition-colors hover:text-bone"
               >
-                {item.label}
+                {t.nav[item.id]}
               </a>
             </li>
           ))
@@ -105,7 +107,7 @@ const lastArea = serviceAreas[serviceAreas.length - 1];
     </div>
 
     <div class="flex flex-col gap-4">
-      <h4 class="eyebrow text-ochre-light">Get in touch</h4>
+      <h4 class="eyebrow text-ochre-light">{t.footer.contact}</h4>
       <ul class="flex flex-col gap-3 text-sm text-sand/70">
         <li>
           <a
@@ -116,22 +118,19 @@ const lastArea = serviceAreas[serviceAreas.length - 1];
             {site.phoneDisplay}
           </a>
         </li>
-        <li>
+        <li class="flex flex-col gap-1">
           <a
-            href={site.emailHref}
+            href={t.contact.emailHref}
             class="flex items-center gap-3 transition-colors hover:text-bone"
           >
             <Mail className="h-4 w-4 shrink-0 text-ochre" />
             {site.email}
           </a>
+          <p class="pl-7 text-xs text-sand/50">{t.contact.emailNotePhone}</p>
         </li>
         <li class="flex items-center gap-3">
           <MapPin className="h-4 w-4 shrink-0 text-ochre" />
-          {site.address.region}
-        </li>
-        <li class="flex items-center gap-3">
-          <Clock className="h-4 w-4 shrink-0 text-ochre" />
-          {site.hours}
+          {t.contact.region}
         </li>
       </ul>
     </div>
@@ -139,7 +138,7 @@ const lastArea = serviceAreas[serviceAreas.length - 1];
 
   <div class="shell">
     <p class="border-t border-bone/10 py-4 text-xs text-sand/50">
-      Serving {areas} &amp; {lastArea}.
+      {fill(t.footer.serving, { areas, last: lastArea })}
     </p>
   </div>
 
@@ -147,10 +146,7 @@ const lastArea = serviceAreas[serviceAreas.length - 1];
     <div
       class="shell flex flex-col gap-2 py-6 text-xs text-sand/50 sm:flex-row sm:items-center sm:justify-between"
     >
-      <p>© {year} {site.name}. All rights reserved.</p>
-      <p class="font-mono tracking-wide">
-        Licensed · Bonded · Insured — {site.license}
-      </p>
+      <p>© {year} {site.name}. {t.footer.rights}</p>
     </div>
   </div>
 </footer>

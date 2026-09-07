@@ -1,38 +1,50 @@
 [
   {
-    "id": "cost",
-    "order": 1,
-    "question": "How much does a paver project cost?",
-    "answer": "Most residential paver projects in the Valley run between $14 and $28 per square foot installed, depending on the paver line, pattern complexity, demo, and site conditions. We give you an itemized quote after seeing the space — never a vague number over the phone."
-  },
-  {
     "id": "timeline",
-    "order": 2,
-    "question": "How long does an installation take?",
-    "answer": "A typical patio or driveway takes three to seven working days from demo to cleanup. Larger outdoor-living builds run longer. We give you a firm schedule with the quote and keep you posted at every stage."
+    "order": 1,
+    "en": {
+      "question": "How long does an installation take?",
+      "answer": "A typical patio or driveway takes three to seven working days from demo to cleanup. Larger outdoor-living builds run longer. We give you a firm schedule with the quote and keep you posted at every stage."
+    },
+    "es": {
+      "question": "¿Cuánto tarda una instalación?",
+      "answer": "Un patio o una entrada típica toma de tres a siete días hábiles, de la demolición a la limpieza. Los proyectos grandes de vida al aire libre tardan más. Le damos un calendario firme con la cotización y lo mantenemos al tanto en cada etapa."
+    }
   },
   {
     "id": "pavers-vs-concrete",
-    "order": 3,
-    "question": "Why pavers instead of poured concrete?",
-    "answer": "A concrete slab is a single sheet that cracks as the ground moves. Interlocking pavers flex with it, spread loads, and any single paver can be lifted and reset if it stains or settles — no ugly patch. They also stay cooler and look far better."
+    "order": 2,
+    "en": {
+      "question": "Why pavers instead of poured concrete?",
+      "answer": "A concrete slab is a single sheet that cracks as the ground moves. Interlocking pavers flex with it, spread loads, and any single paver can be lifted and reset if it stains or settles — no ugly patch. They also stay cooler and look far better."
+    },
+    "es": {
+      "question": "¿Por qué adoquines en lugar de concreto colado?",
+      "answer": "Una losa de concreto es una sola pieza que se agrieta cuando el suelo se mueve. Los adoquines trabados se flexionan con él, reparten las cargas y cualquier pieza se puede levantar y volver a colocar si se mancha o se hunde, sin parches feos. Además se mantienen más frescos y se ven mucho mejor."
+    }
   },
   {
     "id": "turf-heat",
+    "order": 3,
+    "en": {
+      "question": "Does artificial turf get too hot in Phoenix?",
+      "answer": "Turf runs warmer than a living lawn in direct sun, but modern cool-tech yarns and lighter infills cut surface temps significantly, and it cools fast in shade or with a quick rinse. For full-sun play areas we’ll talk through the best product and layout."
+    },
+    "es": {
+      "question": "¿El pasto sintético se calienta demasiado en Phoenix?",
+      "answer": "El pasto sintético se calienta más que uno natural bajo el sol directo, pero las fibras cool-tech modernas y los rellenos más claros bajan bastante la temperatura de la superficie, y se enfría rápido a la sombra o con un enjuague breve. Para áreas de juego a pleno sol, le ayudamos a elegir el mejor producto y la mejor distribución."
+    }
+  },
+  {
+    "id": "hoa",
     "order": 4,
-    "question": "Does artificial turf get too hot in Phoenix?",
-    "answer": "Turf runs warmer than a living lawn in direct sun, but modern cool-tech yarns and lighter infills cut surface temps significantly, and it cools fast in shade or with a quick rinse. For full-sun play areas we’ll talk through the best product and layout."
-  },
-  {
-    "id": "hoa-permits",
-    "order": 5,
-    "question": "Do you handle HOA approvals and permits?",
-    "answer": "Yes. We build to code, pull permits where they’re required, and we’ll prepare the drawings and material specs your HOA needs for architectural review. It’s part of the job, not an upcharge surprise."
-  },
-  {
-    "id": "licensed",
-    "order": 6,
-    "question": "Are you licensed and insured?",
-    "answer": "Fully. We’re licensed, bonded, and insured in Arizona (ROC #327845), and every installation is backed by a two-year workmanship warranty on top of the manufacturer’s paver warranty."
+    "en": {
+      "question": "Do you handle HOA approval?",
+      "answer": "No — securing HOA approval is up to the homeowner. We get asked this a lot, and many homeowners aren’t sure whether they need it at all. Often you don’t, especially for backyard work. Front-yard work usually does require HOA approval, so check with your HOA before we schedule."
+    },
+    "es": {
+      "question": "¿Ustedes gestionan la aprobación de la HOA?",
+      "answer": "No: conseguir la aprobación de la HOA le corresponde al propietario. Nos lo preguntan mucho, y muchos propietarios no saben si la necesitan. A menudo no hace falta, sobre todo para trabajos en el patio trasero. Los trabajos en el frente normalmente sí requieren aprobación de la HOA, así que consulte con la suya antes de que agendemos."
+    }
   }
 ]

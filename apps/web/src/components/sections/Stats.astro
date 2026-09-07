@@ -1,12 +1,14 @@
 ---
 import Reveal from "@/components/ui/Reveal.astro";
-import { stats } from "@/content/site";
+import { i18n } from "@/services/i18n";
+
+const { t } = i18n(Astro.currentLocale);
 ---
 
 <section class="bg-basalt-950 text-bone">
-  <div class="shell grid grid-cols-2 lg:grid-cols-4">
+  <div class="shell grid grid-cols-2 lg:grid-cols-3">
     {
-      stats.map((stat, i) => (
+      t.home.stats.map((stat, i) => (
         <Reveal
           delay={i * 80}
           class="flex flex-col gap-2 border-basalt-700/60 px-2 py-10 lg:border-l lg:[&:first-child]:border-l-0 [&:nth-child(n+3)]:border-t lg:[&:nth-child(n+3)]:border-t-0"

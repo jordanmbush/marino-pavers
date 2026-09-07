@@ -3,23 +3,28 @@ import Site from "@/layouts/Site.astro";
 import Hero from "@/components/sections/Hero.astro";
 import Stats from "@/components/sections/Stats.astro";
 import ServicesGrid from "@/components/sections/ServicesGrid.astro";
-import BuiltToLast from "@/components/sections/BuiltToLast.astro";
 import Process from "@/components/sections/Process.astro";
 import FeaturedWork from "@/components/sections/FeaturedWork.astro";
 import Testimonials from "@/components/sections/Testimonials.astro";
 import ServiceArea from "@/components/sections/ServiceArea.astro";
 import CtaBand from "@/components/sections/CtaBand.astro";
-import { site } from "@/content/site";
+import { i18n } from "@/services/i18n";
+import { localeParams } from "@/services/locale";
+
+/**
+ * Pages in this folder build once per language: `/` and `/es`. The route's
+ * `[...locale]` segment is the language prefix (empty for English), and every
+ * component below reads `Astro.currentLocale` for its copy.
+ */
+export const getStaticPaths = () => localeParams();
+
+const { t } = i18n(Astro.currentLocale);
 ---
 
-<Site
-  title="Marino Pavers — Phoenix Paver Patios, Driveways & Artificial Turf"
-  description={site.description}
->
+<Site title={t.home.title} description={t.description}>
   <Hero />
   <Stats />
   <ServicesGrid />
-  <BuiltToLast />
   <Process />
   <FeaturedWork />
   <Testimonials />

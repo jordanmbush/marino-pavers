@@ -1,14 +1,12 @@
 ---
-import { CalendarDays, ShieldCheck, Star } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import Button from "@/components/ui/Button.astro";
-import { site } from "@/content/site";
+import { i18n } from "@/services/i18n";
 import PaverField from "./PaverField.astro";
 
-const trust = [
-  { Icon: ShieldCheck, label: "Licensed, bonded & insured" },
-  { Icon: Star, label: "4.9★ · 180+ reviews" },
-  { Icon: CalendarDays, label: `Est. ${site.foundedYear}` },
-];
+const { t, href } = i18n(Astro.currentLocale);
+const hero = t.home.hero;
+const trust = [{ Icon: CalendarDays, label: hero.since }];
 ---
 
 <section class="relative overflow-hidden bg-sand">
@@ -21,35 +19,30 @@ const trust = [
         style="animation-delay: 0ms"
       >
         <span class="h-px w-10 bg-cherokee/50"></span>
-        Pavers · Turf · Outdoor Living
+        {hero.eyebrow}
       </span>
 
       <h1
         class="animate-rise text-[2.7rem] leading-[0.98] sm:text-6xl lg:text-[4.25rem]"
         style="animation-delay: 90ms"
       >
-        Outdoor spaces<br />
-        <span class="text-cherokee">built to outlast</span><br />
-        the desert.
+        {hero.titleStart}<br />
+        <span class="text-cherokee">{hero.titleAccent}</span><br />
+        {hero.titleEnd}
       </h1>
 
       <p
         class="max-w-lg animate-rise text-lg leading-relaxed text-basalt/70"
         style="animation-delay: 180ms"
       >
-        Marino Pavers designs and installs custom patios, driveways, pool decks,
-        and artificial turf across the Valley — engineered from the base up to
-        take Arizona heat, monsoon, and time.
+        {hero.lead}
       </p>
 
       <div
         class="mt-2 flex animate-rise flex-wrap gap-4"
         style="animation-delay: 260ms"
       >
-        <Button href="/contact" size="lg">Get a free quote</Button>
-        <Button href="/our-work" variant="outline" size="lg"
-          >See our work</Button
-        >
+        <Button href={href("/gallery")} size="lg">{hero.cta}</Button>
       </div>
 
       <ul
@@ -75,9 +68,9 @@ const trust = [
       <div
         class="absolute bottom-5 left-5 rounded-tile border border-basalt/10 bg-bone/95 px-4 py-3 shadow-paver backdrop-blur"
       >
-        <span class="eyebrow text-cherokee">Herringbone lay</span>
+        <span class="eyebrow text-cherokee">{hero.calloutEyebrow}</span>
         <p class="mt-1 font-display-wide text-sm font-extrabold text-basalt">
-          Driveway · Scottsdale
+          {hero.callout}
         </p>
       </div>
     </div>

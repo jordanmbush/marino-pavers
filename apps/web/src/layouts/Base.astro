@@ -4,12 +4,20 @@ import "@fontsource-variable/plus-jakarta-sans";
 import "@fontsource/space-mono/400.css";
 import "@fontsource/space-mono/700.css";
 import "@/styles/global.css";
+import {
+  DEFAULT_LOCALE,
+  LOCALES,
+  OG_LOCALES,
+  type Locale,
+} from "@/content/locales";
 import { serviceAreas, site } from "@/content/site";
+import { i18n } from "@/services/i18n";
 
 /**
  * The SEO contract every page signs: a real title, a description, a canonical
- * URL, Open Graph tags and LocalBusiness structured data — all in the HTML
- * on disk, because there is no server to add them later.
+ * URL, Open Graph tags, LocalBusiness structured data and — when the page
+ * exists in more than one language — hreflang alternates. All in the HTML on
+ * disk, because there is no server to add them later.
  */
 type Props = {
   title: string;
@@ -18,10 +26,15 @@ type Props = {
   noindex?: boolean;
   /** Extra JSON-LD for the page, merged after the LocalBusiness block. */
   jsonLd?: Record<string, unknown>;
+  /** Where this page lives in each language. Omit for single-language pages. */
+  alternates?: Record<Locale, string>;
 };
 
-const { title, description, noindex = false, jsonLd } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const { title, description, noindex = false, jsonLd, alternates } = Astro.props;
+const { locale, t } = i18n(Astro.currentLocale);
+const absolute = (path: string) => new URL(path, Astro.site).href;
+const canonical = absolute(Astro.url.pathname);
+const hreflang = alternates && !noindex ? alternates : undefined;
 
 const localBusiness = {
   "@context": "https://schema.org",
@@ -30,7 +43,7 @@ const localBusiness = {
   url: site.url,
   telephone: site.phoneHref.replace("tel:", ""),
   email: site.email,
-  description: site.description,
+  description: t.description,
   foundingDate: String(site.foundedYear),
   priceRange: "$$",
   address: {
@@ -40,19 +53,37 @@ const localBusiness = {
     addressCountry: site.address.country,
   },
   areaServed: serviceAreas.map((name) => ({ "@type": "City", name })),
-  openingHours: "Mo-Fr 07:00-17:00",
   sameAs: [site.social.instagram, site.social.facebook],
 };
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {
+      hreflang &&
+        LOCALES.map((code) => (
+          <link
+            rel="alternate"
+            hreflang={code}
+            href={absolute(hreflang[code])}
+          />
+        ))
+    }
+    {
+      hreflang && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={absolute(hreflang[DEFAULT_LOCALE])}
+        />
+      )
+    }
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
@@ -64,7 +95,12 @@ const localBusiness = {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={OG_LOCALES[locale]} />
+    {
+      LOCALES.filter((code) => code !== locale).map((code) => (
+        <meta property="og:locale:alternate" content={OG_LOCALES[code]} />
+      ))
+    }
     <meta name="twitter:card" content="summary" />
 
     <script

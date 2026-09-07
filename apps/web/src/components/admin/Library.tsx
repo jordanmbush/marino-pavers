@@ -14,7 +14,7 @@ export const Library = ({ username, onSignOut }: Props) => {
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <span className="eyebrow text-cherokee">Photo library</span>
-          <h1 className="mt-2 text-3xl">Our Work</h1>
+          <h1 className="mt-2 text-3xl">Photo Gallery</h1>
           <p className="mt-1 text-sm text-basalt/60">
             Photos appear on the site a minute or so after upload. Signed in as{" "}
             {username}.

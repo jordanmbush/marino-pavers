@@ -10,6 +10,8 @@ import {
 } from "@marino/domain";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/components/ui/cn";
+import type { GalleryCopy } from "@/content/copy";
+import { fill } from "@/services/locale";
 import { mediaBase } from "@/services/media";
 import { EmptyTiles } from "./EmptyTiles";
 import { Lightbox } from "./Lightbox";
@@ -19,16 +21,13 @@ import { useManifest } from "./useManifest";
 type Props = {
   /** What the page pre-rendered; the live manifest replaces it on mount. */
   initialItems: ReadyMediaItem[];
+  /** The page's language, as strings. The island never imports a dictionary. */
+  copy: GalleryCopy;
   /** Show the category chips and honour `?category=` in the URL. */
   showFilters?: boolean;
   /** Featured-first, capped — the home-page strip. */
   limit?: number;
 };
-
-const FILTERS: Array<{ slug: CategoryFilter; label: string }> = [
-  { slug: ALL_CATEGORIES, label: "All" },
-  ...MEDIA_CATEGORIES,
-];
 
 const categoryFromUrl = (): CategoryFilter => {
   if (typeof window === "undefined") return ALL_CATEGORIES;
@@ -39,6 +38,7 @@ const categoryFromUrl = (): CategoryFilter => {
 
 export const Gallery = ({
   initialItems,
+  copy,
   showFilters = false,
   limit,
 }: Props) => {
@@ -46,6 +46,14 @@ export const Gallery = ({
   const [category, setCategory] = useState<CategoryFilter>(ALL_CATEGORIES);
   const [open, setOpen] = useState<number | null>(null);
   const base = mediaBase();
+
+  const filters: Array<{ slug: CategoryFilter; label: string }> = [
+    { slug: ALL_CATEGORIES, label: copy.all },
+    ...MEDIA_CATEGORIES.map(({ slug }) => ({
+      slug,
+      label: copy.categories[slug],
+    })),
+  ];
 
   useEffect(() => {
     if (showFilters) setCategory(categoryFromUrl());
@@ -70,9 +78,9 @@ export const Gallery = ({
         <div
           className="flex flex-wrap gap-2.5"
           role="group"
-          aria-label="Filter projects by category"
+          aria-label={copy.filterLabel}
         >
-          {FILTERS.map((filter) => (
+          {filters.map((filter) => (
             <Button
               key={filter.slug}
               variant="bare"
@@ -92,7 +100,7 @@ export const Gallery = ({
       )}
 
       {items.length === 0 ? (
-        <EmptyTiles count={limit ?? 3} />
+        <EmptyTiles count={limit ?? 3} message={copy.empty} />
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item, i) => (
@@ -100,6 +108,7 @@ export const Gallery = ({
               key={item.id}
               item={item}
               mediaBase={base}
+              copy={copy}
               eager={i < 3}
               onOpen={() => setOpen(i)}
             />
@@ -109,9 +118,7 @@ export const Gallery = ({
 
       {showFilters && all.length > 0 && (
         <p className="max-w-2xl font-mono text-xs leading-relaxed text-basalt/50">
-          Showing {items.length} of {all.length} recent projects. Want to see
-          something specific — a paver line, a pattern, a whole backyard? Ask
-          and we’ll send photos from jobs like yours.
+          {fill(copy.showing, { shown: items.length, total: all.length })}
         </p>
       )}
 
@@ -119,6 +126,7 @@ export const Gallery = ({
         items={items}
         index={open}
         mediaBase={base}
+        copy={copy}
         onClose={() => setOpen(null)}
         onStep={step}
       />

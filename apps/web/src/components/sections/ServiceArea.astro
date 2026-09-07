@@ -1,24 +1,18 @@
 ---
 import { MapPin } from "lucide-react";
-import Button from "@/components/ui/Button.astro";
 import Reveal from "@/components/ui/Reveal.astro";
 import SectionHeading from "@/components/ui/SectionHeading.astro";
 import { serviceAreas } from "@/content/site";
+import { i18n } from "@/services/i18n";
+
+const { t } = i18n(Astro.currentLocale);
 ---
 
 <section class="bg-sand-light">
   <div
     class="shell grid gap-12 py-20 lg:grid-cols-[1fr_1.2fr] lg:items-center lg:py-28"
   >
-    <SectionHeading
-      eyebrow="Where we work"
-      title="Building across greater Phoenix."
-      lead="From Cave Creek down to Queen Creek, we cover the Valley. Don’t see your city? Ask — we travel for the right project."
-    >
-      <div class="mt-8">
-        <Button href="/contact">Check my address</Button>
-      </div>
-    </SectionHeading>
+    <SectionHeading {...t.home.area} />
 
     <Reveal class="flex flex-wrap gap-3">
       {
