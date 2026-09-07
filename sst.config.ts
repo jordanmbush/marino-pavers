@@ -66,6 +66,8 @@ export default $config({
 
   async run() {
     const production = $app.stage === "production";
+    // SST allows no top-level imports in this file; pull in the edge code here.
+    const { redirectInjection } = await import("./infra/redirects");
 
     const zoneId = process.env.CLOUDFLARE_ZONE_ID;
     if (production && !zoneId) {
@@ -75,6 +77,8 @@ export default $config({
     }
 
     const router = new sst.aws.Router("Router", {
+      // Retired URLs answer 301 at the edge (infra/redirects.ts).
+      edge: { viewerRequest: { injection: redirectInjection() } },
       domain: production
         ? {
             name: DOMAIN,

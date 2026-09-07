@@ -70,11 +70,20 @@ jobs:
         # key — CloudFront has no ListBucket on the media bucket, so it can't
         # say 404 — and that is a healthy fresh stage, not a broken route.
         run: |
-          for path in / /services /our-work /about /contact /media/manifest.json; do
-            code="$(curl -s -o /dev/null -w '%{http_code}' "https://marinopavers.com${path}")"
+          site="https://marinopavers.com"
+          for path in / /services /gallery /es /es/services /es/gallery /media/manifest.json; do
+            code="$(curl -s -o /dev/null -w '%{http_code}' "${site}${path}")"
             echo "${code} ${path}"
             case "$path" in
               /media/manifest.json) case "$code" in 200 | 403 | 404) ;; *) exit 1 ;; esac ;;
               *) [ "$code" = 200 ] || exit 1 ;;
             esac
+          done
+          # Retired URLs redirect at the edge (infra/redirects.ts).
+          for pair in "/about /" "/contact /" "/our-work /gallery"; do
+            set -- $pair
+            code="$(curl -s -o /dev/null -w '%{http_code}' "${site}$1")"
+            target="$(curl -s -o /dev/null -w '%{redirect_url}' "${site}$1")"
+            echo "${code} $1 -> ${target}"
+            [ "$code" = 301 ] && [ "$target" = "${site}$2" ] || exit 1
           done
