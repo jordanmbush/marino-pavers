@@ -90,7 +90,8 @@ and the sitemap lists both. How it fits together:
   have the same strings and the same `{slots}`, nothing is blank, and titles
   and meta descriptions fit what search results show (70 / 160 chars).
 - `404.html` carries every language and a script shows the one the URL asked
-  for — CloudFront serves one 404 for every missing key. `/admin` is English
+  for, ready for when CloudFront can serve it — today a missing URL under the
+  Router answers S3's XML with status 404 (see Gotchas). `/admin` is English
   only; it is the client's tool.
 - The language switcher is plain links to the page's alternates; a script
   carries `?category=` and `#anchor` across so a reader keeps their place.
@@ -167,8 +168,12 @@ show it to the client at `https://dev.marinopavers.com`.
 - **`fileOptions` in `sst.config.ts` replaces SST's defaults** — keep the `**`
   catch-all first or files silently stop uploading.
 - **Unknown URLs answer 404 only because CloudFront has `s3:ListBucket`** on
-  the site bucket (`transform.assets` in `sst.config.ts`); without it S3 says 403. The body is S3's XML, not `404.html` — serving the branded page under
-  the Router is a follow-up (`/404.html` itself is reachable).
+  the site bucket (`transform.assets` in `sst.config.ts`); without it S3 says 403. The body is S3's XML, not `404.html`: the Router's only configured
+  origin is `placeholder.sst.dev` (the edge function swaps the real one in per
+  request) and CloudFront fetches a `customErrorResponses` page from that
+  static origin, so mapping 404 → `/404.html` on the Router turns every
+  missing URL into a 502 (tried 2026-09-06). `/404.html` itself is reachable;
+  serving it for misses needs a real default origin.
 - **zod 4 applies `.default()` even under `.partial()` / `.optional()`.** A
   partial-update schema picked from a schema with defaults fills in `""` and
   `false` for every field the request left out, which is how a one-field
