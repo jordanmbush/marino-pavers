@@ -2,17 +2,19 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import {
   SIZES,
-  categoryLabel,
   fallbackSrc,
   srcSet,
   type ReadyMediaItem,
 } from "@marino/domain";
 import { Button } from "@/components/ui/Button";
+import type { GalleryCopy } from "@/content/copy";
+import { fill } from "@/services/locale";
 
 type Props = {
   items: ReadyMediaItem[];
   index: number | null;
   mediaBase: string;
+  copy: GalleryCopy;
   onClose: () => void;
   onStep: (delta: -1 | 1) => void;
 };
@@ -25,6 +27,7 @@ export const Lightbox = ({
   items,
   index,
   mediaBase,
+  copy,
   onClose,
   onStep,
 }: Props) => {
@@ -59,9 +62,8 @@ export const Lightbox = ({
     return () => window.removeEventListener("keydown", onKey);
   }, [item, onStep]);
 
-  const alt = item
-    ? item.title || `${categoryLabel(item.category)} project`
-    : "";
+  const category = item ? copy.categories[item.category] : "";
+  const alt = item ? item.title || fill(copy.project, { category }) : "";
 
   return (
     <dialog
@@ -75,17 +77,17 @@ export const Lightbox = ({
           <div className="flex items-center justify-between gap-4">
             <div className="flex min-w-0 flex-col gap-1">
               <span className="eyebrow text-ochre-light">
-                {categoryLabel(item.category)}
+                {category}
                 {item.city && ` · ${item.city}`}
               </span>
               <span className="truncate font-display-wide text-xl font-extrabold">
-                {item.title || categoryLabel(item.category)}
+                {item.title || category}
               </span>
             </div>
             <Button
               variant="bare"
               onClick={onClose}
-              aria-label="Close"
+              aria-label={copy.close}
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-tile border border-bone/20 hover:bg-bone/10"
             >
               <X className="h-5 w-5" />
@@ -109,7 +111,7 @@ export const Lightbox = ({
                 <Button
                   variant="bare"
                   onClick={() => onStep(-1)}
-                  aria-label="Previous photo"
+                  aria-label={copy.previous}
                   className="absolute top-1/2 left-2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-tile bg-basalt/70 hover:bg-basalt"
                 >
                   <ChevronLeft className="h-5 w-5" />
@@ -117,7 +119,7 @@ export const Lightbox = ({
                 <Button
                   variant="bare"
                   onClick={() => onStep(1)}
-                  aria-label="Next photo"
+                  aria-label={copy.next}
                   className="absolute top-1/2 right-2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-tile bg-basalt/70 hover:bg-basalt"
                 >
                   <ChevronRight className="h-5 w-5" />

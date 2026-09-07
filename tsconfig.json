@@ -1,5 +1,6 @@
 {
-  // Root project: only the repo-level scripts. Each workspace type-checks
+  // Root project: the repo-level scripts and the edge code `sst.config.ts`
+  // pulls in from `infra/`. Each workspace type-checks
   // itself (`npm run type-check` fans out). `sst.config.ts` is excluded on
   // purpose: SST's vendored platform under `.sst/` doesn't compile with
   // `verbatimModuleSyntax`, and the config is type-checked by SST itself on
@@ -8,6 +9,6 @@
   "compilerOptions": {
     "types": ["node"]
   },
-  "include": ["scripts/**/*.ts"],
+  "include": ["scripts/**/*.ts", "infra/**/*.ts"],
   "exclude": ["node_modules", "apps", "packages", ".sst", "sst.config.ts"]
 }

@@ -2,14 +2,16 @@
 import { ArrowUpRight } from "lucide-react";
 import Icon from "@/components/ui/Icon.astro";
 import type { Service } from "@/services/content";
+import { i18n } from "@/services/i18n";
 
 type Props = { service: Service };
 
 const { service } = Astro.props;
+const { href } = i18n(Astro.currentLocale);
 ---
 
 <a
-  href={`/services#${service.id}`}
+  href={href(`/services#${service.id}`)}
   class="group flex h-full flex-col gap-4 rounded-tile border border-basalt/10 bg-bone p-7 shadow-seam transition-all duration-200 hover:-translate-y-1 hover:border-basalt/25 hover:shadow-paver"
 >
   <div class="flex items-center justify-between">

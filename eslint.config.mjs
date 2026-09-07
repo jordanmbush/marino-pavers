@@ -45,7 +45,8 @@ import prettier from "eslint-config-prettier/flat";
  *                                               ban (G) — one block.
  *   `no-restricted-syntax`                      the native-controls ban only.
  *   `local/*`                                   anything else needing its own
- *                                               severity or file scope.
+ *                                               severity or file scope (the
+ *                                               island copy ban, H).
  *
  * `eslint.config.test.mjs` lints synthetic snippets at synthetic paths and
  * asserts which rule ids fire, so a boundary that stops reporting fails a
@@ -78,6 +79,12 @@ const NETWORK_BAN =
 const SERVER_PACKAGE_BAN =
   "The AWS SDK, sharp and JWT verification are server-side implementation details of packages/functions/. Nothing in the app or the domain may import them — the browser must never bundle them and the domain must stay pure.";
 
+const COPY_BAN =
+  "Views read copy through i18n() in @/services/i18n, which picks the page's language. Importing a dictionary directly hardcodes one language — and from an island it would ship every dictionary to the browser. (A type-only import is fine.)";
+
+const ISLAND_I18N_BAN =
+  "React islands must not import @/services/i18n: it binds every dictionary, and an island's imports are bundled for the browser. Take the copy slice as a prop from the .astro parent and use fill() from @/services/locale.";
+
 const KIT_BAN =
   "UI primitives (components/ui/) must be domain-free and prop-driven. Don't import domain values, services or content — pass data and callbacks in as props. (A type-only import of a contract the primitive implements is fine.)";
 
@@ -106,6 +113,25 @@ const localPlugin = {
           "MemberExpression[object.name='window'][property.name=/^(localStorage|sessionStorage|indexedDB)$/]"(
             node,
           ) {
+            context.report({ node, messageId: "banned" });
+          },
+        };
+      },
+    },
+    // `no-restricted-imports` ids are all spoken for over .tsx files (D and
+    // F), so the island ban gets its own id rather than a clobbering block.
+    "no-island-i18n": {
+      meta: {
+        type: "problem",
+        docs: {
+          description: "Ban @/services/i18n in React islands (.tsx).",
+        },
+        schema: [],
+        messages: { banned: ISLAND_I18N_BAN },
+      },
+      create(context) {
+        return {
+          "ImportDeclaration[source.value='@/services/i18n']"(node) {
             context.report({ node, messageId: "banned" });
           },
         };
@@ -268,6 +294,11 @@ export default defineConfig([
           patterns: [
             { group: ["astro:content"], message: CONTENT_BAN },
             {
+              group: ["@/content/copy", "@/content/copy/*"],
+              allowTypeImports: true,
+              message: COPY_BAN,
+            },
+            {
               group: ["@marino/functions", "@marino/functions/*"],
               message: NO_APP_IMPORTS,
             },
@@ -339,6 +370,14 @@ export default defineConfig([
     },
   },
 
+  // ── H · Islands take copy as props ──────────────────────────────────────────
+  // Everything a .tsx file imports is bundled for the browser. The static
+  // .astro parent resolves the language and hands the island its slice.
+  {
+    files: ["apps/web/src/**/*.tsx"],
+    rules: { "local/no-island-i18n": "error" },
+  },
+
   // ── Design-system boundary ──────────────────────────────────────────────────
   // Feature code composes the kit; it doesn't hand-roll native controls, which
   // drift away from the shared focus rings, hit targets and tone.
@@ -379,6 +418,7 @@ export default defineConfig([
       "**/vitest.config.ts",
       "apps/web/astro.config.ts",
       "scripts/**/*.{js,mjs,ts}",
+      "infra/**/*.ts",
       "packages/functions/**/*.ts",
       "sst.config.ts",
     ],

@@ -2,6 +2,7 @@ import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
+import { DEFAULT_LOCALE, LOCALES } from "./src/content/locales";
 
 /**
  * Static output, deliberately.
@@ -27,15 +28,30 @@ const HIDDEN_ROUTES = ["/admin"];
 export default defineConfig({
   site: SITE,
   output: "static",
-  // Emit `/about/index.html` rather than `/about.html` so CloudFront can serve
+  // Emit `/services/index.html` rather than `/services.html` so CloudFront can serve
   // clean URLs from S3 without a rewrite function.
   build: { format: "directory" },
   trailingSlash: "ignore",
+  /**
+   * English at the root, Spanish under `/es`. The pages live once, in
+   * `src/pages/[...locale]/`, and prerender for every locale; components read
+   * `Astro.currentLocale`, which Astro derives from the URL prefix.
+   */
+  i18n: {
+    defaultLocale: DEFAULT_LOCALE,
+    locales: [...LOCALES],
+    routing: { prefixDefaultLocale: false },
+  },
   integrations: [
     react(),
     sitemap({
       filter: (page) =>
         !HIDDEN_ROUTES.some((route) => page.startsWith(`${SITE}${route}`)),
+      // Emits the hreflang alternates for each page's translations.
+      i18n: {
+        defaultLocale: DEFAULT_LOCALE,
+        locales: Object.fromEntries(LOCALES.map((locale) => [locale, locale])),
+      },
     }),
   ],
   vite: {

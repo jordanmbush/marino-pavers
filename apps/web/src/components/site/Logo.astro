@@ -1,21 +1,24 @@
 ---
 import { cn } from "@/components/ui/cn";
+import { i18n } from "@/services/i18n";
 
 /**
  * Brand mark: four paver bricks in a basketweave — the simplest pattern a
  * mason lays — with a single clay-red accent brick. Wordmark set in the
- * display face over a mono locale line.
+ * display face over a mono locale line. As a link it goes to the home page
+ * in the current language.
  */
 type Props = { tone?: "dark" | "light"; class?: string; asLink?: boolean };
 
 const { tone = "dark", class: className, asLink = true } = Astro.props;
+const { t, href } = i18n(Astro.currentLocale);
 const brick = tone === "light" ? "#F3ECDE" : "#211C17";
 const accent = tone === "light" ? "#CD854A" : "#A8432B";
 const text = tone === "light" ? "text-bone" : "text-basalt";
 const sub = tone === "light" ? "text-sand/60" : "text-basalt/50";
 const Wrapper = asLink ? "a" : "span";
 const wrapperProps = asLink
-  ? { href: "/", "aria-label": "Marino Pavers — home", class: "inline-flex" }
+  ? { href: href("/"), "aria-label": t.header.logo, class: "inline-flex" }
   : { class: "inline-flex" };
 ---
 

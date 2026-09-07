@@ -65,16 +65,38 @@ jobs:
         run: npx sst deploy --stage production
 
       - name: Smoke check
+        # Runs right after the deploy, while the new CloudFront function and
+        # routes are still propagating: a path that is new to the
+        # distribution can answer 404 for a minute or two first, so each
+        # check retries before it fails.
+        #
         # The manifest only exists once a photo has been processed (or an
         # empty one was seeded). Before that, S3 answers 403 for the missing
         # key — CloudFront has no ListBucket on the media bucket, so it can't
         # say 404 — and that is a healthy fresh stage, not a broken route.
         run: |
-          for path in / /services /our-work /about /contact /media/manifest.json; do
-            code="$(curl -s -o /dev/null -w '%{http_code}' "https://marinopavers.com${path}")"
-            echo "${code} ${path}"
-            case "$path" in
-              /media/manifest.json) case "$code" in 200 | 403 | 404) ;; *) exit 1 ;; esac ;;
-              *) [ "$code" = 200 ] || exit 1 ;;
-            esac
+          site="https://marinopavers.com"
+          expect() { # expect <status regex> <path>
+            for attempt in $(seq 1 12); do
+              code="$(curl -s -o /dev/null -w '%{http_code}' "${site}$2")"
+              if [[ "$code" =~ ^($1)$ ]]; then echo "${code} $2"; return 0; fi
+              sleep 10
+            done
+            echo "::error::$2 answered ${code}, wanted $1"
+            return 1
+          }
+          for route in / /services /gallery /es /es/services /es/gallery; do
+            expect 200 "$route"
+          done
+          expect '200|403|404' /media/manifest.json
+          # A missing URL answers 404 (not 403 or 502), whichever language prefix.
+          expect 404 /nada
+          expect 404 /es/nada
+          # Retired URLs redirect at the edge (infra/redirects.ts).
+          for pair in "/about /" "/contact /" "/our-work /gallery"; do
+            set -- $pair
+            expect 301 "$1"
+            target="$(curl -s -o /dev/null -w '%{redirect_url}' "${site}$1")"
+            echo "  -> ${target}"
+            [ "$target" = "${site}$2" ] || { echo "::error::$1 redirects to ${target}"; exit 1; }
           done

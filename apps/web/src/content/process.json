@@ -3,35 +3,65 @@
     "id": "consult",
     "order": 1,
     "icon": "clipboard-list",
-    "title": "Free consult & quote",
-    "body": "We walk your space, take measurements, bring material samples, and hand you an itemized bid — no pressure, no vague ballparks."
+    "en": {
+      "title": "Free consult & quote",
+      "body": "We walk your space, take measurements, bring material samples, and hand you an itemized bid — no pressure, no vague ballparks."
+    },
+    "es": {
+      "title": "Consulta y cotización gratis",
+      "body": "Recorremos su espacio, tomamos medidas, llevamos muestras de materiales y le entregamos una cotización detallada: sin presión y sin cifras vagas."
+    }
   },
   {
     "id": "design",
     "order": 2,
     "icon": "pencil-ruler",
-    "title": "Design & materials",
-    "body": "Together we settle the layout, pattern, paver line, and colors, so you can picture the finished space before a shovel touches dirt."
+    "en": {
+      "title": "Design & materials",
+      "body": "Together we settle the layout, pattern, paver line, and colors, so you can picture the finished space before a shovel touches dirt."
+    },
+    "es": {
+      "title": "Diseño y materiales",
+      "body": "Juntos definimos la distribución, el patrón, la línea de adoquín y los colores, para que pueda imaginar el espacio terminado antes de que una pala toque la tierra."
+    }
   },
   {
     "id": "base",
     "order": 3,
     "icon": "layers",
-    "title": "Site prep & base",
-    "body": "The part cheap installers rush. We excavate, grade for drainage, and compact the aggregate base in lifts — the foundation everything rides on."
+    "en": {
+      "title": "Site prep & base",
+      "body": "The part cheap installers rush. We excavate, grade for drainage, and compact the aggregate base in lifts — the foundation everything rides on."
+    },
+    "es": {
+      "title": "Preparación y base",
+      "body": "La parte que los instaladores baratos apuran. Excavamos, nivelamos para el drenaje y compactamos la base de agregado por capas: el cimiento sobre el que descansa todo."
+    }
   },
   {
     "id": "install",
     "order": 4,
     "icon": "hammer",
-    "title": "Precision install",
-    "body": "We lay your pattern, make clean cuts on the borders, compact the field, lock the joints with polymeric sand, and clean up as we go."
+    "en": {
+      "title": "Precision install",
+      "body": "We lay your pattern, make clean cuts on the borders, compact the field, lock the joints with polymeric sand, and clean up as we go."
+    },
+    "es": {
+      "title": "Instalación de precisión",
+      "body": "Colocamos su patrón, hacemos cortes limpios en los bordes, compactamos el campo, fijamos las juntas con arena polimérica y limpiamos sobre la marcha."
+    }
   },
   {
     "id": "warranty",
     "order": 5,
     "icon": "shield-check",
-    "title": "Walkthrough & warranty",
-    "body": "We walk the finished job with you, leave the site cleaner than we found it, and back the work with a two-year workmanship warranty."
+    "en": {
+      "title": "Walkthrough & warranty",
+      "body": "We walk the finished job with you, leave the site cleaner than we found it, and back the work with our workmanship warranty."
+    },
+    "es": {
+      "title": "Recorrido final y garantía",
+      "body": "Recorremos el trabajo terminado con usted, dejamos el sitio más limpio de lo que lo encontramos y respaldamos el trabajo con nuestra garantía de mano de obra."
+    }
   }
 ]

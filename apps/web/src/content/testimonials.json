@@ -2,25 +2,43 @@
   {
     "id": "dana-rob",
     "order": 1,
-    "quote": "Three summers of monsoons later and the patio still sits perfectly flat — not one paver has shifted. You can tell the base work was done right.",
     "name": "Dana & Rob P.",
     "city": "Scottsdale",
-    "project": "Travertine patio"
+    "en": {
+      "quote": "Three summers of monsoons later and the patio still sits perfectly flat — not one paver has shifted. You can tell the base work was done right.",
+      "project": "Travertine patio"
+    },
+    "es": {
+      "quote": "Tres temporadas de monzón después y el patio sigue perfectamente plano: ni un solo adoquín se ha movido. Se nota que la base se hizo bien.",
+      "project": "Patio de travertino"
+    }
   },
   {
     "id": "marcus",
     "order": 2,
-    "quote": "They ripped out a cracked concrete driveway and laid herringbone pavers that make the whole house look new. The crew was on time every single day.",
     "name": "Marcus L.",
     "city": "Chandler",
-    "project": "Paver driveway"
+    "en": {
+      "quote": "They ripped out a cracked concrete driveway and laid herringbone pavers that make the whole house look new. The crew was on time every single day.",
+      "project": "Paver driveway"
+    },
+    "es": {
+      "quote": "Quitaron una entrada de concreto agrietada y colocaron adoquines en espiga que hacen ver toda la casa como nueva. La cuadrilla llegó puntual todos los días.",
+      "project": "Entrada de adoquín"
+    }
   },
   {
     "id": "priya",
     "order": 3,
-    "quote": "Ditched the grass we could never keep alive for turf and a fire pit. Our water bill dropped, and the backyard finally gets used. Wish we’d done it sooner.",
     "name": "Priya S.",
     "city": "Gilbert",
-    "project": "Turf & fire pit"
+    "en": {
+      "quote": "Ditched the grass we could never keep alive for turf and a fire pit. Our water bill dropped, and the backyard finally gets used. Wish we’d done it sooner.",
+      "project": "Turf & fire pit"
+    },
+    "es": {
+      "quote": "Cambiamos el pasto que nunca pudimos mantener vivo por pasto sintético y una fogata. Bajó el recibo del agua y por fin usamos el patio. Ojalá lo hubiéramos hecho antes.",
+      "project": "Pasto sintético y fogata"
+    }
   }
 ]

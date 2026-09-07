@@ -27,6 +27,7 @@ const LAYER = "@typescript-eslint/no-restricted-imports";
 const PACKAGE = "no-restricted-imports";
 const GLOBALS = "no-restricted-globals";
 const SYNTAX = "no-restricted-syntax";
+const ISLAND = "local/no-island-i18n";
 
 describe("model layer (packages/domain/)", () => {
   it("bans React", async () => {
@@ -188,6 +189,41 @@ describe("view layer (apps/web/src/{pages,layouts,components}/)", () => {
     );
     expect(fired).not.toContain(LAYER);
     expect(fired).not.toContain(PACKAGE);
+  });
+
+  it("bans a copy dictionary imported directly, in a page or a component", async () => {
+    const page = await rulesFiredFor(
+      "apps/web/src/pages/x.astro",
+      '---\nimport { copy } from "@/content/copy";\n---\n<p>{copy.en.nav.home}</p>\n',
+    );
+    expect(page).toContain(LAYER);
+    const island = await rulesFiredFor(
+      "apps/web/src/components/gallery/X.tsx",
+      'import { es } from "@/content/copy/es"; export const a = es;',
+    );
+    expect(island).toContain(LAYER);
+  });
+
+  it("allows copy types, which an island's props are declared with", async () => {
+    const fired = await rulesFiredFor(
+      "apps/web/src/components/gallery/X.tsx",
+      'import type { GalleryCopy } from "@/content/copy"; export const a = (c: GalleryCopy) => c.all;',
+    );
+    expect(fired).not.toContain(LAYER);
+  });
+
+  it("bans i18n() in an island but allows it in a static component", async () => {
+    const island = await rulesFiredFor(
+      "apps/web/src/components/gallery/X.tsx",
+      'import { i18n } from "@/services/i18n"; export const a = i18n("es");',
+    );
+    expect(island).toContain(ISLAND);
+    const page = await rulesFiredFor(
+      "apps/web/src/components/sections/X.astro",
+      '---\nimport { i18n } from "@/services/i18n";\nconst { t } = i18n(Astro.currentLocale);\n---\n<p>{t.nav.home}</p>\n',
+    );
+    expect(page).not.toContain(ISLAND);
+    expect(page).not.toContain(LAYER);
   });
 });
 

@@ -1,0 +1,28 @@
+---
+import Site from "@/layouts/Site.astro";
+import { Gallery } from "@/components/gallery/Gallery";
+import CtaBand from "@/components/sections/CtaBand.astro";
+import PageHero from "@/components/ui/PageHero.astro";
+import { i18n } from "@/services/i18n";
+import { localeParams } from "@/services/locale";
+import { prefetchManifestItems } from "@/services/media";
+
+/** Builds `/gallery` and `/es/gallery`; see `[...locale]/index.astro`. */
+export const getStaticPaths = () => localeParams();
+
+const { t } = i18n(Astro.currentLocale);
+const page = t.galleryPage;
+const items = await prefetchManifestItems();
+---
+
+<Site title={page.title} description={page.description}>
+  <PageHero {...page.hero} />
+
+  <section class="bg-sand">
+    <div class="shell py-14 lg:py-20">
+      <Gallery client:load initialItems={items} copy={t.gallery} showFilters />
+    </div>
+  </section>
+
+  <CtaBand {...page.cta} />
+</Site>

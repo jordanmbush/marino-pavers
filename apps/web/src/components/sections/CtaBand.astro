@@ -4,13 +4,17 @@ import Button from "@/components/ui/Button.astro";
 import Eyebrow from "@/components/ui/Eyebrow.astro";
 import Reveal from "@/components/ui/Reveal.astro";
 import { site } from "@/content/site";
+import { i18n } from "@/services/i18n";
+import { fill } from "@/services/locale";
 
+/** The closing band. Pages may override the headline copy; the contact card is the same everywhere. */
 type Props = { eyebrow?: string; title?: string; lead?: string };
 
+const { t } = i18n(Astro.currentLocale);
 const {
-  eyebrow = "Free on-site quote",
-  title = "Let’s build something you’ll actually use outside.",
-  lead = "Tell us about your space and we’ll walk it with you, bring samples, and leave you with an honest, itemized quote — no pressure.",
+  eyebrow = t.cta.eyebrow,
+  title = t.cta.title,
+  lead = t.cta.lead,
 } = Astro.props;
 ---
 
@@ -27,10 +31,9 @@ const {
         {lead}
       </p>
       <div class="mt-2 flex flex-wrap gap-4">
-        <Button href="/contact" size="lg">Get my free quote</Button>
         <Button href={site.phoneHref} variant="onDark" size="lg">
           <Phone className="h-4 w-4" strokeWidth={2.4} />
-          Call now
+          {t.cta.call}
         </Button>
       </div>
     </Reveal>
@@ -39,7 +42,7 @@ const {
       <div
         class="rounded-tile border border-bone/15 bg-basalt-900 p-8 shadow-paver-lg"
       >
-        <span class="eyebrow text-sand/50">Prefer to talk?</span>
+        <span class="eyebrow text-sand/50">{t.cta.preferTalk}</span>
         <a
           href={site.phoneHref}
           class="mt-3 block font-display-wide text-3xl font-extrabold text-bone transition-colors hover:text-ochre-light sm:text-[2.1rem]"
@@ -47,9 +50,19 @@ const {
           {site.phoneDisplay}
         </a>
         <p class="mt-4 border-t border-bone/10 pt-4 text-sm text-sand/60">
-          {site.hours}
+          {fill(t.cta.serving, { region: t.contact.region })}
         </p>
-        <p class="mt-1 text-sm text-sand/60">Serving {site.address.region}.</p>
+        <div class="mt-6 border-t border-bone/10 pt-6">
+          <span class="eyebrow text-sand/50">{t.cta.preferWrite}</span>
+          <a
+            href={t.contact.emailHref}
+            class="mt-3 block font-display-wide text-lg font-extrabold break-all text-bone transition-colors hover:text-ochre-light"
+          >
+            {site.email}
+          </a>
+          <p class="mt-3 text-sm text-sand/60">{t.contact.emailNotePhone}</p>
+          <p class="mt-2 text-sm text-sand/60">{t.contact.emailNoteReplies}</p>
+        </div>
       </div>
     </Reveal>
   </div>

@@ -1,20 +1,27 @@
+/// <reference types="vitest/config" />
 import { fileURLToPath } from "node:url";
-import { defineConfig } from "vitest/config";
+import { getViteConfig } from "astro/config";
 
 /**
- * Runs in plain Node: services and the kit are exercised as ordinary
- * functions (React components through `renderToStaticMarkup`), so no DOM
- * environment is needed. The `@/` alias is restated here because Vitest
- * reads neither tsconfig `paths` nor Astro's config.
+ * Vitest runs on Astro's own Vite config, so a test can render `.astro`
+ * components through the Container API as well as call services and React
+ * components as plain functions. No DOM environment: React components go
+ * through `renderToStaticMarkup`, Astro ones through `renderToString`.
+ *
+ * `root` is passed twice on purpose: Vite's for the test project, Astro's to
+ * find `astro.config.ts` when the suite is launched from the repo root.
+ * `.env.test` is loaded over `.env`, so a developer's dev-stage URLs never
+ * reach a test.
  */
-export default defineConfig({
-  resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+const root = fileURLToPath(new URL(".", import.meta.url));
+
+export default getViteConfig(
+  {
+    root,
+    test: {
+      name: "web",
+      include: ["src/**/*.test.{ts,tsx}"],
     },
   },
-  test: {
-    name: "web",
-    include: ["src/**/*.test.{ts,tsx}"],
-  },
-});
+  { root },
+);

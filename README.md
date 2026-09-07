@@ -1,9 +1,9 @@
 # Marino Pavers
 
 The marketing site for [marinopavers.com](https://marinopavers.com): a static
-Astro build on S3 + CloudFront, with a hidden admin page where the client
-manages project photos. Conventions and architecture live in
-[CLAUDE.md](./CLAUDE.md).
+Astro build on S3 + CloudFront, in English and Spanish (`/es/`), with a hidden
+admin page where the client manages project photos. Conventions and
+architecture live in [CLAUDE.md](./CLAUDE.md).
 
 ## Requirements
 
@@ -25,8 +25,12 @@ into `apps/web/.env` (see `apps/web/.env.example`).
 ## Verify
 
 ```bash
-npm run type-check && npm run lint && npm run test && npm run build
+npm run type-check && npm run lint && npm run test
+npm run build && npm run verify:build   # static, both languages, sitemap, 404
 ```
+
+Stop `astro dev --background` before `type-check` or `build`; they share its
+Vite cache (see CLAUDE.md → Validation).
 
 ## Deploy
 
@@ -46,6 +50,7 @@ repo. A manual production deploy works too, with the same three exported.
 apps/web/            Astro site (pages, layouts, components, content, services)
 packages/domain/     photo-library model shared by the site and the Lambdas
 packages/functions/  process-image + admin-api Lambdas
+infra/               CloudFront edge code: 301s for retired URLs
 sst.config.ts        infrastructure
-scripts/             tunnel, admin invite, OIDC setup
+scripts/             tunnel, admin invite, OIDC setup, build verification
 ```

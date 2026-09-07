@@ -2,17 +2,19 @@ import { MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
   SIZES,
-  categoryLabel,
   fallbackSrc,
   srcSet,
   type ReadyMediaItem,
 } from "@marino/domain";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/components/ui/cn";
+import type { GalleryCopy } from "@/content/copy";
+import { fill } from "@/services/locale";
 
 type Props = {
   item: ReadyMediaItem;
   mediaBase: string;
+  copy: GalleryCopy;
   onOpen: () => void;
   /** Eager for the first row so the page doesn't paint a hole above the fold. */
   eager?: boolean;
@@ -25,12 +27,14 @@ type Props = {
 export const PhotoCard = ({
   item,
   mediaBase,
+  copy,
   onOpen,
   eager = false,
 }: Props) => {
   const img = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
-  const alt = item.title || `${categoryLabel(item.category)} project`;
+  const category = copy.categories[item.category];
+  const alt = item.title || fill(copy.project, { category });
 
   // The grid is prerendered, so the browser starts fetching the image from
   // the static HTML and can finish before React hydrates. A `load` that fired
@@ -45,7 +49,7 @@ export const PhotoCard = ({
       <Button
         variant="bare"
         onClick={onOpen}
-        aria-label={`View larger: ${alt}`}
+        aria-label={fill(copy.viewLarger, { alt })}
         className="block w-full text-left"
       >
         <div
@@ -70,13 +74,13 @@ export const PhotoCard = ({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-basalt/80 via-basalt/10 to-transparent" />
           <span className="absolute top-4 left-4 rounded-tile bg-bone/90 px-2.5 py-1 eyebrow text-[0.6rem] text-basalt">
-            {categoryLabel(item.category)}
+            {category}
           </span>
         </div>
 
         <figcaption className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5">
           <span className="font-display-wide text-lg leading-tight font-extrabold text-bone">
-            {item.title || categoryLabel(item.category)}
+            {item.title || category}
           </span>
           {(item.city || item.detail) && (
             <span className="flex flex-wrap items-center gap-1.5 text-xs text-sand/80">

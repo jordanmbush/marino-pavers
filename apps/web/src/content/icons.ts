@@ -15,10 +15,6 @@ export const ICON_NAMES = [
   "layers",
   "hammer",
   "shield-check",
-  "hard-hat",
-  "users",
-  "handshake",
-  "award",
 ] as const;
 
 export type IconName = (typeof ICON_NAMES)[number];

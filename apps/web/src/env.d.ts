@@ -17,3 +17,14 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+/**
+ * Plain `tsc` (the second half of `type-check`) can't read `.astro` files;
+ * `astro check` can. Tests import `.astro` components to render them through
+ * the Container API, so give tsc a shape for those imports.
+ */
+declare module "*.astro" {
+  import type { AstroComponentFactory } from "astro/runtime/server/index.js";
+  const component: AstroComponentFactory;
+  export default component;
+}
