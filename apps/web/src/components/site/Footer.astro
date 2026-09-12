@@ -10,6 +10,7 @@ import { getServices } from "@/services/content";
 import { i18n } from "@/services/i18n";
 import { fill } from "@/services/locale";
 import Logo from "./Logo.astro";
+import SocialIcon from "./SocialIcon.astro";
 
 /** The back of the card: the lockup and the owner's line, then the links, all on linen. */
 const { locale, t, href } = i18n(Astro.currentLocale);
@@ -20,10 +21,6 @@ const lastArea = serviceAreas[serviceAreas.length - 1];
 const socialLabel: Record<SocialId, string> = {
   instagram: t.footer.instagram,
   facebook: t.footer.facebook,
-};
-const socialName: Record<SocialId, string> = {
-  instagram: "Instagram",
-  facebook: "Facebook",
 };
 ---
 
@@ -44,7 +41,7 @@ const socialName: Record<SocialId, string> = {
       <p class="max-w-xs text-lg leading-relaxed text-taupe-600">
         {t.footer.blurb}
       </p>
-      <ul class="flex gap-5">
+      <ul class="flex gap-4">
         {
           socials.map(({ id, href: url }) => (
             <li>
@@ -53,9 +50,9 @@ const socialName: Record<SocialId, string> = {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={socialLabel[id]}
-                class="text-lg text-taupe-700 underline decoration-taupe-300 transition-colors hover:text-taupe-950 hover:decoration-taupe-700"
+                class="inline-flex rounded-[6px] transition-opacity hover:opacity-80"
               >
-                {socialName[id]}
+                <SocialIcon id={id} />
               </a>
             </li>
           ))

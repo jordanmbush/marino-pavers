@@ -9,6 +9,7 @@ import Base from "@/layouts/Base.astro";
 import Header from "./Header.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
 import Logo from "./Logo.astro";
+import SocialIcon from "./SocialIcon.astro";
 
 /**
  * The chrome renders in the language of the URL, and every link it emits
@@ -96,6 +97,17 @@ describe("Logo", () => {
     const html = await render(Logo, "/", { asLink: false });
     expect(html).not.toContain("<a ");
     expect(html).toContain("Marino Pavers, LLC.");
+  });
+});
+
+describe("SocialIcon", () => {
+  it("draws Instagram's mark in its own gradient, hidden from assistive tech", async () => {
+    const html = await render(SocialIcon, "/", { id: "instagram" });
+    expect(html).toContain('aria-hidden="true"');
+    expect(html).toContain("<radialGradient");
+    expect(html).toContain('fill="url(#social-instagram)"');
+    expect(html.match(/<circle /g)).toHaveLength(2);
+    expect(html).not.toContain("#1877f2");
   });
 });
 

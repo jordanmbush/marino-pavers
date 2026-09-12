@@ -168,8 +168,8 @@ a tab opened before that change needs one hard refresh.
   `Props` type. Call such a prop `tag`.
 - **Filenames must differ by more than case.** `Button.tsx` and `button.ts`
   resolve to the same module on macOS; hence `button-classes.ts`.
-- **Lucide dropped brand icons**; Instagram and Facebook are inline SVGs in
-  `Footer.astro`.
+- **Lucide dropped brand icons**; Instagram and Facebook are drawn by hand in
+  `components/site/SocialIcon.astro`, in their own brand colours.
 - **`fileOptions` in `sst.config.ts` replaces SST's defaults** — keep the `**`
   catch-all first or files silently stop uploading.
 - **Unknown URLs answer 404 only because CloudFront has `s3:ListBucket`** on
