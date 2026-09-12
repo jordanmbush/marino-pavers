@@ -54,9 +54,6 @@ export const en = {
       title: "How a job goes",
       lead: "Five steps, one crew, no mystery. You’ll always know what’s happening in your yard and what comes next.",
     },
-    testimonials: {
-      title: "From homeowners",
-    },
     area: {
       title: "Where we work",
       lead: "From Cave Creek down to Queen Creek, we cover the Valley. Don’t see your city? Ask; we travel for the right project.",

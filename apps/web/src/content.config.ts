@@ -55,17 +55,6 @@ const process = defineCollection({
   }),
 });
 
-const testimonials = defineCollection({
-  loader: file("src/content/testimonials.json"),
-  schema: z.object({
-    id: z.string(),
-    order: z.number().int(),
-    name: z.string(),
-    city: z.string(),
-    ...localized({ quote: z.string(), project: z.string() }),
-  }),
-});
-
 const faqs = defineCollection({
   loader: file("src/content/faqs.json"),
   schema: z.object({
@@ -75,4 +64,4 @@ const faqs = defineCollection({
   }),
 });
 
-export const collections = { services, process, testimonials, faqs };
+export const collections = { services, process, faqs };

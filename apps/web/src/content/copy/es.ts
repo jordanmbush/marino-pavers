@@ -47,9 +47,6 @@ export const es: Copy = {
       title: "Cómo funciona",
       lead: "Cinco pasos, una cuadrilla, sin misterios. Siempre sabrá qué está pasando en su patio y qué sigue.",
     },
-    testimonials: {
-      title: "Lo que dicen los propietarios",
-    },
     area: {
       title: "Dónde trabajamos",
       lead: "Desde Cave Creek hasta Queen Creek, cubrimos el Valle. ¿No ve su ciudad? Pregunte; viajamos por el proyecto adecuado.",

@@ -44,7 +44,7 @@ the cap, split the module — there is no allowlist.
 ## Where things are
 
 - `apps/web/` — the Astro site. `src/content/*.json` is the copy (services,
-  FAQs, testimonials…), validated by `src/content.config.ts`; `src/content/copy/`
+  process, FAQs), validated by `src/content.config.ts`; `src/content/copy/`
   is every other sentence on the site, one dictionary per language;
   `src/content/site.ts` is the business facts and nav routes. ⚠️ The project count and
   the Scottsdale address there are **placeholders**; Facebook has no link yet,
