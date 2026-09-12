@@ -26,13 +26,9 @@ export const getServices = async (locale: Locale) =>
 export const getProcess = async (locale: Locale) =>
   (await dataOf("process", locale)).sort(byOrder);
 
-export const getTestimonials = async (locale: Locale) =>
-  (await dataOf("testimonials", locale)).sort(byOrder);
-
 export const getFaqs = async (locale: Locale) =>
   (await dataOf("faqs", locale)).sort(byOrder);
 
 export type Service = Awaited<ReturnType<typeof getServices>>[number];
 export type ProcessStep = Awaited<ReturnType<typeof getProcess>>[number];
-export type Testimonial = Awaited<ReturnType<typeof getTestimonials>>[number];
 export type Faq = Awaited<ReturnType<typeof getFaqs>>[number];

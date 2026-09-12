@@ -83,7 +83,7 @@ export const ItemRow = ({
   };
 
   return (
-    <li className="grid gap-4 rounded-tile border border-basalt/10 bg-bone p-4 sm:grid-cols-[160px_1fr_auto]">
+    <li className="grid gap-4 rounded-tile border border-taupe-900/10 bg-white p-4 sm:grid-cols-[160px_1fr_auto]">
       <Thumbnail
         item={item}
         rotation={draft.rotation}
@@ -153,7 +153,7 @@ export const ItemRow = ({
           onClick={confirmDelete}
           aria-label="Delete photo"
         >
-          <Trash2 className="h-4 w-4 text-cherokee" />
+          <Trash2 className="h-4 w-4 text-taupe-700" />
         </Button>
         <Button
           size="sm"

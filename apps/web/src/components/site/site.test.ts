@@ -8,6 +8,8 @@ import { DEFAULT_LOCALE, LOCALES } from "@/content/locales";
 import Base from "@/layouts/Base.astro";
 import Header from "./Header.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
+import Logo from "./Logo.astro";
+import SocialIcon from "./SocialIcon.astro";
 
 /**
  * The chrome renders in the language of the URL, and every link it emits
@@ -79,6 +81,33 @@ describe("LanguageSwitcher", () => {
     expect(html).toMatch(
       /<a href="\/es\/services\/"[^>]*aria-label="Español"[^>]*lg:hidden/,
     );
+  });
+});
+
+describe("Logo", () => {
+  it("draws the three-square mark and links home in the page's language", async () => {
+    const html = await render(Logo, "/es/gallery/", {});
+    expect(html.match(/<rect /g)).toHaveLength(3);
+    expect(html.match(/fill="#635956"/g)).toHaveLength(1);
+    expect(html.match(/fill="#9E9997"/g)).toHaveLength(2);
+    expect(html).toMatch(/<a href="\/es" aria-label="Marino Pavers — inicio"/);
+  });
+
+  it("is plain text, not a link, where the page is already home", async () => {
+    const html = await render(Logo, "/", { asLink: false });
+    expect(html).not.toContain("<a ");
+    expect(html).toContain("Marino Pavers, LLC.");
+  });
+});
+
+describe("SocialIcon", () => {
+  it("draws Instagram's mark in its own gradient, hidden from assistive tech", async () => {
+    const html = await render(SocialIcon, "/", { id: "instagram" });
+    expect(html).toContain('aria-hidden="true"');
+    expect(html).toContain("<radialGradient");
+    expect(html).toContain('fill="url(#social-instagram)"');
+    expect(html.match(/<circle /g)).toHaveLength(2);
+    expect(html).not.toContain("#1877f2");
   });
 });
 

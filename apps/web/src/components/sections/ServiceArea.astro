@@ -1,28 +1,16 @@
 ---
-import { MapPin } from "lucide-react";
-import Reveal from "@/components/ui/Reveal.astro";
-import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Section from "@/components/ui/Section.astro";
 import { serviceAreas } from "@/content/site";
 import { i18n } from "@/services/i18n";
 
+/** The cities, as a list a reader can scan for their own. */
 const { t } = i18n(Astro.currentLocale);
 ---
 
-<section class="bg-sand-light">
-  <div
-    class="shell grid gap-12 py-20 lg:grid-cols-[1fr_1.2fr] lg:items-center lg:py-28"
+<Section {...t.home.area}>
+  <ul
+    class="columns-2 gap-10 text-xl leading-[1.9] text-taupe-950 sm:columns-3"
   >
-    <SectionHeading {...t.home.area} />
-
-    <Reveal class="flex flex-wrap gap-3">
-      {
-        serviceAreas.map((area) => (
-          <span class="flex items-center gap-2 rounded-tile border border-basalt/12 bg-bone px-4 py-2.5 text-sm text-basalt/80">
-            <MapPin className="h-3.5 w-3.5 text-cherokee" />
-            {area}
-          </span>
-        ))
-      }
-    </Reveal>
-  </div>
-</section>
+    {serviceAreas.map((area) => <li>{area}</li>)}
+  </ul>
+</Section>

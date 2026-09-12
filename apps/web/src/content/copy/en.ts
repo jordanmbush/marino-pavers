@@ -1,5 +1,5 @@
 import type { MediaCategory } from "@marino/domain";
-import { mailto, serviceAreas, site, type NavId } from "../site";
+import { mailto, site, type NavId } from "../site";
 
 /**
  * Every sentence on the public site, in English. This dictionary is the
@@ -34,50 +34,29 @@ export const en = {
   home: {
     title: "Marino Pavers — Phoenix Paver Patios, Driveways & Artificial Turf",
     hero: {
-      eyebrow: "Pavers · Turf · Outdoor Living",
-      /** Three lines; the middle one is set in clay red. */
-      titleStart: "Outdoor spaces",
-      titleAccent: "built to outlast",
-      titleEnd: "the desert.",
-      lead: "Marino Pavers designs and installs custom patios, driveways, pool decks, and artificial turf across the Valley — engineered from the base up to take Arizona heat, monsoon, and time.",
-      cta: "View photo gallery",
-      since: `Est. ${site.foundedYear}`,
-      calloutEyebrow: "Herringbone lay",
-      callout: "Driveway · Scottsdale",
+      title:
+        "Paver patios, driveways and pool decks, built for the Phoenix heat.",
+      lead: "Marino Pavers designs and installs custom patios, driveways, pool decks and artificial turf across the Valley, engineered from the base up to take Arizona heat, monsoon and time.",
+      cta: "View the photo gallery",
+      /** The card's line, beside the owner's name. */
+      experience: `${site.yearsExperience} years of experience`,
     },
-    /**
-     * Warranty terms vary by job, so nothing here quotes a specific period —
-     * the last stat counts service areas instead.
-     */
-    stats: [
-      { value: `Est. ${site.foundedYear}`, label: "Building the Valley" },
-      { value: site.projectsInstalled, label: "Projects installed" },
-      { value: `${serviceAreas.length}`, label: "Valley cities served" },
-    ],
     services: {
-      eyebrow: "What we build",
-      title: "Six ways to live better outside.",
-      lead: "Every surface engineered for the desert, laid by our own crews — never subbed out to the lowest bidder.",
-    },
-    process: {
-      eyebrow: "How it goes",
-      title: "From first walkthrough to warranty.",
-      lead: "Five steps, one crew, no mystery. You’ll always know what’s happening in your yard and what comes next.",
+      title: "Services",
+      lead: "Every surface engineered for the desert and laid by our own crew, never subbed out.",
     },
     featured: {
-      eyebrow: "Recent work",
-      title: "Built across the Valley.",
-      lead: "A few backyards, driveways, and pool decks we’ve wrapped up lately.",
-      link: "View photo gallery",
+      title: "Recent work",
+      lead: "A few backyards, driveways and pool decks we’ve wrapped up lately.",
+      link: "View the photo gallery",
     },
-    testimonials: {
-      eyebrow: "From the Valley",
-      title: "Homeowners who stopped putting it off.",
+    process: {
+      title: "How a job goes",
+      lead: "Five steps, one crew, no mystery. You’ll always know what’s happening in your yard and what comes next.",
     },
     area: {
-      eyebrow: "Where we work",
-      title: "Building across greater Phoenix.",
-      lead: "From Cave Creek down to Queen Creek, we cover the Valley. Don’t see your city? Ask — we travel for the right project.",
+      title: "Where we work",
+      lead: "From Cave Creek down to Queen Creek, we cover the Valley. Don’t see your city? Ask; we travel for the right project.",
     },
   },
 
@@ -86,15 +65,13 @@ export const en = {
     description:
       "Paver patios, driveways, pool decks, artificial turf, walkways and outdoor living across greater Phoenix. One crew, engineered base work, warranty-backed.",
     hero: {
-      eyebrow: "Services",
-      title: "Everything that turns bare dirt into a destination.",
-      lead: "Six specialties, one crew. Whether it’s a single walkway or a full backyard build, the base work and finish detail are the same — done right.",
+      title: "Services",
+      lead: "Six specialties, one crew. Whether it’s a single walkway or a full backyard build, the base work and the finish detail are the same.",
     },
-    seeBuilt: "See {service} we’ve built →",
+    seeBuilt: "See {service} we’ve built",
     faq: {
-      eyebrow: "Good questions",
-      title: "Answers before you ask.",
-      lead: "The things Valley homeowners want to know before they commit.",
+      title: "Common questions",
+      lead: "What Valley homeowners ask before they commit.",
     },
   },
 
@@ -104,13 +81,11 @@ export const en = {
     description:
       "Photos of paver patios, driveways, pool decks, artificial turf and outdoor living builds Marino Pavers has installed across greater Phoenix.",
     hero: {
-      eyebrow: "Photo gallery",
-      title: "Laid across the Valley, one yard at a time.",
-      lead: "Patios, driveways, pool decks, and turf from Cave Creek to Queen Creek. Filter by what you’re planning.",
+      title: "Photo gallery",
+      lead: "Patios, driveways, pool decks and turf from Cave Creek to Queen Creek. Filter by what you’re planning.",
     },
     cta: {
-      eyebrow: "Your yard next",
-      title: "See something you want in your own backyard?",
+      title: "Your yard next",
       lead: "Send us a photo of your space and a note on what you’re after. We’ll follow up with ideas and an honest quote.",
     },
   },
@@ -129,7 +104,7 @@ export const en = {
     } satisfies Record<MediaCategory, string>,
     empty: "Project photos are on their way.",
     showing:
-      "Showing {shown} of {total} recent projects. Want to see something specific — a paver line, a pattern, a whole backyard? Ask and we’ll send photos from jobs like yours.",
+      "Showing {shown} of {total} recent projects. Want to see something specific, a paver line, a pattern, a whole backyard? Ask and we’ll send photos from jobs like yours.",
     close: "Close",
     previous: "Previous photo",
     next: "Next photo",
@@ -137,45 +112,44 @@ export const en = {
     viewLarger: "View larger: {alt}",
   },
 
+  /** The closing block on every page; pages may pass their own title and lead. */
   cta: {
-    eyebrow: "Get in touch",
-    title: "Let’s build something you’ll actually use outside.",
-    lead: "Tell us about your space and we’ll walk it with you, bring samples, and leave you with an honest, itemized quote — no pressure.",
-    call: "Call now",
-    preferTalk: "Prefer to talk?",
-    serving: "Serving {region}.",
-    preferWrite: "Prefer to write?",
+    title: "Get in touch",
+    lead: "Tell us about your space and we’ll walk it with you, bring samples and leave you with an honest, itemized quote.",
+    call: "Call",
+    email: "Email",
+    serving: "Serving the {region}.",
   },
 
   contact: {
-    region: "Greater Phoenix, Arizona",
+    region: "Greater Phoenix Area",
+    /** Daniel's line beside his name, as on the business card. */
+    ownerTitle: "Owner",
     emailHref: mailto(
       "Project inquiry",
       "Name:\nPhone:\nCity:\n\nWhat I'm planning:\n",
     ),
     emailNotePhone: "Include your phone number so we can call you back.",
     emailNoteReplies:
-      "Our office admin, Valeria, will reach out — usually the same day, though please allow one business day. Her reply comes from her personal @icloud.com address rather than this inbox, so check your spam folder if you don’t see it.",
+      "Our office admin, Valeria, will reach out, usually the same day, though please allow one business day. Her reply comes from her personal @icloud.com address rather than this inbox, so check your spam folder if you don’t see it.",
   },
 
   /** The one 404 page, which carries every language; see `pages/404.astro`. */
   notFound: {
     title: "Page not found — Marino Pavers",
-    description: "That page washed out.",
-    eyebrow: "Error 404",
-    titleStart: "This path leads",
-    titleAccent: "nowhere.",
-    lead: "Looks like this one washed out. Every other path on the site is on solid ground — head back and pick one.",
-    back: "Back home",
+    description: "That address doesn’t exist on the site.",
+    heading: "Page not found",
+    lead: "That address doesn’t exist on the site. Head back to the home page or pick a page below.",
+    back: "Back to home",
     pages: "Site pages",
   },
 
   footer: {
     blurb:
-      "Custom paver patios, driveways, pool decks, artificial turf, and outdoor living — engineered from the base up for the Arizona desert.",
+      "Custom paver patios, driveways, pool decks, artificial turf and outdoor living, engineered from the base up for the Arizona desert.",
     services: "Services",
-    explore: "Explore",
-    contact: "Get in touch",
+    explore: "Pages",
+    contact: "Contact",
     instagram: "Marino Pavers on Instagram",
     facebook: "Marino Pavers on Facebook",
     serving: "Serving {areas} & {last}.",

@@ -1,34 +1,29 @@
 ---
-import Icon from "@/components/ui/Icon.astro";
-import Reveal from "@/components/ui/Reveal.astro";
-import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Section from "@/components/ui/Section.astro";
 import { getProcess } from "@/services/content";
 import { i18n } from "@/services/i18n";
 
+/** The five steps of a job, numbered because they happen in this order. */
 const { locale, t } = i18n(Astro.currentLocale);
 const steps = await getProcess(locale);
 ---
 
-<section class="bg-sand-light">
-  <div class="shell py-20 lg:py-28">
-    <SectionHeading {...t.home.process} />
-
-    <ol class="mt-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
-      {
-        steps.map((step, i) => (
-          <Reveal tag="li" delay={i * 90} class="relative flex flex-col gap-4">
-            <div class="flex items-center gap-3">
-              <span class="font-display-wide text-3xl font-extrabold text-cherokee">
-                {String(step.order).padStart(2, "0")}
-              </span>
-              <span class="h-px flex-1 bg-basalt/15" />
-              <Icon name={step.icon} class="h-5 w-5 text-basalt/50" />
-            </div>
-            <h3 class="text-xl leading-tight">{step.title}</h3>
-            <p class="text-sm leading-relaxed text-basalt/65">{step.body}</p>
-          </Reveal>
-        ))
-      }
-    </ol>
-  </div>
-</section>
+<Section {...t.home.process}>
+  <ol class="border-t border-taupe-200">
+    {
+      steps.map((step) => (
+        <li class="grid gap-2 border-b border-taupe-200 py-6 sm:grid-cols-[3.5rem_minmax(0,1fr)]">
+          <span class="text-2xl leading-tight text-taupe-400">
+            {step.order}
+          </span>
+          <div>
+            <h3 class="text-2xl leading-tight text-taupe-950">{step.title}</h3>
+            <p class="mt-2 max-w-[60ch] text-lg leading-relaxed text-taupe-600">
+              {step.body}
+            </p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</Section>

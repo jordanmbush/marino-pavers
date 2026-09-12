@@ -1,4 +1,3 @@
-import { MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
   SIZES,
@@ -21,8 +20,9 @@ type Props = {
 };
 
 /**
- * One photo in the grid. The blur placeholder paints instantly as a CSS
- * background; the real image fades over it once decoded.
+ * One photo in the grid, captioned underneath like a print. The blur
+ * placeholder paints instantly as a CSS background; the real image fades
+ * over it once decoded.
  */
 export const PhotoCard = ({
   item,
@@ -35,6 +35,7 @@ export const PhotoCard = ({
   const [loaded, setLoaded] = useState(false);
   const category = copy.categories[item.category];
   const alt = item.title || fill(copy.project, { category });
+  const where = [item.city, item.detail].filter(Boolean).join(", ");
 
   // The grid is prerendered, so the browser starts fetching the image from
   // the static HTML and can finish before React hydrates. A `load` that fired
@@ -45,15 +46,15 @@ export const PhotoCard = ({
   }, []);
 
   return (
-    <figure className="group relative overflow-hidden rounded-tile border border-basalt/10 shadow-paver">
+    <figure className="flex flex-col gap-3">
       <Button
         variant="bare"
         onClick={onOpen}
         aria-label={fill(copy.viewLarger, { alt })}
-        className="block w-full text-left"
+        className="block w-full"
       >
         <div
-          className="relative aspect-[4/3] w-full overflow-hidden bg-cover bg-center"
+          className="relative aspect-[4/3] w-full overflow-hidden rounded-tile bg-taupe-100 bg-cover bg-center"
           style={{ backgroundImage: `url(${item.image.placeholder})` }}
         >
           <img
@@ -68,36 +69,20 @@ export const PhotoCard = ({
             decoding="async"
             onLoad={() => setLoaded(true)}
             className={cn(
-              "h-full w-full object-cover transition-[opacity,transform] duration-700 group-hover:scale-105",
+              "h-full w-full object-cover transition-opacity duration-700",
               loaded ? "opacity-100" : "opacity-0",
             )}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-basalt/80 via-basalt/10 to-transparent" />
-          <span className="absolute top-4 left-4 rounded-tile bg-bone/90 px-2.5 py-1 eyebrow text-[0.6rem] text-basalt">
-            {category}
-          </span>
         </div>
-
-        <figcaption className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5">
-          <span className="font-display-wide text-lg leading-tight font-extrabold text-bone">
-            {item.title || category}
-          </span>
-          {(item.city || item.detail) && (
-            <span className="flex flex-wrap items-center gap-1.5 text-xs text-sand/80">
-              {item.city && (
-                <>
-                  <MapPin className="h-3 w-3" />
-                  {item.city}
-                </>
-              )}
-              {item.city && item.detail && (
-                <span className="text-sand/40">·</span>
-              )}
-              {item.detail && <span className="font-mono">{item.detail}</span>}
-            </span>
-          )}
-        </figcaption>
       </Button>
+      <figcaption className="flex flex-col gap-0.5 leading-snug">
+        <span className="text-xl text-taupe-950">{item.title || category}</span>
+        <span className="text-base text-taupe-500">
+          {item.title ? category : null}
+          {item.title && where ? ", " : null}
+          {where}
+        </span>
+      </figcaption>
     </figure>
   );
 };

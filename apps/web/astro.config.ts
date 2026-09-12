@@ -56,10 +56,19 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
-    // Fail if the port is taken instead of sliding to the next free one. The
-    // tunnel is pinned to DEV_PORT, so a silent slide would leave it pointing
-    // at nothing — or at whichever other project grabbed the port.
-    server: { strictPort: true },
+    server: {
+      // Fail if the port is taken instead of sliding to the next free one. The
+      // tunnel is pinned to DEV_PORT, so a silent slide would leave it pointing
+      // at nothing — or at whichever other project grabbed the port.
+      strictPort: true,
+      // Cloudflare proxies the tunnel hostname and caches by file extension.
+      // Vite's default `no-cache` does not stop it: anything ending in .css,
+      // .js, .woff2 or .svg was stored at the edge and re-stamped with a
+      // four-hour browser TTL, so a browser kept Vite's stylesheet module and
+      // painted stale CSS over fresh markup. `no-store` makes Cloudflare
+      // bypass the response and pass the header through untouched.
+      headers: { "Cache-Control": "no-store" },
+    },
   },
   server: {
     // Not Astro's default 4321: other Astro projects on this machine use it,

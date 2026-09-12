@@ -44,11 +44,11 @@ the cap, split the module — there is no allowlist.
 ## Where things are
 
 - `apps/web/` — the Astro site. `src/content/*.json` is the copy (services,
-  FAQs, testimonials…), validated by `src/content.config.ts`; `src/content/copy/`
+  process, FAQs), validated by `src/content.config.ts`; `src/content/copy/`
   is every other sentence on the site, one dictionary per language;
-  `src/content/site.ts` is the business facts and nav routes. ⚠️ Socials,
-  founding year and project count there are **placeholders** until the client
-  supplies real ones.
+  `src/content/site.ts` is the business facts and nav routes. ⚠️ The project count and
+  the Scottsdale address there are **placeholders**; Facebook has no link yet,
+  so `socials` lists Instagram only.
 - `packages/domain/` — the photo library as data: item and manifest schemas,
   bucket key layout, rendition math, sort order, the admin API contract.
 - `packages/functions/` — `process-image` (S3 event → sharp → renditions +
@@ -153,18 +153,23 @@ answers before any routing.
 
 Local dev against a deployed dev stage: copy `apps/web/.env.example` to
 `apps/web/.env` with the dev outputs, `npm run dev`, and `npm run tunnel` to
-show it to the client at `https://dev.marinopavers.com`.
+show it to the client at `https://dev.marinopavers.com`. Cloudflare proxies
+that hostname and caches by file extension, replacing Vite's `no-cache` with
+a four-hour browser TTL, which once left a browser painting a stale
+stylesheet module over fresh markup. The dev server therefore sends
+`Cache-Control: no-store` (`vite.server.headers` in `astro.config.ts`);
+a tab opened before that change needs one hard refresh.
 
 ## Gotchas
 
 - **Astro 7's compiler is strict**: unclosed tags are errors, and whitespace
   between inline elements follows JSX rules — use `{" "}` where a space matters.
 - **`as` is not a safe prop name in `.astro` files**: the compiler loses the
-  `Props` type. `Reveal` uses `tag`.
+  `Props` type. Call such a prop `tag`.
 - **Filenames must differ by more than case.** `Button.tsx` and `button.ts`
   resolve to the same module on macOS; hence `button-classes.ts`.
-- **Lucide dropped brand icons**; Instagram and Facebook are inline SVGs in
-  `Footer.astro`.
+- **Lucide dropped brand icons**; Instagram and Facebook are drawn by hand in
+  `components/site/SocialIcon.astro`, in their own brand colours.
 - **`fileOptions` in `sst.config.ts` replaces SST's defaults** — keep the `**`
   catch-all first or files silently stop uploading.
 - **Unknown URLs answer 404 only because CloudFront has `s3:ListBucket`** on

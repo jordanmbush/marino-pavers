@@ -1,8 +1,8 @@
 ---
 import Site from "@/layouts/Site.astro";
 import { Gallery } from "@/components/gallery/Gallery";
-import CtaBand from "@/components/sections/CtaBand.astro";
-import PageHero from "@/components/ui/PageHero.astro";
+import Contact from "@/components/sections/Contact.astro";
+import PageIntro from "@/components/ui/PageIntro.astro";
 import { i18n } from "@/services/i18n";
 import { localeParams } from "@/services/locale";
 import { prefetchManifestItems } from "@/services/media";
@@ -16,13 +16,11 @@ const items = await prefetchManifestItems();
 ---
 
 <Site title={page.title} description={page.description}>
-  <PageHero {...page.hero} />
+  <PageIntro {...page.hero} />
 
-  <section class="bg-sand">
-    <div class="shell py-14 lg:py-20">
-      <Gallery client:load initialItems={items} copy={t.gallery} showFilters />
-    </div>
-  </section>
+  <div class="shell pb-20 lg:pb-28">
+    <Gallery client:load initialItems={items} copy={t.gallery} showFilters />
+  </div>
 
-  <CtaBand {...page.cta} />
+  <Contact {...page.cta} />
 </Site>

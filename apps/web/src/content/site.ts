@@ -3,16 +3,20 @@
  * service area and the routes in the primary nav. Anything a person reads as
  * a sentence lives in `content/copy/` instead, once per language.
  *
- * ⚠️ PLACEHOLDERS: the social links, founding year and project count below
- * are stand-ins. Replace them with the client's real details before launch —
- * they appear in the header, the footer and the LocalBusiness structured data.
+ * ⚠️ PLACEHOLDERS: the project count and the Scottsdale address below are
+ * stand-ins until the client confirms them — they appear in the stats band
+ * and the LocalBusiness structured data.
  */
 
 export const site = {
   name: "Marino Pavers",
-  legalName: "Marino Pavers LLC",
+  legalName: "Marino Pavers, LLC",
+  /** The name as the business card prints it, set beside the mark. */
+  wordmark: "Marino Pavers, LLC.",
+  owner: "Daniel Montoya",
   url: "https://marinopavers.com",
-  foundedYear: 2009,
+  /** From the business card: "20+ Years of Experience". */
+  yearsExperience: "20+",
   projectsInstalled: "600+",
   phoneDisplay: "(602) 691-8029",
   phoneHref: "tel:+16026918029",
@@ -29,11 +33,17 @@ export const site = {
     state: "AZ",
     country: "US",
   },
-  social: {
-    instagram: "https://instagram.com",
-    facebook: "https://facebook.com",
-  },
 } as const;
+
+export type SocialId = "instagram" | "facebook";
+
+/**
+ * Real profiles only. A network without a link stays out of the footer and
+ * the structured data until the client supplies one — Facebook is pending.
+ */
+export const socials: ReadonlyArray<{ id: SocialId; href: string }> = [
+  { id: "instagram", href: "https://www.instagram.com/marino.pavers/" },
+];
 
 /**
  * A mailto that opens with a body template, so the sender is prompted for a
