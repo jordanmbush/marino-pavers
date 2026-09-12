@@ -153,7 +153,12 @@ answers before any routing.
 
 Local dev against a deployed dev stage: copy `apps/web/.env.example` to
 `apps/web/.env` with the dev outputs, `npm run dev`, and `npm run tunnel` to
-show it to the client at `https://dev.marinopavers.com`.
+show it to the client at `https://dev.marinopavers.com`. Cloudflare proxies
+that hostname and caches by file extension, replacing Vite's `no-cache` with
+a four-hour browser TTL, which once left a browser painting a stale
+stylesheet module over fresh markup. The dev server therefore sends
+`Cache-Control: no-store` (`vite.server.headers` in `astro.config.ts`);
+a tab opened before that change needs one hard refresh.
 
 ## Gotchas
 
