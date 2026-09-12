@@ -3,17 +3,19 @@ import { cn } from "@/components/ui/cn";
 import { i18n } from "@/services/i18n";
 
 /**
- * Brand mark: four paver bricks in a basketweave — the simplest pattern a
- * mason lays — with a single clay-red accent brick. Wordmark set in the
- * display face over a mono locale line. As a link it goes to the home page
- * in the current language.
+ * Brand mark: three square pavers on a 2×2 grid with the last corner left
+ * open — one dark, two light, joints a twentieth of the width. The mark keeps
+ * its two greys on light and dark ground; `tone` only recolours the wordmark,
+ * set in the display face over a mono locale line. As a link it goes to the
+ * home page in the current language.
  */
 type Props = { tone?: "dark" | "light"; class?: string; asLink?: boolean };
 
 const { tone = "dark", class: className, asLink = true } = Astro.props;
 const { t, href } = i18n(Astro.currentLocale);
-const brick = tone === "light" ? "#F3ECDE" : "#211C17";
-const accent = tone === "light" ? "#CD854A" : "#A8432B";
+/** The mark's two greys. `public/favicon.svg` repeats them. */
+const MARK_DARK = "#635956";
+const MARK_LIGHT = "#9E9997";
 const text = tone === "light" ? "text-bone" : "text-basalt";
 const sub = tone === "light" ? "text-sand/60" : "text-basalt/50";
 const Wrapper = asLink ? "a" : "span";
@@ -25,21 +27,16 @@ const wrapperProps = asLink
 <Wrapper {...wrapperProps}>
   <span class={cn("flex items-center gap-3", className)}>
     <svg
-      width="34"
-      height="34"
-      viewBox="0 0 32 32"
+      width="36"
+      height="36"
+      viewBox="0 0 40 40"
       fill="none"
       aria-hidden="true"
       class="shrink-0"
     >
-      <rect x="4" y="4" width="11" height="5" rx="1" fill={brick}></rect>
-      <rect x="4" y="10" width="11" height="5" rx="1" fill={brick}></rect>
-      <rect x="17" y="4" width="5" height="11" rx="1" fill={accent}></rect>
-      <rect x="23" y="4" width="5" height="11" rx="1" fill={brick}></rect>
-      <rect x="4" y="17" width="5" height="11" rx="1" fill={brick}></rect>
-      <rect x="10" y="17" width="5" height="11" rx="1" fill={brick}></rect>
-      <rect x="17" y="17" width="11" height="5" rx="1" fill={brick}></rect>
-      <rect x="17" y="23" width="11" height="5" rx="1" fill={brick}></rect>
+      <rect x="0" y="0" width="19" height="19" fill={MARK_DARK}></rect>
+      <rect x="21" y="0" width="19" height="19" fill={MARK_LIGHT}></rect>
+      <rect x="0" y="21" width="19" height="19" fill={MARK_LIGHT}></rect>
     </svg>
     <span class="flex flex-col leading-none">
       <span
