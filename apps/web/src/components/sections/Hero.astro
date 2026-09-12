@@ -9,30 +9,30 @@ const hero = t.home.hero;
 const trust = [{ Icon: CalendarDays, label: hero.since }];
 ---
 
-<section class="relative overflow-hidden bg-sand">
+<section class="relative overflow-hidden bg-paper">
   <div
     class="shell grid items-center gap-12 py-14 lg:grid-cols-[1.02fr_0.98fr] lg:py-24"
   >
     <div class="relative z-10 flex flex-col gap-6">
       <span
-        class="flex animate-rise items-center gap-3 eyebrow text-cherokee"
+        class="flex animate-rise items-center gap-3 eyebrow text-taupe-500"
         style="animation-delay: 0ms"
       >
-        <span class="h-px w-10 bg-cherokee/50"></span>
+        <span class="h-px w-10 bg-taupe-300"></span>
         {hero.eyebrow}
       </span>
 
       <h1
-        class="animate-rise text-[2.7rem] leading-[0.98] sm:text-6xl lg:text-[4.25rem]"
+        class="animate-rise text-[3.3rem] leading-[0.98] sm:text-7xl lg:text-[5.4rem]"
         style="animation-delay: 90ms"
       >
         {hero.titleStart}<br />
-        <span class="text-cherokee">{hero.titleAccent}</span><br />
+        <em class="text-taupe-500">{hero.titleAccent}</em><br />
         {hero.titleEnd}
       </h1>
 
       <p
-        class="max-w-lg animate-rise text-lg leading-relaxed text-basalt/70"
+        class="max-w-lg animate-rise text-lg leading-relaxed text-taupe-900/70"
         style="animation-delay: 180ms"
       >
         {hero.lead}
@@ -51,8 +51,8 @@ const trust = [{ Icon: CalendarDays, label: hero.since }];
       >
         {
           trust.map(({ Icon, label }) => (
-            <li class="flex items-center gap-2 text-sm text-basalt/70">
-              <Icon className="h-4 w-4 text-cherokee" strokeWidth={2.2} />
+            <li class="flex items-center gap-2 text-sm text-taupe-900/70">
+              <Icon className="h-4 w-4 text-taupe-500" strokeWidth={2} />
               {label}
             </li>
           ))
@@ -66,10 +66,10 @@ const trust = [{ Icon: CalendarDays, label: hero.since }];
     >
       <PaverField class="rounded-tile" />
       <div
-        class="absolute bottom-5 left-5 rounded-tile border border-basalt/10 bg-bone/95 px-4 py-3 shadow-paver backdrop-blur"
+        class="absolute bottom-5 left-5 rounded-tile border border-taupe-900/10 bg-white/95 px-4 py-3 shadow-paver backdrop-blur"
       >
-        <span class="eyebrow text-cherokee">{hero.calloutEyebrow}</span>
-        <p class="mt-1 font-display-wide text-sm font-extrabold text-basalt">
+        <span class="eyebrow text-taupe-500">{hero.calloutEyebrow}</span>
+        <p class="mt-1.5 font-display text-xl font-medium text-taupe-900">
           {hero.callout}
         </p>
       </div>

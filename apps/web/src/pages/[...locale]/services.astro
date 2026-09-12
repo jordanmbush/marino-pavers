@@ -20,15 +20,15 @@ const page = t.servicesPage;
 const services = await getServices(locale);
 const faqs = await getFaqs(locale);
 
-// Material swatch gradients that pair with each service panel until the
-// client's own photos take their place.
+// Swatch gradients in the mark's greys that pair with each service panel
+// until the client's own photos take their place.
 const swatches = [
-  ["#CBB58A", "#9C8158"],
-  ["#4E4336", "#211C17"],
-  ["#71755B", "#585B45"],
-  ["#EDE3D2", "#C7AB7C"],
-  ["#D0B98C", "#A98B5E"],
-  ["#CD854A", "#8E3421"],
+  ["#D9D5D2", "#BCB7B4"],
+  ["#4C4441", "#2A2523"],
+  ["#9E9997", "#756C69"],
+  ["#F5F3F1", "#D9D5D2"],
+  ["#BCB7B4", "#9E9997"],
+  ["#635956", "#3A3331"],
 ];
 
 const faqJsonLd = {
@@ -45,7 +45,7 @@ const faqJsonLd = {
 <Site title={page.title} description={page.description} jsonLd={faqJsonLd}>
   <PageHero {...page.hero} />
 
-  <div class="bg-sand">
+  <div class="bg-paper">
     <div class="shell flex flex-col gap-24 py-20 lg:gap-28 lg:py-28">
       {
         services.map((service, i) => {
@@ -58,35 +58,35 @@ const faqJsonLd = {
             >
               <div
                 class={cn(
-                  "relative order-first aspect-[5/4] overflow-hidden rounded-tile border border-basalt/10 shadow-paver",
+                  "relative order-first aspect-[5/4] overflow-hidden rounded-tile border border-taupe-900/10 shadow-paver",
                   flip && "lg:order-last",
                 )}
                 style={`background-image: linear-gradient(135deg, ${from}, ${to});`}
               >
                 <div class="absolute inset-0 herringbone opacity-25 mix-blend-overlay" />
-                <span class="absolute bottom-5 left-5 rounded-tile bg-bone/90 px-3 py-1.5 eyebrow text-basalt">
+                <span class="absolute bottom-5 left-5 rounded-tile bg-white/90 px-3 py-1.5 eyebrow text-taupe-900">
                   {service.tagline}
                 </span>
               </div>
 
               <div class="flex flex-col gap-5">
                 <div class="flex items-center gap-4">
-                  <span class="flex h-12 w-12 items-center justify-center rounded-tile bg-basalt text-bone">
+                  <span class="flex h-12 w-12 items-center justify-center rounded-tile bg-taupe-900 text-white">
                     <Icon name={service.icon} class="h-5 w-5" />
                   </span>
-                  <span class="eyebrow text-cherokee">
+                  <span class="eyebrow text-taupe-500">
                     {String(service.order).padStart(2, "0")} / {service.tagline}
                   </span>
                 </div>
                 <h2 class="text-3xl sm:text-4xl">{service.title}</h2>
-                <p class="max-w-xl leading-relaxed text-basalt/70">
+                <p class="max-w-xl leading-relaxed text-taupe-900/70">
                   {service.description}
                 </p>
                 <ul class="mt-2 grid gap-3 sm:grid-cols-2">
                   {service.features.map((feature) => (
-                    <li class="flex items-start gap-2.5 text-sm text-basalt/80">
+                    <li class="flex items-start gap-2.5 text-sm text-taupe-900/80">
                       <Check
-                        className="mt-0.5 h-4 w-4 shrink-0 text-cherokee"
+                        className="mt-0.5 h-4 w-4 shrink-0 text-taupe-700"
                         strokeWidth={2.4}
                       />
                       {feature}
@@ -95,7 +95,7 @@ const faqJsonLd = {
                 </ul>
                 <a
                   href={href(`/gallery?category=${service.category}`)}
-                  class="mt-2 eyebrow text-cherokee hover:text-cherokee-dark"
+                  class="mt-2 eyebrow text-taupe-700 hover:text-taupe-950"
                 >
                   {fill(page.seeBuilt, {
                     service: service.title.toLowerCase(),
@@ -109,7 +109,7 @@ const faqJsonLd = {
     </div>
   </div>
 
-  <section class="bg-sand-light">
+  <section class="bg-taupe-50">
     <div class="shell grid gap-12 py-20 lg:grid-cols-[0.8fr_1.2fr] lg:py-28">
       <SectionHeading {...page.faq} />
       <FaqList items={faqs} />

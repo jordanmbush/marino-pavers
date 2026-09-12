@@ -46,15 +46,15 @@ export const SignIn = (props: Props) => {
         event.preventDefault();
         void submit();
       }}
-      className="mx-auto flex w-full max-w-md flex-col gap-5 rounded-tile border border-basalt/10 bg-bone p-8 shadow-paver"
+      className="mx-auto flex w-full max-w-md flex-col gap-5 rounded-tile border border-taupe-900/10 bg-white p-8 shadow-paver"
     >
       <div>
-        <span className="eyebrow text-cherokee">Photo library</span>
+        <span className="eyebrow text-taupe-700">Photo library</span>
         <h1 className="mt-2 text-2xl">
           {props.mode === "sign-in" ? "Sign in" : "Choose a new password"}
         </h1>
         {props.mode === "new-password" && (
-          <p className="mt-2 text-sm text-basalt/70">
+          <p className="mt-2 text-sm text-taupe-900/70">
             First sign-in for {props.username}. Pick a password of at least 12
             characters with upper and lower case letters and a number.
           </p>
@@ -105,7 +105,7 @@ export const SignIn = (props: Props) => {
       )}
 
       {error && (
-        <p className="text-sm text-cherokee" role="alert">
+        <p className="text-sm text-taupe-700" role="alert">
           {error}
         </p>
       )}

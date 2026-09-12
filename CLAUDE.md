@@ -46,9 +46,9 @@ the cap, split the module — there is no allowlist.
 - `apps/web/` — the Astro site. `src/content/*.json` is the copy (services,
   FAQs, testimonials…), validated by `src/content.config.ts`; `src/content/copy/`
   is every other sentence on the site, one dictionary per language;
-  `src/content/site.ts` is the business facts and nav routes. ⚠️ Socials,
-  founding year and project count there are **placeholders** until the client
-  supplies real ones.
+  `src/content/site.ts` is the business facts and nav routes. ⚠️ The project count and
+  the Scottsdale address there are **placeholders**; Facebook has no link yet,
+  so `socials` lists Instagram only.
 - `packages/domain/` — the photo library as data: item and manifest schemas,
   bucket key layout, rendition math, sort order, the admin API contract.
 - `packages/functions/` — `process-image` (S3 event → sharp → renditions +

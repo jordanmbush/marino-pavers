@@ -45,7 +45,7 @@ export const PhotoCard = ({
   }, []);
 
   return (
-    <figure className="group relative overflow-hidden rounded-tile border border-basalt/10 shadow-paver">
+    <figure className="group relative overflow-hidden rounded-tile border border-taupe-900/10 shadow-paver">
       <Button
         variant="bare"
         onClick={onOpen}
@@ -72,18 +72,18 @@ export const PhotoCard = ({
               loaded ? "opacity-100" : "opacity-0",
             )}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-basalt/80 via-basalt/10 to-transparent" />
-          <span className="absolute top-4 left-4 rounded-tile bg-bone/90 px-2.5 py-1 eyebrow text-[0.6rem] text-basalt">
+          <div className="absolute inset-0 bg-gradient-to-t from-taupe-900/80 via-taupe-900/10 to-transparent" />
+          <span className="absolute top-4 left-4 rounded-tile bg-white/90 px-2.5 py-1 label text-[0.6rem] text-taupe-900">
             {category}
           </span>
         </div>
 
         <figcaption className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5">
-          <span className="font-display-wide text-lg leading-tight font-extrabold text-bone">
+          <span className="font-display text-lg leading-tight font-medium text-white">
             {item.title || category}
           </span>
           {(item.city || item.detail) && (
-            <span className="flex flex-wrap items-center gap-1.5 text-xs text-sand/80">
+            <span className="flex flex-wrap items-center gap-1.5 text-xs text-taupe-200/80">
               {item.city && (
                 <>
                   <MapPin className="h-3 w-3" />
@@ -91,9 +91,9 @@ export const PhotoCard = ({
                 </>
               )}
               {item.city && item.detail && (
-                <span className="text-sand/40">·</span>
+                <span className="text-taupe-200/40">·</span>
               )}
-              {item.detail && <span className="font-mono">{item.detail}</span>}
+              {item.detail && <span className="font-sans">{item.detail}</span>}
             </span>
           )}
         </figcaption>

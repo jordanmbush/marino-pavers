@@ -34,12 +34,12 @@ export const es: Copy = {
       titleEnd: "más que el desierto.",
       lead: "Marino Pavers diseña e instala patios, entradas para autos, decks de alberca y pasto sintético a la medida en todo el Valle, construidos desde la base para aguantar el calor de Arizona, el monzón y el paso del tiempo.",
       cta: "Ver galería de fotos",
-      since: `Desde ${site.foundedYear}`,
+      since: `${site.yearsExperience} años de experiencia`,
       calloutEyebrow: "Patrón espiga",
       callout: "Entrada · Scottsdale",
     },
     stats: [
-      { value: `Desde ${site.foundedYear}`, label: "Construyendo en el Valle" },
+      { value: site.yearsExperience, label: "Años de experiencia" },
       { value: site.projectsInstalled, label: "Proyectos instalados" },
       {
         value: `${serviceAreas.length}`,
@@ -68,7 +68,7 @@ export const es: Copy = {
     },
     area: {
       eyebrow: "Dónde trabajamos",
-      title: "Construyendo en toda el área de Phoenix.",
+      title: "Al servicio del Área Metropolitana de Phoenix.",
       lead: "Desde Cave Creek hasta Queen Creek, cubrimos el Valle. ¿No ve su ciudad? Pregunte: viajamos por el proyecto adecuado.",
     },
   },
@@ -134,12 +134,13 @@ export const es: Copy = {
     lead: "Cuéntenos de su espacio y lo recorremos con usted, llevamos muestras y le dejamos una cotización honesta y detallada, sin presión.",
     call: "Llamar ahora",
     preferTalk: "¿Prefiere hablar?",
-    serving: "Servimos en {region}.",
+    serving: "Servimos en toda el {region}.",
     preferWrite: "¿Prefiere escribir?",
   },
 
   contact: {
-    region: "Área metropolitana de Phoenix, Arizona",
+    region: "Área Metropolitana de Phoenix",
+    ownerTitle: "Propietario",
     emailHref: mailto(
       "Consulta de proyecto",
       "Nombre:\nTeléfono:\nCiudad:\n\nLo que tengo en mente:\n",

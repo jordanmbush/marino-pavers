@@ -95,7 +95,7 @@ describe("Logo", () => {
   it("is plain text, not a link, where the page is already home", async () => {
     const html = await render(Logo, "/", { asLink: false });
     expect(html).not.toContain("<a ");
-    expect(html).toContain("MARINO");
+    expect(html).toContain("Marino Pavers, LLC.");
   });
 });
 

@@ -8,7 +8,7 @@ import { i18n } from "@/services/i18n";
 const { t } = i18n(Astro.currentLocale);
 ---
 
-<section class="bg-sand-light">
+<section class="bg-taupe-50">
   <div
     class="shell grid gap-12 py-20 lg:grid-cols-[1fr_1.2fr] lg:items-center lg:py-28"
   >
@@ -17,8 +17,8 @@ const { t } = i18n(Astro.currentLocale);
     <Reveal class="flex flex-wrap gap-3">
       {
         serviceAreas.map((area) => (
-          <span class="flex items-center gap-2 rounded-tile border border-basalt/12 bg-bone px-4 py-2.5 text-sm text-basalt/80">
-            <MapPin className="h-3.5 w-3.5 text-cherokee" />
+          <span class="flex items-center gap-2 rounded-tile border border-taupe-900/12 bg-white px-4 py-2.5 text-sm text-taupe-900/80">
+            <MapPin className="h-3.5 w-3.5 text-taupe-700" />
             {area}
           </span>
         ))

@@ -20,7 +20,7 @@ const others = LOCALES.filter((code) => code !== locale);
 <nav
   aria-label={t.header.language}
   class={cn(
-    "hidden h-10 items-center gap-0.5 rounded-tile border border-basalt/15 p-1 lg:flex",
+    "hidden h-10 items-center gap-0.5 rounded-tile border border-taupe-900/15 p-1 lg:flex",
     className,
   )}
 >
@@ -34,10 +34,10 @@ const others = LOCALES.filter((code) => code !== locale);
         aria-label={LOCALE_NAMES[code]}
         aria-current={code === locale ? "true" : undefined}
         class={cn(
-          "flex h-full items-center rounded-[2px] px-2.5 eyebrow text-[0.65rem] transition-colors",
+          "flex h-full items-center rounded-[2px] px-2.5 label text-[0.66rem] transition-colors",
           code === locale
-            ? "bg-basalt text-bone"
-            : "text-basalt/60 hover:bg-basalt/8 hover:text-basalt",
+            ? "bg-taupe-900 text-white"
+            : "text-taupe-900/60 hover:bg-taupe-900/8 hover:text-taupe-900",
         )}
       >
         {code.toUpperCase()}
@@ -55,7 +55,7 @@ const others = LOCALES.filter((code) => code !== locale);
       hreflang={code}
       aria-label={LOCALE_NAMES[code]}
       class={cn(
-        "flex h-10 w-10 items-center justify-center rounded-tile border border-basalt/15 eyebrow text-[0.65rem] text-basalt transition-colors hover:bg-basalt hover:text-bone lg:hidden",
+        "flex h-10 w-10 items-center justify-center rounded-tile border border-taupe-900/15 label text-[0.66rem] text-taupe-900 transition-colors hover:bg-taupe-900 hover:text-white lg:hidden",
         className,
       )}
     >

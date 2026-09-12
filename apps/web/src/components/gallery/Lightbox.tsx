@@ -70,17 +70,17 @@ export const Lightbox = ({
       ref={ref}
       onClose={onClose}
       aria-label={alt}
-      className="m-auto max-h-[100dvh] w-full max-w-6xl bg-transparent p-0 text-bone backdrop:bg-basalt-950/92 backdrop:backdrop-blur-sm"
+      className="m-auto max-h-[100dvh] w-full max-w-6xl bg-transparent p-0 text-white backdrop:bg-taupe-950/92 backdrop:backdrop-blur-sm"
     >
       {item && (
         <div className="flex flex-col gap-4 p-4 sm:p-6">
           <div className="flex items-center justify-between gap-4">
             <div className="flex min-w-0 flex-col gap-1">
-              <span className="eyebrow text-ochre-light">
+              <span className="eyebrow text-taupe-300">
                 {category}
                 {item.city && ` · ${item.city}`}
               </span>
-              <span className="truncate font-display-wide text-xl font-extrabold">
+              <span className="truncate font-display text-xl font-medium">
                 {item.title || category}
               </span>
             </div>
@@ -88,7 +88,7 @@ export const Lightbox = ({
               variant="bare"
               onClick={onClose}
               aria-label={copy.close}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-tile border border-bone/20 hover:bg-bone/10"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-tile border border-white/20 hover:bg-white/10"
             >
               <X className="h-5 w-5" />
             </Button>
@@ -112,7 +112,7 @@ export const Lightbox = ({
                   variant="bare"
                   onClick={() => onStep(-1)}
                   aria-label={copy.previous}
-                  className="absolute top-1/2 left-2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-tile bg-basalt/70 hover:bg-basalt"
+                  className="absolute top-1/2 left-2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-tile bg-taupe-900/70 hover:bg-taupe-900"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </Button>
@@ -120,7 +120,7 @@ export const Lightbox = ({
                   variant="bare"
                   onClick={() => onStep(1)}
                   aria-label={copy.next}
-                  className="absolute top-1/2 right-2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-tile bg-basalt/70 hover:bg-basalt"
+                  className="absolute top-1/2 right-2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-tile bg-taupe-900/70 hover:bg-taupe-900"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </Button>
@@ -129,7 +129,7 @@ export const Lightbox = ({
           </div>
 
           {item.detail && (
-            <p className="font-mono text-xs text-sand/70">{item.detail}</p>
+            <p className="font-sans text-xs text-taupe-200/70">{item.detail}</p>
           )}
         </div>
       )}

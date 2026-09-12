@@ -9,7 +9,7 @@ const { locale, t } = i18n(Astro.currentLocale);
 const steps = await getProcess(locale);
 ---
 
-<section class="bg-sand-light">
+<section class="bg-taupe-50">
   <div class="shell py-20 lg:py-28">
     <SectionHeading {...t.home.process} />
 
@@ -18,14 +18,14 @@ const steps = await getProcess(locale);
         steps.map((step, i) => (
           <Reveal tag="li" delay={i * 90} class="relative flex flex-col gap-4">
             <div class="flex items-center gap-3">
-              <span class="font-display-wide text-3xl font-extrabold text-cherokee">
+              <span class="font-display text-4xl font-medium text-taupe-500">
                 {String(step.order).padStart(2, "0")}
               </span>
-              <span class="h-px flex-1 bg-basalt/15" />
-              <Icon name={step.icon} class="h-5 w-5 text-basalt/50" />
+              <span class="h-px flex-1 bg-taupe-900/15" />
+              <Icon name={step.icon} class="h-5 w-5 text-taupe-900/50" />
             </div>
-            <h3 class="text-xl leading-tight">{step.title}</h3>
-            <p class="text-sm leading-relaxed text-basalt/65">{step.body}</p>
+            <h3 class="text-2xl leading-tight">{step.title}</h3>
+            <p class="text-sm leading-relaxed text-taupe-900/65">{step.body}</p>
           </Reveal>
         ))
       }

@@ -9,7 +9,7 @@ const { t, href } = i18n(Astro.currentLocale);
 const items = await prefetchManifestItems();
 ---
 
-<section class="bg-sand">
+<section class="bg-paper">
   <div class="shell py-20 lg:py-28">
     <div class="flex flex-wrap items-end justify-between gap-6">
       <SectionHeading
@@ -19,7 +19,7 @@ const items = await prefetchManifestItems();
       />
       <a
         href={href("/gallery")}
-        class="group flex items-center gap-2 eyebrow text-cherokee hover:text-cherokee-dark"
+        class="group flex items-center gap-2 eyebrow text-taupe-700 hover:text-taupe-950"
       >
         {t.home.featured.link}
         <ArrowRight

@@ -40,7 +40,7 @@ export const Thumbnail = ({ item, rotation, onTurn }: Props) => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-tile bg-sand-dark sm:aspect-square">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-tile bg-taupe-100 sm:aspect-square">
         {ready ? (
           <img
             src={renditionUrl(mediaBase(), item, item.image.widths[0]!)}
@@ -54,12 +54,12 @@ export const Thumbnail = ({ item, rotation, onTurn }: Props) => {
             )}
           />
         ) : (
-          <div className="flex h-full items-center justify-center p-3 text-center font-mono text-[0.65rem] text-basalt/60">
+          <div className="flex h-full items-center justify-center p-3 text-center font-mono text-[0.65rem] text-taupe-900/60">
             Processing…
           </div>
         )}
         {item.featured && (
-          <span className="absolute top-2 left-2 rounded-tile bg-cherokee px-2 py-0.5 eyebrow text-[0.55rem] text-bone">
+          <span className="absolute top-2 left-2 rounded-tile bg-taupe-700 px-2 py-0.5 label text-[0.55rem] text-white">
             Featured
           </span>
         )}

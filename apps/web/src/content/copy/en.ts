@@ -35,13 +35,13 @@ export const en = {
     title: "Marino Pavers — Phoenix Paver Patios, Driveways & Artificial Turf",
     hero: {
       eyebrow: "Pavers · Turf · Outdoor Living",
-      /** Three lines; the middle one is set in clay red. */
+      /** Three lines; the middle one is set in italic. */
       titleStart: "Outdoor spaces",
       titleAccent: "built to outlast",
       titleEnd: "the desert.",
       lead: "Marino Pavers designs and installs custom patios, driveways, pool decks, and artificial turf across the Valley — engineered from the base up to take Arizona heat, monsoon, and time.",
       cta: "View photo gallery",
-      since: `Est. ${site.foundedYear}`,
+      since: `${site.yearsExperience} years of experience`,
       calloutEyebrow: "Herringbone lay",
       callout: "Driveway · Scottsdale",
     },
@@ -50,7 +50,7 @@ export const en = {
      * the last stat counts service areas instead.
      */
     stats: [
-      { value: `Est. ${site.foundedYear}`, label: "Building the Valley" },
+      { value: site.yearsExperience, label: "Years of experience" },
       { value: site.projectsInstalled, label: "Projects installed" },
       { value: `${serviceAreas.length}`, label: "Valley cities served" },
     ],
@@ -76,7 +76,7 @@ export const en = {
     },
     area: {
       eyebrow: "Where we work",
-      title: "Building across greater Phoenix.",
+      title: "Serving the Greater Phoenix Area.",
       lead: "From Cave Creek down to Queen Creek, we cover the Valley. Don’t see your city? Ask — we travel for the right project.",
     },
   },
@@ -143,12 +143,14 @@ export const en = {
     lead: "Tell us about your space and we’ll walk it with you, bring samples, and leave you with an honest, itemized quote — no pressure.",
     call: "Call now",
     preferTalk: "Prefer to talk?",
-    serving: "Serving {region}.",
+    serving: "Serving the {region}.",
     preferWrite: "Prefer to write?",
   },
 
   contact: {
-    region: "Greater Phoenix, Arizona",
+    region: "Greater Phoenix Area",
+    /** Daniel's line in the footer, as on the business card. */
+    ownerTitle: "Owner",
     emailHref: mailto(
       "Project inquiry",
       "Name:\nPhone:\nCity:\n\nWhat I'm planning:\n",

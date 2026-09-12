@@ -1,24 +1,27 @@
 ---
 import { cn } from "./cn";
 
-/** The mono label with its leading rule: "Pavers · Turf · Outdoor Living". */
+/**
+ * The italic Garamond label above a heading — the card's "Email:" — with an
+ * optional hairline before it.
+ */
 type Props = { tone?: "dark" | "light"; class?: string; rule?: boolean };
 
-const { tone = "dark", class: className, rule = true } = Astro.props;
+const { tone = "dark", class: className, rule = false } = Astro.props;
 const onDark = tone === "light";
 ---
 
 <span
   class={cn(
     "flex items-center gap-3 eyebrow",
-    onDark ? "text-ochre-light" : "text-cherokee",
+    onDark ? "text-taupe-300" : "text-taupe-500",
     className,
   )}
 >
   {
     rule && (
       <span
-        class={cn("h-px w-8", onDark ? "bg-ochre-light/60" : "bg-cherokee/50")}
+        class={cn("h-px w-8", onDark ? "bg-taupe-300/50" : "bg-taupe-300")}
       />
     )
   }

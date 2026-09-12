@@ -1,43 +1,43 @@
 @import "tailwindcss";
 
 /*
- * "Sonoran masonry": desert sand, basalt and Cherokee-red clay. Display type is
- * Archivo at 125% width (the Expanded cut of the variable font), body is Plus
- * Jakarta, and utility labels are Space Mono — the blueprint voice.
+ * The business card, on screen: three grey squares, a Garamond, and quiet
+ * warm greys on white. Display type is Cormorant Garamond (the card's face),
+ * body is Plus Jakarta Sans. The greys are the mark's two — #635956 and
+ * #9E9997 — stretched into a scale; nothing on the site is a colour.
  */
 @theme {
   --font-display:
-    "Archivo Variable", "Archivo", ui-sans-serif, system-ui, sans-serif;
+    "Cormorant Garamond Variable", "Cormorant Garamond", Garamond, Georgia,
+    serif;
   --font-sans:
     "Plus Jakarta Sans Variable", "Plus Jakarta Sans", ui-sans-serif, system-ui,
     sans-serif;
-  --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 
-  --color-basalt-950: #181410;
-  --color-basalt-900: #211c17;
-  --color-basalt-800: #2e271f;
-  --color-basalt-700: #3d342a;
-  --color-basalt-600: #4e4336;
-  --color-basalt: #211c17;
-  --color-sand: #e5d9c3;
-  --color-sand-light: #ede3d2;
-  --color-sand-dark: #d6c6aa;
-  --color-bone: #f3ecde;
-  --color-cherokee: #a8432b;
-  --color-cherokee-dark: #8e3421;
-  --color-cherokee-light: #c0563d;
-  --color-ochre: #cd854a;
-  --color-ochre-light: #dba06e;
-  --color-sage: #71755b;
-  --color-sage-dark: #585b45;
+  /* Warm white, a shade off the card stock. */
+  --color-paper: #fbfaf8;
+  --color-taupe-50: #f5f3f1;
+  --color-taupe-100: #ebe8e5;
+  --color-taupe-200: #d9d5d2;
+  --color-taupe-300: #bcb7b4;
+  /* The mark's light square. */
+  --color-taupe-400: #9e9997;
+  --color-taupe-500: #86807d;
+  --color-taupe-600: #756c69;
+  /* The mark's dark square: the ink of the card. */
+  --color-taupe-700: #635956;
+  --color-taupe-800: #4c4441;
+  --color-taupe-900: #3a3331;
+  --color-taupe-950: #2a2523;
 
   --radius-tile: 3px;
 
-  --shadow-paver: 0 18px 40px -24px rgb(33 28 23 / 0.55);
-  --shadow-paver-lg: 0 40px 80px -36px rgb(33 28 23 / 0.6);
-  --shadow-seam: inset 0 1px 0 0 rgb(243 236 222 / 0.06);
+  --shadow-paver: 0 18px 40px -24px rgb(42 37 35 / 0.35);
+  --shadow-paver-lg: 0 40px 80px -36px rgb(42 37 35 / 0.4);
+  --shadow-seam: inset 0 1px 0 0 rgb(255 255 255 / 0.7);
 
-  --tracking-label: 0.24em;
+  --tracking-label: 0.14em;
 
   --container-shell: 80rem;
 
@@ -78,16 +78,16 @@
   }
 
   body {
-    @apply bg-sand font-sans text-basalt antialiased;
+    @apply bg-paper font-sans text-taupe-900 antialiased;
   }
 
+  /* Cormorant has a small x-height; headings run larger than the sans would. */
   h1,
   h2,
   h3,
   h4 {
-    @apply font-display font-extrabold;
-    font-stretch: 125%;
-    letter-spacing: -0.01em;
+    @apply font-display font-medium;
+    letter-spacing: -0.005em;
     text-wrap: balance;
     overflow-wrap: break-word;
   }
@@ -100,8 +100,8 @@
   }
 
   ::selection {
-    background: var(--color-cherokee);
-    color: var(--color-bone);
+    background: var(--color-taupe-700);
+    color: var(--color-paper);
   }
 
   a {
@@ -109,7 +109,7 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-cherokee);
+    outline: 2px solid var(--color-taupe-700);
     outline-offset: 3px;
     border-radius: 2px;
   }
@@ -120,34 +120,38 @@
   @apply mx-auto w-full max-w-shell px-6 sm:px-8 lg:px-10;
 }
 
-/* Monospace utility label — the craftsman/blueprint voice. */
+/* The card's "Email:" — an italic Garamond label above a block of text. */
 @utility eyebrow {
-  @apply font-mono text-[0.72rem] tracking-label uppercase;
+  @apply font-display text-[1.125rem] leading-none font-medium italic;
 }
 
-/* Display face at its Expanded width, for non-heading display text. */
-@utility font-display-wide {
-  font-family: var(--font-display);
-  font-stretch: 125%;
+/* Small capitals in the sans, for navigation and buttons. */
+@utility label {
+  @apply font-sans text-[0.76rem] font-semibold tracking-label uppercase;
 }
 
-/* The signature: a herringbone paver field drawn in CSS. Two 90°-offset
-   stripe layers masked into an interlocking weave. */
+/* The hairline the card rules under a name. */
+@utility rule {
+  @apply border-t border-taupe-300;
+}
+
+/* A herringbone paver field drawn in CSS, in the greys of the mark. Two
+   90°-offset stripe layers masked into an interlocking weave. */
 @utility herringbone {
-  background-color: #cbb896;
+  background-color: #e6e2df;
   background-image:
     linear-gradient(
       45deg,
-      #241f19 0 12.5%,
+      #9e9997 0 12.5%,
       transparent 12.5% 50%,
-      #241f19 50% 62.5%,
+      #9e9997 50% 62.5%,
       transparent 62.5%
     ),
     linear-gradient(
       -45deg,
-      #a8432b 0 12.5%,
+      #635956 0 12.5%,
       transparent 12.5% 50%,
-      #a8432b 50% 62.5%,
+      #635956 50% 62.5%,
       transparent 62.5%
     );
   background-size: 34px 34px;

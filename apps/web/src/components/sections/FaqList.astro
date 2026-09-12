@@ -8,20 +8,20 @@ type Props = { items: Faq[] };
 const { items } = Astro.props;
 ---
 
-<div class="border-t border-basalt/12">
+<div class="border-t border-taupe-900/12">
   {
     items.map((item) => (
-      <details class="group border-b border-basalt/12 py-2">
+      <details class="group border-b border-taupe-900/12 py-2">
         <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-4 [&::-webkit-details-marker]:hidden">
-          <span class="font-display-wide text-lg font-extrabold text-basalt">
+          <span class="font-display text-2xl font-medium text-taupe-900">
             {item.question}
           </span>
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-tile border border-basalt/15 text-basalt transition-colors group-open:bg-cherokee group-open:text-bone">
+          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-tile border border-taupe-900/15 text-taupe-900 transition-colors group-open:bg-taupe-700 group-open:text-white">
             <Plus className="h-4 w-4 group-open:hidden" />
             <Minus className="hidden h-4 w-4 group-open:block" />
           </span>
         </summary>
-        <p class="max-w-2xl pb-4 leading-relaxed text-basalt/70">
+        <p class="max-w-2xl pb-4 leading-relaxed text-taupe-900/70">
           {item.answer}
         </p>
       </details>

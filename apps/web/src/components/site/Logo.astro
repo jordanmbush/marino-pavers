@@ -1,13 +1,14 @@
 ---
 import { cn } from "@/components/ui/cn";
+import { site } from "@/content/site";
 import { i18n } from "@/services/i18n";
 
 /**
- * Brand mark: three square pavers on a 2×2 grid with the last corner left
- * open — one dark, two light, joints a twentieth of the width. The mark keeps
- * its two greys on light and dark ground; `tone` only recolours the wordmark,
- * set in the display face over a mono locale line. As a link it goes to the
- * home page in the current language.
+ * The business card's lockup: three square pavers on a 2×2 grid with the
+ * last corner left open — one dark, two light, joints a twentieth of the
+ * width — and the company name in the card's Garamond. The mark keeps its
+ * two greys on light and dark ground; `tone` only recolours the name. As a
+ * link it goes to the home page in the current language.
  */
 type Props = { tone?: "dark" | "light"; class?: string; asLink?: boolean };
 
@@ -16,8 +17,7 @@ const { t, href } = i18n(Astro.currentLocale);
 /** The mark's two greys. `public/favicon.svg` repeats them. */
 const MARK_DARK = "#635956";
 const MARK_LIGHT = "#9E9997";
-const text = tone === "light" ? "text-bone" : "text-basalt";
-const sub = tone === "light" ? "text-sand/60" : "text-basalt/50";
+const text = tone === "light" ? "text-taupe-100" : "text-taupe-700";
 const Wrapper = asLink ? "a" : "span";
 const wrapperProps = asLink
   ? { href: href("/"), "aria-label": t.header.logo, class: "inline-flex" }
@@ -25,31 +25,26 @@ const wrapperProps = asLink
 ---
 
 <Wrapper {...wrapperProps}>
-  <span class={cn("flex items-center gap-3", className)}>
+  <span class={cn("flex items-center gap-3 sm:gap-3.5", className)}>
     <svg
       width="36"
       height="36"
       viewBox="0 0 40 40"
       fill="none"
       aria-hidden="true"
-      class="shrink-0"
+      class="h-8 w-8 shrink-0 sm:h-9 sm:w-9"
     >
       <rect x="0" y="0" width="19" height="19" fill={MARK_DARK}></rect>
       <rect x="21" y="0" width="19" height="19" fill={MARK_LIGHT}></rect>
       <rect x="0" y="21" width="19" height="19" fill={MARK_LIGHT}></rect>
     </svg>
-    <span class="flex flex-col leading-none">
-      <span
-        class={cn(
-          "font-display-wide text-[1.15rem] font-extrabold tracking-[0.02em]",
-          text,
-        )}
-      >
-        MARINO
-      </span>
-      <span class={cn("mt-1 eyebrow text-[0.6rem] tracking-[0.3em]", sub)}
-        >Pavers · Phoenix</span
-      >
+    <span
+      class={cn(
+        "font-display text-[1.3rem] leading-none font-medium tracking-[0.005em] whitespace-nowrap sm:text-[1.55rem]",
+        text,
+      )}
+    >
+      {site.wordmark}
     </span>
   </span>
 </Wrapper>

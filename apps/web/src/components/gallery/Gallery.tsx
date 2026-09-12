@@ -89,8 +89,8 @@ export const Gallery = ({
               className={cn(
                 "rounded-tile border px-4 py-2.5 eyebrow transition-colors",
                 category === filter.slug
-                  ? "border-basalt bg-basalt text-bone"
-                  : "border-basalt/15 bg-bone text-basalt/60 hover:border-basalt/40 hover:text-basalt",
+                  ? "border-taupe-900 bg-taupe-900 text-white"
+                  : "border-taupe-900/15 bg-white text-taupe-900/60 hover:border-taupe-900/40 hover:text-taupe-900",
               )}
             >
               {filter.label}
@@ -117,7 +117,7 @@ export const Gallery = ({
       )}
 
       {showFilters && all.length > 0 && (
-        <p className="max-w-2xl font-mono text-xs leading-relaxed text-basalt/50">
+        <p className="max-w-2xl font-sans text-xs leading-relaxed text-taupe-900/50">
           {fill(copy.showing, { shown: items.length, total: all.length })}
         </p>
       )}

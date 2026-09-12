@@ -18,16 +18,18 @@ const {
 } = Astro.props;
 ---
 
-<section class="relative overflow-hidden bg-basalt-950 text-bone">
-  <div class="h-2 w-full herringbone opacity-70"></div>
+<section class="relative overflow-hidden bg-taupe-950 text-white">
+  <div class="h-1.5 w-full herringbone opacity-40"></div>
 
   <div class="shell grid gap-10 py-20 lg:grid-cols-[1.5fr_1fr] lg:items-center">
     <Reveal class="flex flex-col gap-6">
       <Eyebrow tone="light">{eyebrow}</Eyebrow>
-      <h2 class="text-[2rem] leading-[1.05] sm:text-4xl lg:text-[2.9rem]">
+      <h2 class="text-[2.5rem] leading-[1.02] sm:text-5xl lg:text-[3.4rem]">
         {title}
       </h2>
-      <p class="max-w-xl text-base leading-relaxed text-sand/75 sm:text-lg">
+      <p
+        class="max-w-xl text-base leading-relaxed text-taupe-200/75 sm:text-lg"
+      >
         {lead}
       </p>
       <div class="mt-2 flex flex-wrap gap-4">
@@ -40,28 +42,32 @@ const {
 
     <Reveal delay={120}>
       <div
-        class="rounded-tile border border-bone/15 bg-basalt-900 p-8 shadow-paver-lg"
+        class="rounded-tile border border-white/10 bg-taupe-900 p-8 shadow-paver-lg"
       >
-        <span class="eyebrow text-sand/50">{t.cta.preferTalk}</span>
+        <span class="eyebrow text-taupe-300">{t.cta.preferTalk}</span>
         <a
           href={site.phoneHref}
-          class="mt-3 block font-display-wide text-3xl font-extrabold text-bone transition-colors hover:text-ochre-light sm:text-[2.1rem]"
+          class="mt-3 block font-display text-4xl font-medium text-white transition-colors hover:text-taupe-300 sm:text-[2.6rem]"
         >
           {site.phoneDisplay}
         </a>
-        <p class="mt-4 border-t border-bone/10 pt-4 text-sm text-sand/60">
+        <p class="mt-4 border-t border-white/10 pt-4 text-sm text-taupe-200/60">
           {fill(t.cta.serving, { region: t.contact.region })}
         </p>
-        <div class="mt-6 border-t border-bone/10 pt-6">
-          <span class="eyebrow text-sand/50">{t.cta.preferWrite}</span>
+        <div class="mt-6 border-t border-white/10 pt-6">
+          <span class="eyebrow text-taupe-300">{t.cta.preferWrite}</span>
           <a
             href={t.contact.emailHref}
-            class="mt-3 block font-display-wide text-lg font-extrabold break-all text-bone transition-colors hover:text-ochre-light"
+            class="mt-3 block font-display text-2xl font-medium break-all text-white transition-colors hover:text-taupe-300"
           >
             {site.email}
           </a>
-          <p class="mt-3 text-sm text-sand/60">{t.contact.emailNotePhone}</p>
-          <p class="mt-2 text-sm text-sand/60">{t.contact.emailNoteReplies}</p>
+          <p class="mt-3 text-sm text-taupe-200/60">
+            {t.contact.emailNotePhone}
+          </p>
+          <p class="mt-2 text-sm text-taupe-200/60">
+            {t.contact.emailNoteReplies}
+          </p>
         </div>
       </div>
     </Reveal>

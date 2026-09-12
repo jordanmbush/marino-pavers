@@ -18,7 +18,7 @@ export const EmptyTiles = ({ count = 3, message }: Props) => (
       <div
         key={from}
         className={cn(
-          "relative aspect-[4/3] overflow-hidden rounded-tile border border-basalt/10 shadow-paver",
+          "relative aspect-[4/3] overflow-hidden rounded-tile border border-taupe-900/10 shadow-paver",
           i === 0 && "flex items-end",
         )}
         style={{ backgroundImage: `linear-gradient(135deg, ${from}, ${to})` }}
@@ -26,7 +26,7 @@ export const EmptyTiles = ({ count = 3, message }: Props) => (
       >
         <div className="absolute inset-0 herringbone opacity-20 mix-blend-overlay" />
         {i === 0 && (
-          <p className="relative m-5 rounded-tile bg-bone/90 px-3 py-2 font-mono text-xs text-basalt">
+          <p className="relative m-5 rounded-tile bg-white/90 px-3 py-2 font-sans text-xs text-taupe-900">
             {message}
           </p>
         )}

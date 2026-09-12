@@ -20,16 +20,16 @@ export const Field = ({
   children,
 }: Props) => (
   <div className={cn("flex flex-col gap-1.5", className)}>
-    <label htmlFor={htmlFor} className="eyebrow text-basalt/60">
+    <label htmlFor={htmlFor} className="label text-[0.7rem] text-taupe-900/60">
       {label}
     </label>
     {children}
     {error ? (
-      <p className="text-sm text-cherokee" role="alert">
+      <p className="text-sm text-taupe-700" role="alert">
         {error}
       </p>
     ) : (
-      hint && <p className="text-xs text-basalt/50">{hint}</p>
+      hint && <p className="text-xs text-taupe-900/50">{hint}</p>
     )}
   </div>
 );

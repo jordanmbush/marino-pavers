@@ -1,8 +1,7 @@
 ---
-import "@fontsource-variable/archivo/wdth.css";
+import "@fontsource-variable/cormorant-garamond/wght.css";
+import "@fontsource-variable/cormorant-garamond/wght-italic.css";
 import "@fontsource-variable/plus-jakarta-sans";
-import "@fontsource/space-mono/400.css";
-import "@fontsource/space-mono/700.css";
 import "@/styles/global.css";
 import {
   DEFAULT_LOCALE,
@@ -10,7 +9,7 @@ import {
   OG_LOCALES,
   type Locale,
 } from "@/content/locales";
-import { serviceAreas, site } from "@/content/site";
+import { serviceAreas, site, socials } from "@/content/site";
 import { i18n } from "@/services/i18n";
 
 /**
@@ -40,11 +39,12 @@ const localBusiness = {
   "@context": "https://schema.org",
   "@type": "HomeAndConstructionBusiness",
   name: site.name,
+  legalName: site.legalName,
   url: site.url,
+  founder: { "@type": "Person", name: site.owner },
   telephone: site.phoneHref.replace("tel:", ""),
   email: site.email,
   description: t.description,
-  foundingDate: String(site.foundedYear),
   priceRange: "$$",
   address: {
     "@type": "PostalAddress",
@@ -53,7 +53,7 @@ const localBusiness = {
     addressCountry: site.address.country,
   },
   areaServed: serviceAreas.map((name) => ({ "@type": "City", name })),
-  sameAs: [site.social.instagram, site.social.facebook],
+  sameAs: socials.map((network) => network.href),
 };
 ---
 
@@ -87,7 +87,7 @@ const localBusiness = {
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <meta name="theme-color" content="#211c17" />
+    <meta name="theme-color" content="#fbfaf8" />
     <meta name="application-name" content={site.name} />
 
     <meta property="og:type" content="website" />

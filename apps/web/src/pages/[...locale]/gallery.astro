@@ -18,7 +18,7 @@ const items = await prefetchManifestItems();
 <Site title={page.title} description={page.description}>
   <PageHero {...page.hero} />
 
-  <section class="bg-sand">
+  <section class="bg-paper">
     <div class="shell py-14 lg:py-20">
       <Gallery client:load initialItems={items} copy={t.gallery} showFilters />
     </div>
