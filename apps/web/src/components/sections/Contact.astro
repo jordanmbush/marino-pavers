@@ -1,0 +1,57 @@
+---
+import Section from "@/components/ui/Section.astro";
+import { site } from "@/content/site";
+import { i18n } from "@/services/i18n";
+import { fill } from "@/services/locale";
+
+/**
+ * The closing block on every page: the phone number, large, and the email
+ * with its two notes. Pages may pass their own title and lead; the facts
+ * are the same everywhere.
+ */
+type Props = { title?: string; lead?: string };
+
+const { t } = i18n(Astro.currentLocale);
+const { title = t.cta.title, lead = t.cta.lead } = Astro.props;
+const link =
+  "text-taupe-950 underline decoration-taupe-300 transition-colors hover:decoration-taupe-700";
+---
+
+<Section title={title} lead={lead}>
+  <dl class="grid gap-12 sm:grid-cols-2 sm:gap-10">
+    <div class="flex flex-col gap-4">
+      <dt class="text-base leading-none text-taupe-500">{t.cta.call}</dt>
+      <dd>
+        <a
+          href={site.phoneHref}
+          class:list={[
+            link,
+            "text-[2.25rem] leading-none underline-offset-8 sm:text-[2.75rem]",
+          ]}
+        >
+          {site.phoneDisplay}
+        </a>
+        <p class="mt-5 text-lg leading-relaxed text-taupe-600">
+          {fill(t.cta.serving, { region: t.contact.region })}
+        </p>
+      </dd>
+    </div>
+    <div class="flex flex-col gap-4">
+      <dt class="text-base leading-none text-taupe-500">{t.cta.email}</dt>
+      <dd>
+        <a
+          href={t.contact.emailHref}
+          class:list={[link, "text-2xl leading-tight break-all"]}
+        >
+          {site.email}
+        </a>
+        <p class="mt-5 text-lg leading-relaxed text-taupe-600">
+          {t.contact.emailNotePhone}
+        </p>
+        <p class="mt-2 text-base leading-relaxed text-taupe-500">
+          {t.contact.emailNoteReplies}
+        </p>
+      </dd>
+    </div>
+  </dl>
+</Section>

@@ -1,78 +1,59 @@
 ---
-import { CalendarDays } from "lucide-react";
 import Button from "@/components/ui/Button.astro";
+import { site } from "@/content/site";
 import { i18n } from "@/services/i18n";
-import PaverField from "./PaverField.astro";
 
+/**
+ * The business card, enlarged, on the logo's own grid: two by two with the
+ * last corner left open. The headline sits top-left, the card's facts
+ * top-right, the lead and the one link bottom-left; bottom-right is the
+ * missing square. The only motion on the site is these cells settling.
+ */
 const { t, href } = i18n(Astro.currentLocale);
 const hero = t.home.hero;
-const trust = [{ Icon: CalendarDays, label: hero.since }];
 ---
 
-<section class="relative overflow-hidden bg-paper">
-  <div
-    class="shell grid items-center gap-12 py-14 lg:grid-cols-[1.02fr_0.98fr] lg:py-24"
+<section
+  class="shell grid gap-x-16 gap-y-12 pt-14 pb-20 lg:grid-cols-2 lg:pt-24 lg:pb-32"
+>
+  <h1
+    class="max-w-[14ch] animate-rise text-[3rem] leading-[1.02] text-taupe-950 sm:text-[3.75rem] lg:text-[4.25rem]"
+    style="animation-delay: 0ms"
   >
-    <div class="relative z-10 flex flex-col gap-6">
-      <span
-        class="flex animate-rise items-center gap-3 eyebrow text-taupe-500"
-        style="animation-delay: 0ms"
-      >
-        <span class="h-px w-10 bg-taupe-300"></span>
-        {hero.eyebrow}
-      </span>
+    {hero.title}
+  </h1>
 
-      <h1
-        class="animate-rise text-[3.3rem] leading-[0.98] sm:text-7xl lg:text-[5.4rem]"
-        style="animation-delay: 90ms"
-      >
-        {hero.titleStart}<br />
-        <em class="text-taupe-500">{hero.titleAccent}</em><br />
-        {hero.titleEnd}
-      </h1>
-
-      <p
-        class="max-w-lg animate-rise text-lg leading-relaxed text-taupe-900/70"
-        style="animation-delay: 180ms"
-      >
-        {hero.lead}
+  <div
+    class="order-3 animate-rise lg:order-none lg:justify-self-end"
+    style="animation-delay: 160ms"
+  >
+    <div class="max-w-sm border-t border-taupe-300 pt-5 lg:w-[22rem]">
+      <p class="text-[1.75rem] leading-none text-taupe-950">{site.owner}</p>
+      <p class="mt-2 text-base leading-none text-taupe-500">
+        {t.contact.ownerTitle}
       </p>
-
-      <div
-        class="mt-2 flex animate-rise flex-wrap gap-4"
-        style="animation-delay: 260ms"
-      >
-        <Button href={href("/gallery")} size="lg">{hero.cta}</Button>
-      </div>
-
       <ul
-        class="mt-4 flex animate-rise flex-wrap gap-x-6 gap-y-3"
-        style="animation-delay: 340ms"
+        class="mt-6 flex flex-col gap-2 border-t border-taupe-300 pt-5 text-lg leading-snug text-taupe-700"
       >
-        {
-          trust.map(({ Icon, label }) => (
-            <li class="flex items-center gap-2 text-sm text-taupe-900/70">
-              <Icon className="h-4 w-4 text-taupe-500" strokeWidth={2} />
-              {label}
-            </li>
-          ))
-        }
+        <li>{hero.experience}</li>
+        <li>{t.contact.region}</li>
+        <li>
+          <a
+            href={site.phoneHref}
+            class="text-taupe-950 underline decoration-taupe-300 hover:decoration-taupe-700"
+          >
+            {site.phoneDisplay}
+          </a>
+        </li>
       </ul>
     </div>
+  </div>
 
-    <div
-      class="relative h-[300px] animate-rise sm:h-[420px] lg:h-[560px]"
-      style="animation-delay: 140ms"
-    >
-      <PaverField class="rounded-tile" />
-      <div
-        class="absolute bottom-5 left-5 rounded-tile border border-taupe-900/10 bg-white/95 px-4 py-3 shadow-paver backdrop-blur"
-      >
-        <span class="eyebrow text-taupe-500">{hero.calloutEyebrow}</span>
-        <p class="mt-1.5 font-display text-xl font-medium text-taupe-900">
-          {hero.callout}
-        </p>
-      </div>
-    </div>
+  <div
+    class="order-2 flex max-w-[34rem] animate-rise flex-col items-start gap-8 lg:order-none"
+    style="animation-delay: 80ms"
+  >
+    <p class="text-xl leading-relaxed text-taupe-700">{hero.lead}</p>
+    <Button href={href("/gallery")} size="lg">{hero.cta}</Button>
   </div>
 </section>

@@ -160,7 +160,7 @@ show it to the client at `https://dev.marinopavers.com`.
 - **Astro 7's compiler is strict**: unclosed tags are errors, and whitespace
   between inline elements follows JSX rules — use `{" "}` where a space matters.
 - **`as` is not a safe prop name in `.astro` files**: the compiler loses the
-  `Props` type. `Reveal` uses `tag`.
+  `Props` type. Call such a prop `tag`.
 - **Filenames must differ by more than case.** `Button.tsx` and `button.ts`
   resolve to the same module on macOS; hence `button-classes.ts`.
 - **Lucide dropped brand icons**; Instagram and Facebook are inline SVGs in

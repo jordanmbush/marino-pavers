@@ -1,0 +1,31 @@
+---
+import Section from "@/components/ui/Section.astro";
+import { getServices } from "@/services/content";
+import { i18n } from "@/services/i18n";
+
+/** The six services as one ruled list; each row opens its entry on the services page. */
+const { locale, t, href } = i18n(Astro.currentLocale);
+const services = await getServices(locale);
+---
+
+<Section {...t.home.services}>
+  <ul class="border-t border-taupe-200">
+    {
+      services.map((service) => (
+        <li class="border-b border-taupe-200">
+          <a
+            href={href(`/services#${service.id}`)}
+            class="group grid gap-1 py-6 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] sm:gap-8"
+          >
+            <h3 class="text-2xl leading-tight text-taupe-950 underline decoration-transparent transition-colors group-hover:decoration-taupe-400">
+              {service.title}
+            </h3>
+            <p class="text-lg leading-relaxed text-taupe-600">
+              {service.tagline}
+            </p>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

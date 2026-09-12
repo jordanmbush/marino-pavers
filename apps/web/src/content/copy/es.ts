@@ -1,4 +1,4 @@
-import { mailto, serviceAreas, site } from "../site";
+import { mailto, site } from "../site";
 import type { Copy } from "./en";
 
 /**
@@ -28,48 +28,31 @@ export const es: Copy = {
   home: {
     title: "Marino Pavers — Adoquín, entradas y pasto sintético en Phoenix",
     hero: {
-      eyebrow: "Adoquines · Pasto sintético · Vida al aire libre",
-      titleStart: "Espacios exteriores",
-      titleAccent: "hechos para durar",
-      titleEnd: "más que el desierto.",
+      title:
+        "Patios de adoquín, entradas y decks de alberca, hechos para el calor de Phoenix.",
       lead: "Marino Pavers diseña e instala patios, entradas para autos, decks de alberca y pasto sintético a la medida en todo el Valle, construidos desde la base para aguantar el calor de Arizona, el monzón y el paso del tiempo.",
-      cta: "Ver galería de fotos",
-      since: `${site.yearsExperience} años de experiencia`,
-      calloutEyebrow: "Patrón espiga",
-      callout: "Entrada · Scottsdale",
+      cta: "Ver la galería de fotos",
+      experience: `${site.yearsExperience} años de experiencia`,
     },
-    stats: [
-      { value: site.yearsExperience, label: "Años de experiencia" },
-      { value: site.projectsInstalled, label: "Proyectos instalados" },
-      {
-        value: `${serviceAreas.length}`,
-        label: "Ciudades del Valle atendidas",
-      },
-    ],
     services: {
-      eyebrow: "Lo que construimos",
-      title: "Seis formas de vivir mejor afuera.",
-      lead: "Cada superficie diseñada para el desierto y colocada por nuestras propias cuadrillas, nunca subcontratada al postor más barato.",
-    },
-    process: {
-      eyebrow: "Cómo funciona",
-      title: "Del primer recorrido a la garantía.",
-      lead: "Cinco pasos, una cuadrilla, sin misterios. Siempre sabrá qué está pasando en su patio y qué sigue.",
+      title: "Servicios",
+      lead: "Cada superficie diseñada para el desierto y colocada por nuestra propia cuadrilla, nunca subcontratada.",
     },
     featured: {
-      eyebrow: "Trabajos recientes",
-      title: "Construido en todo el Valle.",
+      title: "Trabajos recientes",
       lead: "Algunos patios, entradas y decks de alberca que terminamos hace poco.",
-      link: "Ver galería de fotos",
+      link: "Ver la galería de fotos",
+    },
+    process: {
+      title: "Cómo funciona",
+      lead: "Cinco pasos, una cuadrilla, sin misterios. Siempre sabrá qué está pasando en su patio y qué sigue.",
     },
     testimonials: {
-      eyebrow: "Desde el Valle",
-      title: "Propietarios que dejaron de posponerlo.",
+      title: "Lo que dicen los propietarios",
     },
     area: {
-      eyebrow: "Dónde trabajamos",
-      title: "Al servicio del Área Metropolitana de Phoenix.",
-      lead: "Desde Cave Creek hasta Queen Creek, cubrimos el Valle. ¿No ve su ciudad? Pregunte: viajamos por el proyecto adecuado.",
+      title: "Dónde trabajamos",
+      lead: "Desde Cave Creek hasta Queen Creek, cubrimos el Valle. ¿No ve su ciudad? Pregunte; viajamos por el proyecto adecuado.",
     },
   },
 
@@ -79,15 +62,13 @@ export const es: Copy = {
     description:
       "Patios de adoquín, entradas, decks de alberca, pasto sintético, andadores y vida al aire libre en el área de Phoenix. Una cuadrilla, base bien hecha, garantía.",
     hero: {
-      eyebrow: "Servicios",
-      title: "Todo lo que convierte un terreno vacío en un destino.",
-      lead: "Seis especialidades, una cuadrilla. Ya sea un solo andador o un patio trasero completo, el trabajo de base y el detalle del acabado son los mismos: bien hechos.",
+      title: "Servicios",
+      lead: "Seis especialidades, una cuadrilla. Ya sea un solo andador o un patio trasero completo, el trabajo de base y el detalle del acabado son los mismos.",
     },
-    seeBuilt: "Ver proyectos de {service} →",
+    seeBuilt: "Ver proyectos de {service}",
     faq: {
-      eyebrow: "Buenas preguntas",
-      title: "Respuestas antes de que pregunte.",
-      lead: "Lo que los propietarios del Valle quieren saber antes de decidirse.",
+      title: "Preguntas frecuentes",
+      lead: "Lo que los propietarios del Valle preguntan antes de decidirse.",
     },
   },
 
@@ -96,13 +77,11 @@ export const es: Copy = {
     description:
       "Fotos de patios de adoquín, entradas, decks de alberca, pasto sintético y vida al aire libre que Marino Pavers ha instalado en el área de Phoenix.",
     hero: {
-      eyebrow: "Galería de fotos",
-      title: "Colocado en todo el Valle, un patio a la vez.",
+      title: "Galería de fotos",
       lead: "Patios, entradas, decks de alberca y pasto sintético, de Cave Creek a Queen Creek. Filtre por lo que tiene en mente.",
     },
     cta: {
-      eyebrow: "Su patio es el siguiente",
-      title: "¿Vio algo que quiere en su propio patio?",
+      title: "Su patio es el siguiente",
       lead: "Envíenos una foto de su espacio y una nota de lo que busca. Le responderemos con ideas y una cotización honesta.",
     },
   },
@@ -120,7 +99,7 @@ export const es: Copy = {
     },
     empty: "Las fotos de proyectos vienen en camino.",
     showing:
-      "Mostrando {shown} de {total} proyectos recientes. ¿Quiere ver algo en específico: una línea de adoquín, un patrón, un patio completo? Pregunte y le enviamos fotos de trabajos como el suyo.",
+      "Mostrando {shown} de {total} proyectos recientes. ¿Quiere ver algo en específico, una línea de adoquín, un patrón, un patio completo? Pregunte y le enviamos fotos de trabajos como el suyo.",
     close: "Cerrar",
     previous: "Foto anterior",
     next: "Foto siguiente",
@@ -129,13 +108,11 @@ export const es: Copy = {
   },
 
   cta: {
-    eyebrow: "Contáctenos",
-    title: "Construyamos algo que de verdad use afuera.",
-    lead: "Cuéntenos de su espacio y lo recorremos con usted, llevamos muestras y le dejamos una cotización honesta y detallada, sin presión.",
-    call: "Llamar ahora",
-    preferTalk: "¿Prefiere hablar?",
+    title: "Contacto",
+    lead: "Cuéntenos de su espacio y lo recorremos con usted, llevamos muestras y le dejamos una cotización honesta y detallada.",
+    call: "Llamar",
+    email: "Correo",
     serving: "Servimos en toda el {region}.",
-    preferWrite: "¿Prefiere escribir?",
   },
 
   contact: {
@@ -153,11 +130,9 @@ export const es: Copy = {
 
   notFound: {
     title: "Página no encontrada — Marino Pavers",
-    description: "Esa página se la llevó la lluvia.",
-    eyebrow: "Error 404",
-    titleStart: "Este camino no lleva",
-    titleAccent: "a ningún lado.",
-    lead: "Parece que este se lo llevó la lluvia. Los demás caminos del sitio están en tierra firme: regrese y elija uno.",
+    description: "Esa dirección no existe en el sitio.",
+    heading: "Página no encontrada",
+    lead: "Esa dirección no existe en el sitio. Vuelva al inicio o elija una página abajo.",
     back: "Volver al inicio",
     pages: "Páginas del sitio",
   },
@@ -166,7 +141,7 @@ export const es: Copy = {
     blurb:
       "Patios de adoquín, entradas para autos, decks de alberca, pasto sintético y vida al aire libre a la medida, construidos desde la base para el desierto de Arizona.",
     services: "Servicios",
-    explore: "Explorar",
+    explore: "Páginas",
     contact: "Contacto",
     instagram: "Marino Pavers en Instagram",
     facebook: "Marino Pavers en Facebook",

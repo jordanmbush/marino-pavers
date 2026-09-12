@@ -23,7 +23,7 @@ type Props = {
   initialItems: ReadyMediaItem[];
   /** The page's language, as strings. The island never imports a dictionary. */
   copy: GalleryCopy;
-  /** Show the category chips and honour `?category=` in the URL. */
+  /** Show the category filters and honour `?category=` in the URL. */
   showFilters?: boolean;
   /** Featured-first, capped — the home-page strip. */
   limit?: number;
@@ -76,7 +76,7 @@ export const Gallery = ({
     <div className="flex flex-col gap-10">
       {showFilters && (
         <div
-          className="flex flex-wrap gap-2.5"
+          className="flex flex-wrap gap-x-7 gap-y-3 border-b border-taupe-200 pb-4"
           role="group"
           aria-label={copy.filterLabel}
         >
@@ -87,10 +87,10 @@ export const Gallery = ({
               onClick={() => setCategory(filter.slug)}
               aria-pressed={category === filter.slug}
               className={cn(
-                "rounded-tile border px-4 py-2.5 eyebrow transition-colors",
+                "-mb-px border-b pb-1 text-lg leading-none transition-colors",
                 category === filter.slug
-                  ? "border-taupe-900 bg-taupe-900 text-white"
-                  : "border-taupe-900/15 bg-white text-taupe-900/60 hover:border-taupe-900/40 hover:text-taupe-900",
+                  ? "border-taupe-950 text-taupe-950"
+                  : "border-transparent text-taupe-500 hover:text-taupe-950",
               )}
             >
               {filter.label}
@@ -102,7 +102,7 @@ export const Gallery = ({
       {items.length === 0 ? (
         <EmptyTiles count={limit ?? 3} message={copy.empty} />
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item, i) => (
             <PhotoCard
               key={item.id}
@@ -117,7 +117,7 @@ export const Gallery = ({
       )}
 
       {showFilters && all.length > 0 && (
-        <p className="max-w-2xl font-sans text-xs leading-relaxed text-taupe-900/50">
+        <p className="max-w-[62ch] text-base leading-relaxed text-taupe-500">
           {fill(copy.showing, { shown: items.length, total: all.length })}
         </p>
       )}

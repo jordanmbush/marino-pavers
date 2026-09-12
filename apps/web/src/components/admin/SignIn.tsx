@@ -46,7 +46,7 @@ export const SignIn = (props: Props) => {
         event.preventDefault();
         void submit();
       }}
-      className="mx-auto flex w-full max-w-md flex-col gap-5 rounded-tile border border-taupe-900/10 bg-white p-8 shadow-paver"
+      className="shadow-paver mx-auto flex w-full max-w-md flex-col gap-5 rounded-tile border border-taupe-900/10 bg-white p-8"
     >
       <div>
         <span className="eyebrow text-taupe-700">Photo library</span>

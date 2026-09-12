@@ -1,0 +1,33 @@
+---
+import { cn } from "./cn";
+
+/**
+ * A ruled block: the heading in the narrow left column, the content beside
+ * it — the card's label-and-value rhythm at page scale. Every section of
+ * every public page is one of these, so a reader learns the page once.
+ */
+type Props = { id?: string; title: string; lead?: string; class?: string };
+
+const { id, title, lead, class: className } = Astro.props;
+---
+
+<section
+  id={id}
+  class={cn("scroll-mt-20 border-t border-taupe-200", className)}
+>
+  <div
+    class="shell grid gap-10 py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,2.4fr)] lg:gap-20 lg:py-24"
+  >
+    <header class="flex flex-col gap-4">
+      <h2 class="text-[2rem] leading-tight text-taupe-700">{title}</h2>
+      {
+        lead && (
+          <p class="max-w-xs text-lg leading-relaxed text-taupe-600">{lead}</p>
+        )
+      }
+    </header>
+    <div class="min-w-0">
+      <slot />
+    </div>
+  </div>
+</section>

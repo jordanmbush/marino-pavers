@@ -1,0 +1,22 @@
+---
+/** An interior page's opening: its name, large, and one paragraph on what it holds. */
+type Props = { title: string; lead?: string };
+
+const { title, lead } = Astro.props;
+---
+
+<section class="shell pt-14 pb-14 lg:pt-24 lg:pb-20">
+  <h1
+    class="max-w-[16ch] text-[3rem] leading-[1.02] text-taupe-950 sm:text-[3.75rem] lg:text-[4.5rem]"
+  >
+    {title}
+  </h1>
+  {
+    lead && (
+      <p class="mt-6 max-w-[58ch] text-xl leading-relaxed text-taupe-700">
+        {lead}
+      </p>
+    )
+  }
+  <slot />
+</section>

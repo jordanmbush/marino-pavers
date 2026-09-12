@@ -20,7 +20,7 @@ export const Field = ({
   children,
 }: Props) => (
   <div className={cn("flex flex-col gap-1.5", className)}>
-    <label htmlFor={htmlFor} className="label text-[0.7rem] text-taupe-900/60">
+    <label htmlFor={htmlFor} className="text-base text-taupe-600">
       {label}
     </label>
     {children}

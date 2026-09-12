@@ -2,7 +2,6 @@
   {
     "id": "paver-patios",
     "order": 1,
-    "icon": "layout-grid",
     "category": "patios",
     "en": {
       "title": "Paver Patios",
@@ -30,7 +29,6 @@
   {
     "id": "driveways",
     "order": 2,
-    "icon": "car",
     "category": "driveways",
     "en": {
       "title": "Paver Driveways",
@@ -58,7 +56,6 @@
   {
     "id": "artificial-turf",
     "order": 3,
-    "icon": "sprout",
     "category": "turf",
     "en": {
       "title": "Artificial Turf",
@@ -86,7 +83,6 @@
   {
     "id": "pool-decks",
     "order": 4,
-    "icon": "waves",
     "category": "pool-decks",
     "en": {
       "title": "Pool Decks & Coping",
@@ -114,7 +110,6 @@
   {
     "id": "walkways",
     "order": 5,
-    "icon": "footprints",
     "category": "walkways",
     "en": {
       "title": "Walkways & Steps",
@@ -142,7 +137,6 @@
   {
     "id": "outdoor-living",
     "order": 6,
-    "icon": "flame",
     "category": "outdoor-living",
     "en": {
       "title": "Outdoor Living",

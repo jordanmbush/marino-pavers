@@ -7,7 +7,7 @@ import { i18n } from "@/services/i18n";
  * EN / ES. Plain links to the same page in the other language — no script,
  * no cookie, no redirect — so a crawler follows it and a person can bookmark
  * the language they want. Desktop shows both languages with the current one
- * marked; a phone's header bar only has room for a single square offering
+ * in ink; a phone's header bar only has room for a single square offering
  * the other one, sized like the menu button beside it.
  */
 type Props = { alternates: Record<Locale, string>; class?: string };
@@ -20,28 +20,35 @@ const others = LOCALES.filter((code) => code !== locale);
 <nav
   aria-label={t.header.language}
   class={cn(
-    "hidden h-10 items-center gap-0.5 rounded-tile border border-taupe-900/15 p-1 lg:flex",
+    "hidden items-center gap-2 text-lg leading-none lg:flex",
     className,
   )}
 >
   {
-    LOCALES.map((code) => (
-      <a
-        href={alternates[code]}
-        data-language-link
-        lang={code}
-        hreflang={code}
-        aria-label={LOCALE_NAMES[code]}
-        aria-current={code === locale ? "true" : undefined}
-        class={cn(
-          "flex h-full items-center rounded-[2px] px-2.5 label text-[0.66rem] transition-colors",
-          code === locale
-            ? "bg-taupe-900 text-white"
-            : "text-taupe-900/60 hover:bg-taupe-900/8 hover:text-taupe-900",
+    LOCALES.map((code, i) => (
+      <>
+        {i > 0 && (
+          <span class="text-taupe-300" aria-hidden="true">
+            /
+          </span>
         )}
-      >
-        {code.toUpperCase()}
-      </a>
+        <a
+          href={alternates[code]}
+          data-language-link
+          lang={code}
+          hreflang={code}
+          aria-label={LOCALE_NAMES[code]}
+          aria-current={code === locale ? "true" : undefined}
+          class={cn(
+            "transition-colors",
+            code === locale
+              ? "text-taupe-950"
+              : "text-taupe-500 hover:text-taupe-950",
+          )}
+        >
+          {code.toUpperCase()}
+        </a>
+      </>
     ))
   }
 </nav>
@@ -55,7 +62,7 @@ const others = LOCALES.filter((code) => code !== locale);
       hreflang={code}
       aria-label={LOCALE_NAMES[code]}
       class={cn(
-        "flex h-10 w-10 items-center justify-center rounded-tile border border-taupe-900/15 label text-[0.66rem] text-taupe-900 transition-colors hover:bg-taupe-900 hover:text-white lg:hidden",
+        "flex h-10 w-10 items-center justify-center rounded-tile border border-taupe-300 text-base leading-none text-taupe-950 transition-colors hover:bg-taupe-950 hover:text-paper lg:hidden",
         className,
       )}
     >

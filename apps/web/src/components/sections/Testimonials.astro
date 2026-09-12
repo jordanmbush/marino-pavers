@@ -1,37 +1,27 @@
 ---
-import { Quote } from "lucide-react";
-import Reveal from "@/components/ui/Reveal.astro";
-import SectionHeading from "@/components/ui/SectionHeading.astro";
+import Section from "@/components/ui/Section.astro";
 import { getTestimonials } from "@/services/content";
 import { i18n } from "@/services/i18n";
 
+/** Three homeowners in their own words. Quotes are the one place italic appears. */
 const { locale, t } = i18n(Astro.currentLocale);
 const testimonials = await getTestimonials(locale);
 ---
 
-<section class="bg-taupe-50">
-  <div class="shell py-20 lg:py-28">
-    <SectionHeading {...t.home.testimonials} />
-
-    <div class="mt-14 grid gap-6 md:grid-cols-3">
-      {
-        testimonials.map((item, i) => (
-          <Reveal delay={i * 100}>
-            <figure class="flex h-full flex-col gap-6 rounded-tile border border-taupe-200 bg-white p-8 shadow-seam">
-              <Quote className="h-7 w-7 text-taupe-300" strokeWidth={1.6} />
-              <blockquote class="flex-1 font-display text-[1.45rem] leading-snug text-taupe-800">
-                “{item.quote}”
-              </blockquote>
-              <figcaption class="border-t border-taupe-200 pt-5">
-                <p class="text-sm font-semibold text-taupe-900">{item.name}</p>
-                <p class="mt-1 text-sm text-taupe-500">
-                  {item.city} · {item.project}
-                </p>
-              </figcaption>
-            </figure>
-          </Reveal>
-        ))
-      }
-    </div>
+<Section title={t.home.testimonials.title}>
+  <div class="grid gap-10 md:grid-cols-3 md:gap-8">
+    {
+      testimonials.map((item) => (
+        <figure class="flex flex-col gap-5 border-t border-taupe-200 pt-6">
+          <blockquote class="text-[1.375rem] leading-snug text-taupe-950 italic">
+            “{item.quote}”
+          </blockquote>
+          <figcaption class="text-base leading-snug text-taupe-600">
+            <span class="block text-lg text-taupe-950">{item.name}</span>
+            {item.project}, {item.city}
+          </figcaption>
+        </figure>
+      ))
+    }
   </div>
-</section>
+</Section>

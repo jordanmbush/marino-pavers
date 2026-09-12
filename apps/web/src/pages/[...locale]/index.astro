@@ -1,13 +1,12 @@
 ---
 import Site from "@/layouts/Site.astro";
 import Hero from "@/components/sections/Hero.astro";
-import Stats from "@/components/sections/Stats.astro";
-import ServicesGrid from "@/components/sections/ServicesGrid.astro";
-import Process from "@/components/sections/Process.astro";
+import ServicesList from "@/components/sections/ServicesList.astro";
 import FeaturedWork from "@/components/sections/FeaturedWork.astro";
+import Process from "@/components/sections/Process.astro";
 import Testimonials from "@/components/sections/Testimonials.astro";
 import ServiceArea from "@/components/sections/ServiceArea.astro";
-import CtaBand from "@/components/sections/CtaBand.astro";
+import Contact from "@/components/sections/Contact.astro";
 import { i18n } from "@/services/i18n";
 import { localeParams } from "@/services/locale";
 
@@ -23,11 +22,10 @@ const { t } = i18n(Astro.currentLocale);
 
 <Site title={t.home.title} description={t.description}>
   <Hero />
-  <Stats />
-  <ServicesGrid />
-  <Process />
+  <ServicesList />
   <FeaturedWork />
+  <Process />
   <Testimonials />
   <ServiceArea />
-  <CtaBand />
+  <Contact />
 </Site>

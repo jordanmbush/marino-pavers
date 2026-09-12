@@ -92,7 +92,7 @@ export const UploadPanel = ({ client, onUploaded }: Props) => {
   };
 
   return (
-    <section className="flex flex-col gap-5 rounded-tile border border-taupe-900/10 bg-white p-6 shadow-paver sm:p-8">
+    <section className="shadow-paver flex flex-col gap-5 rounded-tile border border-taupe-900/10 bg-white p-6 sm:p-8">
       <div>
         <span className="eyebrow text-taupe-700">Add photos</span>
         <h2 className="mt-2 text-xl">Upload from a job</h2>
