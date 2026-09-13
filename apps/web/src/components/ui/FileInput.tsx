@@ -30,16 +30,16 @@ export const FileInput = ({
     <label
       htmlFor={id}
       className={cn(
-        "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-tile border-2 border-dashed border-basalt/20 bg-sand-light px-6 py-10 text-center text-sm text-basalt/70 transition-colors focus-within:border-cherokee hover:border-cherokee hover:text-basalt",
+        "flex cursor-pointer flex-col items-center justify-center gap-2 rounded-tile border-2 border-dashed border-taupe-900/20 bg-taupe-50 px-6 py-10 text-center text-sm text-taupe-900/70 transition-colors focus-within:border-taupe-700 hover:border-taupe-700 hover:text-taupe-900",
         disabled && "cursor-not-allowed opacity-60",
         className,
       )}
     >
-      <UploadCloud className="h-7 w-7 text-cherokee" strokeWidth={1.8} />
-      <span className="font-display-wide font-extrabold text-basalt">
+      <UploadCloud className="h-7 w-7 text-taupe-700" strokeWidth={1.8} />
+      <span className="font-display font-medium text-taupe-900">
         {children}
       </span>
-      <span className="text-xs text-basalt/50">
+      <span className="text-xs text-taupe-900/50">
         JPEG, PNG or WebP · up to 25 MB each
       </span>
       <input

@@ -24,7 +24,7 @@ import prettier from "eslint-config-prettier/flat";
  *                             only layer in the app that fetches or touches
  *                             browser storage. Framework-agnostic.
  *   apps/web/src/content/     CONTENT. Zod-validated collections (services,
- *                             FAQs, testimonials…). Read through the content
+ *                             process, FAQs). Read through the content
  *                             service, never straight from a view.
  *   apps/web/src/pages/       VIEW. Astro pages (static HTML) and React
  *   apps/web/src/layouts/     islands. Calls services; renders what it gets.

@@ -1,84 +1,74 @@
 ---
-import { Mail, MapPin, Phone } from "lucide-react";
-import { nav, serviceAreas, site } from "@/content/site";
+import {
+  nav,
+  serviceAreas,
+  site,
+  socials,
+  type SocialId,
+} from "@/content/site";
 import { getServices } from "@/services/content";
 import { i18n } from "@/services/i18n";
 import { fill } from "@/services/locale";
 import Logo from "./Logo.astro";
+import SocialIcon from "./SocialIcon.astro";
 
+/** The back of the card: the lockup and the owner's line, then the links, all on linen. */
 const { locale, t, href } = i18n(Astro.currentLocale);
 const services = await getServices(locale);
 const year = new Date().getFullYear();
 const areas = serviceAreas.slice(0, -1).join(", ");
 const lastArea = serviceAreas[serviceAreas.length - 1];
+const socialLabel: Record<SocialId, string> = {
+  instagram: t.footer.instagram,
+  facebook: t.footer.facebook,
+};
 ---
 
-<footer class="mt-auto bg-basalt-950 text-sand">
+<footer class="mt-auto border-t border-taupe-200 bg-taupe-50 text-taupe-700">
   <div
-    class="shell grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]"
+    class="shell grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.2fr] lg:py-20"
   >
-    <div class="flex flex-col gap-5">
-      <Logo tone="light" />
-      <p class="max-w-xs text-sm leading-relaxed text-sand/65">
+    <div class="flex flex-col gap-6">
+      <Logo />
+      <div>
+        <p class="text-2xl leading-none text-taupe-950">{site.owner}</p>
+        <p class="mt-2 text-base leading-none text-taupe-500">
+          {t.contact.ownerTitle}
+        </p>
+        <span class="mt-5 block h-px w-40 bg-taupe-300" aria-hidden="true"
+        ></span>
+      </div>
+      <p class="max-w-xs text-lg leading-relaxed text-taupe-600">
         {t.footer.blurb}
       </p>
-      <div class="flex gap-3">
-        <a
-          href={site.social.instagram}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={t.footer.instagram}
-          class="flex h-10 w-10 items-center justify-center rounded-tile border border-bone/15 text-sand/70 transition-colors hover:border-ochre hover:text-ochre"
-        >
-          <svg
-            class="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-          </svg>
-        </a>
-        <a
-          href={site.social.facebook}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={t.footer.facebook}
-          class="flex h-10 w-10 items-center justify-center rounded-tile border border-bone/15 text-sand/70 transition-colors hover:border-ochre hover:text-ochre"
-        >
-          <svg
-            class="h-4 w-4"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-          >
-            <path
-              d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
-            ></path>
-          </svg>
-        </a>
-      </div>
+      <ul class="flex gap-4">
+        {
+          socials.map(({ id, href: url }) => (
+            <li>
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={socialLabel[id]}
+                class="inline-flex rounded-[6px] transition-opacity hover:opacity-80"
+              >
+                <SocialIcon id={id} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
     </div>
 
     <div class="flex flex-col gap-4">
-      <h4 class="eyebrow text-ochre-light">{t.footer.services}</h4>
-      <ul class="flex flex-col gap-2.5">
+      <h4 class="text-base leading-none text-taupe-500">{t.footer.services}</h4>
+      <ul class="flex flex-col gap-2">
         {
           services.map((s) => (
             <li>
               <a
                 href={href(`/services#${s.id}`)}
-                class="text-sm text-sand/70 transition-colors hover:text-bone"
+                class="text-lg text-taupe-950 hover:underline"
               >
                 {s.title}
               </a>
@@ -89,14 +79,14 @@ const lastArea = serviceAreas[serviceAreas.length - 1];
     </div>
 
     <div class="flex flex-col gap-4">
-      <h4 class="eyebrow text-ochre-light">{t.footer.explore}</h4>
-      <ul class="flex flex-col gap-2.5">
+      <h4 class="text-base leading-none text-taupe-500">{t.footer.explore}</h4>
+      <ul class="flex flex-col gap-2">
         {
           nav.map((item) => (
             <li>
               <a
                 href={href(item.href)}
-                class="text-sm text-sand/70 transition-colors hover:text-bone"
+                class="text-lg text-taupe-950 hover:underline"
               >
                 {t.nav[item.id]}
               </a>
@@ -107,46 +97,35 @@ const lastArea = serviceAreas[serviceAreas.length - 1];
     </div>
 
     <div class="flex flex-col gap-4">
-      <h4 class="eyebrow text-ochre-light">{t.footer.contact}</h4>
-      <ul class="flex flex-col gap-3 text-sm text-sand/70">
+      <h4 class="text-base leading-none text-taupe-500">{t.footer.contact}</h4>
+      <ul class="flex flex-col gap-3 text-lg">
         <li>
-          <a
-            href={site.phoneHref}
-            class="flex items-center gap-3 transition-colors hover:text-bone"
-          >
-            <Phone className="h-4 w-4 shrink-0 text-ochre" />
+          <a href={site.phoneHref} class="text-taupe-950 hover:underline">
             {site.phoneDisplay}
           </a>
         </li>
-        <li class="flex flex-col gap-1">
+        <li>
           <a
             href={t.contact.emailHref}
-            class="flex items-center gap-3 transition-colors hover:text-bone"
+            class="break-all text-taupe-950 hover:underline"
           >
-            <Mail className="h-4 w-4 shrink-0 text-ochre" />
             {site.email}
           </a>
-          <p class="pl-7 text-xs text-sand/50">{t.contact.emailNotePhone}</p>
+          <p class="mt-1 text-base leading-snug text-taupe-500">
+            {t.contact.emailNotePhone}
+          </p>
         </li>
-        <li class="flex items-center gap-3">
-          <MapPin className="h-4 w-4 shrink-0 text-ochre" />
-          {t.contact.region}
-        </li>
+        <li class="text-taupe-700">{t.contact.region}</li>
       </ul>
     </div>
   </div>
 
   <div class="shell">
-    <p class="border-t border-bone/10 py-4 text-xs text-sand/50">
+    <p class="border-t border-taupe-200 py-5 text-base text-taupe-500">
       {fill(t.footer.serving, { areas, last: lastArea })}
     </p>
-  </div>
-
-  <div class="border-t border-bone/10">
-    <div
-      class="shell flex flex-col gap-2 py-6 text-xs text-sand/50 sm:flex-row sm:items-center sm:justify-between"
-    >
-      <p>© {year} {site.name}. {t.footer.rights}</p>
-    </div>
+    <p class="border-t border-taupe-200 py-5 text-base text-taupe-500">
+      © {year}{" "}{site.legalName}.{" "}{t.footer.rights}
+    </p>
   </div>
 </footer>

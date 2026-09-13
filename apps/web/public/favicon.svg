@@ -1,12 +1,7 @@
 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="7" fill="#211C17"/>
-  <!-- basketweave paver mark -->
-  <rect x="5" y="5" width="9.5" height="4.4" rx="1" fill="#F3ECDE"/>
-  <rect x="5" y="10.1" width="9.5" height="4.4" rx="1" fill="#F3ECDE"/>
-  <rect x="16.6" y="5" width="4.4" height="9.5" rx="1" fill="#A8432B"/>
-  <rect x="21.6" y="5" width="4.4" height="9.5" rx="1" fill="#F3ECDE"/>
-  <rect x="5" y="16.6" width="4.4" height="9.5" rx="1" fill="#F3ECDE"/>
-  <rect x="10" y="16.6" width="4.4" height="9.5" rx="1" fill="#F3ECDE"/>
-  <rect x="16.6" y="16.6" width="9.5" height="4.4" rx="1" fill="#F3ECDE"/>
-  <rect x="16.6" y="21.7" width="9.5" height="4.4" rx="1" fill="#F3ECDE"/>
+  <rect width="32" height="32" rx="7" fill="#F3ECDE"/>
+  <!-- three-square mark; the joint is widened so it survives 16px -->
+  <rect x="6" y="6" width="9" height="9" fill="#635956"/>
+  <rect x="17" y="6" width="9" height="9" fill="#9E9997"/>
+  <rect x="6" y="17" width="9" height="9" fill="#9E9997"/>
 </svg>

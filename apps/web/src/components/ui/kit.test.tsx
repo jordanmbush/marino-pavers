@@ -20,7 +20,7 @@ describe("Button", () => {
   it("bare drops every visual class but keeps a focus ring", () => {
     const classes = buttonClasses({ variant: "bare", class: "x" });
     expect(classes).not.toContain("bg-");
-    expect(classes).toContain("focus-visible:outline-cherokee");
+    expect(classes).toContain("focus-visible:outline-taupe-700");
     expect(classes).toContain("x");
   });
 

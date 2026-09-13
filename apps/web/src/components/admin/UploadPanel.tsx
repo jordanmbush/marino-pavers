@@ -92,11 +92,11 @@ export const UploadPanel = ({ client, onUploaded }: Props) => {
   };
 
   return (
-    <section className="flex flex-col gap-5 rounded-tile border border-basalt/10 bg-bone p-6 shadow-paver sm:p-8">
+    <section className="shadow-paver flex flex-col gap-5 rounded-tile border border-taupe-900/10 bg-white p-6 sm:p-8">
       <div>
-        <span className="eyebrow text-cherokee">Add photos</span>
+        <span className="eyebrow text-taupe-700">Add photos</span>
         <h2 className="mt-2 text-xl">Upload from a job</h2>
-        <p className="mt-1 text-sm text-basalt/60">
+        <p className="mt-1 text-sm text-taupe-900/60">
           Set the category and location first — they apply to every photo in
           this batch and can be changed later.
         </p>
@@ -155,8 +155,8 @@ export const UploadPanel = ({ client, onUploaded }: Props) => {
                 <span
                   className={cn(
                     "shrink-0 eyebrow",
-                    row.state === "done" && "text-sage",
-                    row.state === "failed" && "text-cherokee",
+                    row.state === "done" && "text-taupe-500",
+                    row.state === "failed" && "text-taupe-700",
                   )}
                 >
                   {row.state === "uploading"
@@ -166,11 +166,11 @@ export const UploadPanel = ({ client, onUploaded }: Props) => {
                       : (row.note ?? "Failed")}
                 </span>
               </div>
-              <div className="h-1 overflow-hidden rounded-full bg-basalt/10">
+              <div className="h-1 overflow-hidden rounded-full bg-taupe-900/10">
                 <div
                   className={cn(
                     "h-full transition-[width]",
-                    row.state === "failed" ? "bg-cherokee" : "bg-sage",
+                    row.state === "failed" ? "bg-taupe-700" : "bg-taupe-500",
                   )}
                   style={{ width: `${Math.round(row.progress * 100)}%` }}
                 />

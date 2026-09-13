@@ -19,6 +19,9 @@ type Props = {
   onStep: (delta: -1 | 1) => void;
 };
 
+const control =
+  "flex h-11 w-11 shrink-0 items-center justify-center rounded-tile border border-white/30 text-white transition-colors hover:border-white hover:bg-white/10";
+
 /**
  * A native <dialog>: modal focus, Escape to close and a backdrop for free.
  * Arrow keys step through the set; clicking the dim backdrop closes it.
@@ -64,33 +67,35 @@ export const Lightbox = ({
 
   const category = item ? copy.categories[item.category] : "";
   const alt = item ? item.title || fill(copy.project, { category }) : "";
+  const where = item ? [item.city, item.detail].filter(Boolean).join(", ") : "";
 
   return (
     <dialog
       ref={ref}
       onClose={onClose}
       aria-label={alt}
-      className="m-auto max-h-[100dvh] w-full max-w-6xl bg-transparent p-0 text-bone backdrop:bg-basalt-950/92 backdrop:backdrop-blur-sm"
+      className="m-auto max-h-[100dvh] w-full max-w-6xl bg-transparent p-0 text-white backdrop:bg-taupe-950/95"
     >
       {item && (
-        <div className="flex flex-col gap-4 p-4 sm:p-6">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex min-w-0 flex-col gap-1">
-              <span className="eyebrow text-ochre-light">
-                {category}
-                {item.city && ` · ${item.city}`}
-              </span>
-              <span className="truncate font-display-wide text-xl font-extrabold">
+        <div className="flex flex-col gap-5 p-4 sm:p-6">
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex min-w-0 flex-col gap-1 leading-snug">
+              <span className="truncate text-2xl">
                 {item.title || category}
+              </span>
+              <span className="text-base text-taupe-300">
+                {item.title ? category : null}
+                {item.title && where ? ", " : null}
+                {where}
               </span>
             </div>
             <Button
               variant="bare"
               onClick={onClose}
               aria-label={copy.close}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-tile border border-bone/20 hover:bg-bone/10"
+              className={control}
             >
-              <X className="h-5 w-5" />
+              <X className="h-5 w-5" strokeWidth={1.6} />
             </Button>
           </div>
 
@@ -104,7 +109,7 @@ export const Lightbox = ({
               height={item.image.height}
               alt={alt}
               decoding="async"
-              className="mx-auto max-h-[78dvh] w-auto rounded-tile object-contain"
+              className="mx-auto max-h-[78dvh] w-auto object-contain"
             />
             {items.length > 1 && (
               <>
@@ -112,25 +117,21 @@ export const Lightbox = ({
                   variant="bare"
                   onClick={() => onStep(-1)}
                   aria-label={copy.previous}
-                  className="absolute top-1/2 left-2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-tile bg-basalt/70 hover:bg-basalt"
+                  className={`${control} absolute top-1/2 left-2 -translate-y-1/2 bg-taupe-950/70`}
                 >
-                  <ChevronLeft className="h-5 w-5" />
+                  <ChevronLeft className="h-5 w-5" strokeWidth={1.6} />
                 </Button>
                 <Button
                   variant="bare"
                   onClick={() => onStep(1)}
                   aria-label={copy.next}
-                  className="absolute top-1/2 right-2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-tile bg-basalt/70 hover:bg-basalt"
+                  className={`${control} absolute top-1/2 right-2 -translate-y-1/2 bg-taupe-950/70`}
                 >
-                  <ChevronRight className="h-5 w-5" />
+                  <ChevronRight className="h-5 w-5" strokeWidth={1.6} />
                 </Button>
               </>
             )}
           </div>
-
-          {item.detail && (
-            <p className="font-mono text-xs text-sand/70">{item.detail}</p>
-          )}
         </div>
       )}
     </dialog>

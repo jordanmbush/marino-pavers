@@ -1,27 +1,29 @@
 ---
-import { Minus, Plus } from "lucide-react";
 import type { Faq } from "@/services/content";
 
-/** No-JS accordion on native <details>/<summary> — keyboard-accessible, works before hydration. */
+/** No-JS accordion on native <details>/<summary>: keyboard-accessible, works before hydration. */
 type Props = { items: Faq[] };
 
 const { items } = Astro.props;
 ---
 
-<div class="border-t border-basalt/12">
+<div class="border-t border-taupe-200">
   {
     items.map((item) => (
-      <details class="group border-b border-basalt/12 py-2">
-        <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-4 [&::-webkit-details-marker]:hidden">
-          <span class="font-display-wide text-lg font-extrabold text-basalt">
+      <details class="group border-b border-taupe-200">
+        <summary class="flex cursor-pointer list-none items-baseline justify-between gap-6 py-5 [&::-webkit-details-marker]:hidden">
+          <span class="text-2xl leading-tight text-taupe-950">
             {item.question}
           </span>
-          <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-tile border border-basalt/15 text-basalt transition-colors group-open:bg-cherokee group-open:text-bone">
-            <Plus className="h-4 w-4 group-open:hidden" />
-            <Minus className="hidden h-4 w-4 group-open:block" />
+          <span
+            class="shrink-0 text-2xl leading-none text-taupe-400"
+            aria-hidden="true"
+          >
+            <span class="group-open:hidden">+</span>
+            <span class="hidden group-open:inline">−</span>
           </span>
         </summary>
-        <p class="max-w-2xl pb-4 leading-relaxed text-basalt/70">
+        <p class="max-w-[62ch] pb-6 text-lg leading-relaxed text-taupe-600">
           {item.answer}
         </p>
       </details>

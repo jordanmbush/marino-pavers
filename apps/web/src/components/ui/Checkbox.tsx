@@ -10,14 +10,14 @@ export const Checkbox = ({ label, className, id, ...rest }: Props) => (
   <label
     htmlFor={id}
     className={cn(
-      "flex cursor-pointer items-center gap-2 text-sm text-basalt/80",
+      "flex cursor-pointer items-center gap-2 text-sm text-taupe-900/80",
       className,
     )}
   >
     <input
       id={id}
       type="checkbox"
-      className="h-4 w-4 accent-cherokee"
+      className="h-4 w-4 accent-taupe-700"
       {...rest}
     />
     {label}

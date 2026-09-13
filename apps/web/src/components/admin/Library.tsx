@@ -13,9 +13,9 @@ export const Library = ({ username, onSignOut }: Props) => {
     <div className="flex flex-col gap-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <span className="eyebrow text-cherokee">Photo library</span>
+          <span className="eyebrow text-taupe-700">Photo library</span>
           <h1 className="mt-2 text-3xl">Photo Gallery</h1>
-          <p className="mt-1 text-sm text-basalt/60">
+          <p className="mt-1 text-sm text-taupe-900/60">
             Photos appear on the site a minute or so after upload. Signed in as{" "}
             {username}.
           </p>
@@ -34,7 +34,7 @@ export const Library = ({ username, onSignOut }: Props) => {
 
       {error && (
         <p
-          className="rounded-tile border border-cherokee/30 bg-cherokee/5 px-4 py-3 text-sm text-cherokee"
+          className="rounded-tile border border-taupe-700/30 bg-taupe-700/5 px-4 py-3 text-sm text-taupe-700"
           role="alert"
         >
           {error}
@@ -42,9 +42,9 @@ export const Library = ({ username, onSignOut }: Props) => {
       )}
 
       {items === null ? (
-        <p className="font-mono text-xs text-basalt/50">Loading photos…</p>
+        <p className="font-mono text-xs text-taupe-900/50">Loading photos…</p>
       ) : items.length === 0 ? (
-        <p className="rounded-tile border border-dashed border-basalt/20 p-8 text-center text-sm text-basalt/60">
+        <p className="rounded-tile border border-dashed border-taupe-900/20 p-8 text-center text-sm text-taupe-900/60">
           No photos yet. Upload the first batch above.
         </p>
       ) : (

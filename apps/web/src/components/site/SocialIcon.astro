@@ -1,0 +1,55 @@
+---
+import { cn } from "@/components/ui/cn";
+import type { SocialId } from "@/content/site";
+
+/**
+ * A social network's mark the way its app icon draws it: the rounded square
+ * in the brand's own colour with the white glyph inside. Lucide dropped
+ * brand icons, so they are drawn here. This is the one colour on the site —
+ * a reader knows the network by it before reading the label, which the
+ * link around it supplies.
+ */
+type Props = { id: SocialId; class?: string };
+
+const { id, class: className } = Astro.props;
+---
+
+<svg
+  viewBox="0 0 24 24"
+  aria-hidden="true"
+  class={cn("h-7 w-7 shrink-0", className)}
+>
+  {
+    id === "instagram" && (
+      <>
+        <defs>
+          {/* Instagram's radial gradient: yellow from the bottom-left corner through orange and magenta to blue-violet. */}
+          <radialGradient id="social-instagram" cx="0.3" cy="1.07" r="1.5">
+            <stop offset="0" stop-color="#fdf497" />
+            <stop offset="0.05" stop-color="#fdf497" />
+            <stop offset="0.45" stop-color="#fd5949" />
+            <stop offset="0.6" stop-color="#d6249f" />
+            <stop offset="0.9" stop-color="#285aeb" />
+          </radialGradient>
+        </defs>
+        <rect width="24" height="24" rx="6" fill="url(#social-instagram)" />
+        <g fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round">
+          <rect x="4.75" y="4.75" width="14.5" height="14.5" rx="4.25" />
+          <circle cx="12" cy="12" r="3.4" />
+        </g>
+        <circle cx="16.2" cy="7.8" r="0.9" fill="#fff" />
+      </>
+    )
+  }
+  {
+    id === "facebook" && (
+      <>
+        <rect width="24" height="24" rx="6" fill="#1877f2" />
+        <path
+          fill="#fff"
+          d="M13.4 24V14.5h2.9l.5-3.3h-3.4V9.1c0-.9.4-1.7 1.9-1.7H17V4.5c-.6-.1-1.5-.2-2.4-.2-2.5 0-4.2 1.5-4.2 4.3v2.6H7.6v3.3h2.8V24z"
+        />
+      </>
+    )
+  }
+</svg>

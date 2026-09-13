@@ -1,67 +1,48 @@
 @import "tailwindcss";
 
 /*
- * "Sonoran masonry": desert sand, basalt and Cherokee-red clay. Display type is
- * Archivo at 125% width (the Expanded cut of the variable font), body is Plus
- * Jakarta, and utility labels are Space Mono — the blueprint voice.
+ * The business card, enlarged. One typeface — Cormorant Garamond, the card's
+ * face — at every size, on paper-white, with hairlines where the card has
+ * them. The greys are the mark's two, #635956 and #9E9997, stretched into a
+ * scale. The one colour on the site is the Instagram mark in the footer.
  */
 @theme {
-  --font-display:
-    "Archivo Variable", "Archivo", ui-sans-serif, system-ui, sans-serif;
   --font-sans:
-    "Plus Jakarta Sans Variable", "Plus Jakarta Sans", ui-sans-serif, system-ui,
-    sans-serif;
-  --font-mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    "Cormorant Garamond Variable", "Cormorant Garamond", Garamond, Georgia,
+    serif;
+  --font-display: var(--font-sans);
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 
-  --color-basalt-950: #181410;
-  --color-basalt-900: #211c17;
-  --color-basalt-800: #2e271f;
-  --color-basalt-700: #3d342a;
-  --color-basalt-600: #4e4336;
-  --color-basalt: #211c17;
-  --color-sand: #e5d9c3;
-  --color-sand-light: #ede3d2;
-  --color-sand-dark: #d6c6aa;
-  --color-bone: #f3ecde;
-  --color-cherokee: #a8432b;
-  --color-cherokee-dark: #8e3421;
-  --color-cherokee-light: #c0563d;
-  --color-ochre: #cd854a;
-  --color-ochre-light: #dba06e;
-  --color-sage: #71755b;
-  --color-sage-dark: #585b45;
+  /* Warm white, a shade off the card stock. */
+  --color-paper: #fbfaf8;
+  --color-taupe-50: #f3f1ee;
+  --color-taupe-100: #ebe8e5;
+  --color-taupe-200: #d9d5d2;
+  --color-taupe-300: #bcb7b4;
+  /* The mark's light square. */
+  --color-taupe-400: #9e9997;
+  --color-taupe-500: #86807d;
+  --color-taupe-600: #756c69;
+  /* The mark's dark square: the ink of the card. */
+  --color-taupe-700: #635956;
+  --color-taupe-800: #4c4441;
+  --color-taupe-900: #3a3331;
+  --color-taupe-950: #2b2624;
 
-  --radius-tile: 3px;
+  --radius-tile: 2px;
 
-  --shadow-paver: 0 18px 40px -24px rgb(33 28 23 / 0.55);
-  --shadow-paver-lg: 0 40px 80px -36px rgb(33 28 23 / 0.6);
-  --shadow-seam: inset 0 1px 0 0 rgb(243 236 222 / 0.06);
+  --container-shell: 72rem;
 
-  --tracking-label: 0.24em;
-
-  --container-shell: 80rem;
-
-  --animate-rise: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-  --animate-lay-in: lay-in 0.6s ease-out both;
+  --animate-rise: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 
   @keyframes rise {
     from {
       opacity: 0;
-      transform: translateY(22px);
+      transform: translateY(14px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
-    }
-  }
-  @keyframes lay-in {
-    from {
-      opacity: 0;
-      transform: translateX(-10px) rotate(-1deg);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0) rotate(0);
     }
   }
 }
@@ -77,16 +58,16 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Cormorant is small on the body and light at 400; 500 at 19px reads. */
   body {
-    @apply bg-sand font-sans text-basalt antialiased;
+    @apply bg-paper font-sans text-[1.1875rem] leading-[1.6] font-medium text-taupe-950 antialiased;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    @apply font-display font-extrabold;
-    font-stretch: 125%;
+    @apply font-medium;
     letter-spacing: -0.01em;
     text-wrap: balance;
     overflow-wrap: break-word;
@@ -100,16 +81,17 @@
   }
 
   ::selection {
-    background: var(--color-cherokee);
-    color: var(--color-bone);
+    background: var(--color-taupe-700);
+    color: var(--color-paper);
   }
 
   a {
-    text-underline-offset: 3px;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-cherokee);
+    outline: 2px solid var(--color-taupe-700);
     outline-offset: 3px;
     border-radius: 2px;
   }
@@ -120,66 +102,19 @@
   @apply mx-auto w-full max-w-shell px-6 sm:px-8 lg:px-10;
 }
 
-/* Monospace utility label — the craftsman/blueprint voice. */
+/* A small heading over a block, in the card's grey — the admin's section titles. */
 @utility eyebrow {
-  @apply font-mono text-[0.72rem] tracking-label uppercase;
+  @apply text-base leading-none text-taupe-500;
 }
 
-/* Display face at its Expanded width, for non-heading display text. */
-@utility font-display-wide {
-  font-family: var(--font-display);
-  font-stretch: 125%;
-}
-
-/* The signature: a herringbone paver field drawn in CSS. Two 90°-offset
-   stripe layers masked into an interlocking weave. */
-@utility herringbone {
-  background-color: #cbb896;
-  background-image:
-    linear-gradient(
-      45deg,
-      #241f19 0 12.5%,
-      transparent 12.5% 50%,
-      #241f19 50% 62.5%,
-      transparent 62.5%
-    ),
-    linear-gradient(
-      -45deg,
-      #a8432b 0 12.5%,
-      transparent 12.5% 50%,
-      #a8432b 50% 62.5%,
-      transparent 62.5%
-    );
-  background-size: 34px 34px;
-  background-position: 0 0;
-}
-
-/* Scroll-reveal: elements start settled-down and rise into place when the
-   IntersectionObserver in Site.astro marks them visible. No transition until
-   observed, so first paint is stable. */
-@utility reveal {
-  opacity: 0;
-  transform: translateY(24px);
-  transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
-  transition-delay: var(--reveal-delay, 0ms);
-
-  &.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* A short tag — the admin's status badges. */
+@utility label {
+  @apply text-sm leading-none text-taupe-600;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .reveal {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
   }
 
   *,
