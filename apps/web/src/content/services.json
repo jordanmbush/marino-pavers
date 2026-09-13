@@ -3,6 +3,7 @@
     "id": "paver-patios",
     "order": 1,
     "category": "patios",
+    "image": "../assets/photos/paver-patios.jpg",
     "en": {
       "title": "Paver Patios",
       "tagline": "The outdoor room you actually use",
@@ -12,7 +13,8 @@
         "Herringbone, ashlar & running-bond patterns",
         "Built-in seat walls & planters",
         "Drainage graded away from the house"
-      ]
+      ],
+      "imageAlt": "A paver patio beside the house, edged with artificial turf"
     },
     "es": {
       "title": "Patios de adoquín",
@@ -23,13 +25,15 @@
         "Patrones espiga, ashlar y trabado",
         "Muros de asiento y jardineras integrados",
         "Drenaje con pendiente hacia afuera de la casa"
-      ]
+      ],
+      "imageAlt": "Un patio de adoquín junto a la casa, bordeado de pasto sintético"
     }
   },
   {
     "id": "driveways",
     "order": 2,
     "category": "driveways",
+    "image": "../assets/photos/driveways.jpg",
     "en": {
       "title": "Paver Driveways",
       "tagline": "Curb appeal that carries the load",
@@ -39,7 +43,8 @@
         "Reinforced base rated for vehicle loads",
         "Individual pavers replaceable if stained",
         "Crisp banding & border details"
-      ]
+      ],
+      "imageAlt": "A finished paver driveway leading up to the garage"
     },
     "es": {
       "title": "Entradas de adoquín",
@@ -50,13 +55,15 @@
         "Base reforzada para el peso de vehículos",
         "Adoquines reemplazables uno por uno si se manchan",
         "Cenefas y bordes bien definidos"
-      ]
+      ],
+      "imageAlt": "Una entrada de adoquín terminada que sube hasta el garaje"
     }
   },
   {
     "id": "artificial-turf",
     "order": 3,
     "category": "turf",
+    "image": "../assets/photos/artificial-turf.jpg",
     "en": {
       "title": "Artificial Turf",
       "tagline": "Green year-round, zero water bills",
@@ -66,7 +73,8 @@
         "Free-draining base for monsoon season",
         "Cool-tech yarns for lower surface heat",
         "Putting greens & play areas"
-      ]
+      ],
+      "imageAlt": "A backyard of artificial turf inside a block wall"
     },
     "es": {
       "title": "Pasto sintético",
@@ -77,13 +85,15 @@
         "Base de drenaje libre para la temporada de monzón",
         "Fibras cool-tech que reducen el calor en la superficie",
         "Greens de golf y áreas de juego"
-      ]
+      ],
+      "imageAlt": "Un patio trasero de pasto sintético dentro de un muro de bloque"
     }
   },
   {
     "id": "pool-decks",
     "order": 4,
     "category": "pool-decks",
+    "image": "../assets/photos/pool-decks.jpg",
     "en": {
       "title": "Pool Decks & Coping",
       "tagline": "Cool underfoot, safe when wet",
@@ -93,7 +103,8 @@
         "Slip-resistant when wet",
         "Bullnose coping to match",
         "Re-decks over old concrete"
-      ]
+      ],
+      "imageAlt": "A travertine pool deck with a lantern at the water's edge"
     },
     "es": {
       "title": "Decks y bordes de alberca",
@@ -104,13 +115,15 @@
         "Antiderrapantes cuando están mojados",
         "Borde bullnose a juego",
         "Recubrimos decks sobre concreto viejo"
-      ]
+      ],
+      "imageAlt": "Un deck de travertino junto a la alberca, con una lámpara al borde del agua"
     }
   },
   {
     "id": "walkways",
     "order": 5,
     "category": "walkways",
+    "image": "../assets/photos/walkways.jpg",
     "en": {
       "title": "Walkways & Steps",
       "tagline": "The path that ties it together",
@@ -120,7 +133,8 @@
         "Code-compliant steps & landings",
         "Landscape lighting integration",
         "Matched banding to your patio or drive"
-      ]
+      ],
+      "imageAlt": "Stone slab steps set between strips of turf"
     },
     "es": {
       "title": "Andadores y escalones",
@@ -131,13 +145,15 @@
         "Escalones y descansos según el código",
         "Integración de iluminación de paisaje",
         "Cenefas a juego con su patio o entrada"
-      ]
+      ],
+      "imageAlt": "Escalones de losas de piedra entre franjas de pasto"
     }
   },
   {
     "id": "outdoor-living",
     "order": 6,
     "category": "outdoor-living",
+    "image": "../assets/photos/outdoor-living.jpg",
     "en": {
       "title": "Outdoor Living",
       "tagline": "Kitchens, fire & walls",
@@ -146,7 +162,8 @@
         "BBQ islands & outdoor kitchens",
         "Fire pits, fireplaces & fire tables",
         "Retaining, seat & privacy walls"
-      ]
+      ],
+      "imageAlt": "A circular paver fire pit"
     },
     "es": {
       "title": "Vida al aire libre",
@@ -156,7 +173,8 @@
         "Islas de asador y cocinas exteriores",
         "Fogatas, chimeneas y mesas de fuego",
         "Muros de contención, de asiento y de privacidad"
-      ]
+      ],
+      "imageAlt": "Una fogata circular de adoquín"
     }
   }
 ]

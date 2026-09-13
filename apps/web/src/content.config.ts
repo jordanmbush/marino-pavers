@@ -32,18 +32,22 @@ const localized = <Shape extends Record<string, z.ZodType>>(shape: Shape) =>
 
 const services = defineCollection({
   loader: file("src/content/services.json"),
-  schema: z.object({
-    id: z.string(),
-    order: z.number().int(),
-    /** Which photo category this service's gallery link filters to. */
-    category,
-    ...localized({
-      title: z.string(),
-      tagline: z.string(),
-      description: z.string(),
-      features: z.array(z.string()).min(1),
+  schema: ({ image }) =>
+    z.object({
+      id: z.string(),
+      order: z.number().int(),
+      /** Which photo category this service's gallery link filters to. */
+      category,
+      /** One of the client's own photos, in `src/assets/photos/`; cropped at build. */
+      image: image(),
+      ...localized({
+        title: z.string(),
+        tagline: z.string(),
+        description: z.string(),
+        features: z.array(z.string()).min(1),
+        imageAlt: z.string(),
+      }),
     }),
-  }),
 });
 
 const process = defineCollection({

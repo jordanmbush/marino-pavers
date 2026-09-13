@@ -49,6 +49,12 @@ the cap, split the module — there is no allowlist.
   `src/content/site.ts` is the business facts and nav routes. ⚠️ The project count and
   the Scottsdale address there are **placeholders**; Facebook has no link yet,
   so `socials` lists Instagram only.
+- `apps/web/src/assets/photos/` — the seven photos the static pages use: the
+  home hero and one per service, named by service id. They are the client's
+  own, pulled from the production library and resized to fit 2048px;
+  `photos/README.md` says which library photo each is and how to swap one.
+  Astro crops and resizes them at build (`<Image fit="cover">`), so the
+  pages never depend on the manifest or on a photo surviving the admin.
 - `packages/domain/` — the photo library as data: item and manifest schemas,
   bucket key layout, rendition math, sort order, the admin API contract.
 - `packages/functions/` — `process-image` (S3 event → sharp → renditions +

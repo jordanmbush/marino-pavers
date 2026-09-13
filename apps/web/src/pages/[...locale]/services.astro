@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import Site from "@/layouts/Site.astro";
 import Contact from "@/components/sections/Contact.astro";
 import FaqList from "@/components/sections/FaqList.astro";
@@ -33,6 +34,15 @@ const faqJsonLd = {
   {
     services.map((service) => (
       <Section id={service.id} title={service.title} lead={service.tagline}>
+        <Image
+          src={service.image}
+          alt={service.imageAlt}
+          layout="constrained"
+          width={1400}
+          height={933}
+          fit="cover"
+          class="mb-8 h-auto w-full rounded-tile"
+        />
         <p class="max-w-[62ch] text-xl leading-relaxed text-taupe-950">
           {service.description}
         </p>

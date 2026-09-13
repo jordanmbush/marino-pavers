@@ -1,13 +1,15 @@
 ---
+import { Image } from "astro:assets";
+import heroPhoto from "@/assets/photos/hero.jpg";
 import Button from "@/components/ui/Button.astro";
 import { site } from "@/content/site";
 import { i18n } from "@/services/i18n";
 
 /**
- * The business card, enlarged, on the logo's own grid: two by two with the
- * last corner left open. The headline sits top-left, the card's facts
- * top-right, the lead and the one link bottom-left; bottom-right is the
- * missing square. The only motion on the site is these cells settling.
+ * The business card, enlarged, on the logo's own grid: two by two. The
+ * headline sits top-left, the card's facts top-right, the lead and the one
+ * link bottom-left; bottom-right, the mark's open corner, is where the work
+ * goes: one photo. The only motion on the site is these cells settling.
  */
 const { t, href } = i18n(Astro.currentLocale);
 const hero = t.home.hero;
@@ -24,7 +26,7 @@ const hero = t.home.hero;
   </h1>
 
   <div
-    class="order-3 animate-rise lg:order-none lg:justify-self-end"
+    class="order-4 animate-rise lg:order-none lg:justify-self-end"
     style="animation-delay: 160ms"
   >
     <div class="max-w-sm border-t border-taupe-300 pt-5 lg:w-[22rem]">
@@ -56,4 +58,16 @@ const hero = t.home.hero;
     <p class="text-xl leading-relaxed text-taupe-700">{hero.lead}</p>
     <Button href={href("/gallery")} size="lg">{hero.cta}</Button>
   </div>
+
+  <Image
+    src={heroPhoto}
+    alt={hero.imageAlt}
+    layout="constrained"
+    width={1008}
+    height={756}
+    fit="cover"
+    priority
+    class="order-3 h-auto w-full animate-rise rounded-tile lg:order-none"
+    style="animation-delay: 240ms"
+  />
 </section>

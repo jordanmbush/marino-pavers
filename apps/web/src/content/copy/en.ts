@@ -40,6 +40,7 @@ export const en = {
       cta: "View the photo gallery",
       /** The card's line, beside the owner's name. */
       experience: `${site.yearsExperience} years of experience`,
+      imageAlt: "Artificial turf with square paver pads, the mountains behind",
     },
     services: {
       title: "Services",

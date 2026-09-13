@@ -33,6 +33,8 @@ export const es: Copy = {
       lead: "Marino Pavers diseña e instala patios, entradas para autos, decks de alberca y pasto sintético a la medida en todo el Valle, construidos desde la base para aguantar el calor de Arizona, el monzón y el paso del tiempo.",
       cta: "Ver la galería de fotos",
       experience: `${site.yearsExperience} años de experiencia`,
+      imageAlt:
+        "Pasto sintético con losas cuadradas de adoquín y las montañas al fondo",
     },
     services: {
       title: "Servicios",
