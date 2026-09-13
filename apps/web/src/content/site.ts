@@ -2,10 +2,6 @@
  * Single source of truth for business facts: name, contact details, address,
  * service area and the routes in the primary nav. Anything a person reads as
  * a sentence lives in `content/copy/` instead, once per language.
- *
- * ⚠️ PLACEHOLDERS: the project count and the Scottsdale address below are
- * stand-ins until the client confirms them — they appear in the stats band
- * and the LocalBusiness structured data.
  */
 
 export const site = {
@@ -17,7 +13,6 @@ export const site = {
   url: "https://marinopavers.com",
   /** From the business card: "20+ Years of Experience". */
   yearsExperience: "20+",
-  projectsInstalled: "600+",
   phoneDisplay: "(602) 691-8029",
   phoneHref: "tel:+16026918029",
   /**
@@ -27,9 +22,14 @@ export const site = {
    * published.
    */
   email: "contact@marinopavers.com",
+  /**
+   * Where the business is based, for the LocalBusiness structured data. The
+   * crew works at customers' homes, so only the city is published: the shop
+   * is in west Phoenix, near Lower Buckeye Rd and 75th Ave (client, 2026-09-13).
+   */
   address: {
-    hq: "Scottsdale, AZ",
-    locality: "Scottsdale",
+    hq: "Phoenix, AZ",
+    locality: "Phoenix",
     state: "AZ",
     country: "US",
   },

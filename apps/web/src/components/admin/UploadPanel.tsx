@@ -114,7 +114,7 @@ export const UploadPanel = ({ client, onUploaded }: Props) => {
         <Field label="City" htmlFor="upload-city">
           <Input
             id="upload-city"
-            placeholder="Scottsdale"
+            placeholder="Phoenix"
             value={city}
             onChange={(e) => setCity(e.target.value)}
           />
