@@ -213,6 +213,15 @@ a tab opened before that change needs one hard refresh.
   `components/site/SocialIcon.astro`, in their own brand colours.
 - **`fileOptions` in `sst.config.ts` replaces SST's defaults** — keep the `**`
   catch-all first or files silently stop uploading.
+- **A longer component name is a shorter IAM role prefix.** SST truncates the
+  `{app}-{stage}-` prefix to fit IAM's 64-character limit, so the same stage
+  produces `marino-pavers-production-AdminApiRole-…` and
+  `prod-MediaNotificationsNotificationProcessImagejpegRole-…`. The deploy
+  policy in `scripts/setup-github-oidc.sh` therefore matches roles by
+  component name with a leading wildcard, never by stage prefix. Renaming a
+  component or adding one letter to a notification suffix can otherwise turn
+  into an `AccessDenied` that appears only in CI — the local profile is
+  Admin, so nothing catches it here.
 - **Unknown URLs answer 404 only because CloudFront has `s3:ListBucket`** on
   the site bucket (`transform.assets` in `sst.config.ts`); without it S3 says 403. The body is S3's XML, not `404.html`: the Router's only configured
   origin is `placeholder.sst.dev` (the edge function swaps the real one in per
