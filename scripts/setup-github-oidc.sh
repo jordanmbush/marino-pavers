@@ -104,6 +104,19 @@ fi
 # for SST state.
 # ⚠️ A component that reaches a NEW service means adding it here and
 # re-running: the local profile is Admin, so the gap only shows in CI.
+#
+# Roles are matched by COMPONENT name, with a leading wildcard, because SST
+# truncates the `{app}-{stage}-` prefix to fit IAM's 64-character limit — so
+# how much prefix survives depends on how long the component name is:
+#
+#   marino-pavers-production-AdminApiRole-bdmoskeo
+#   produ-MediaNotificationsNotificationProcessImagejpgRole-wzaanbao
+#   prod-MediaNotificationsNotificationProcessImagejpegRole-vexnrata
+#
+# Those are the same stage. Pinning the prefix means a one-character-longer
+# component name is an AccessDenied in CI and nowhere else. None of these
+# patterns match the SSO roles, the Organizations role, or this deploy role
+# itself, which is what keeps the escalation paths shut.
 DEPLOY_POLICY="$(
   cat <<JSON
 {
@@ -135,17 +148,14 @@ DEPLOY_POLICY="$(
         "iam:UntagRole", "iam:UpdateAssumeRolePolicy", "iam:UpdateRole", "iam:UpdateRoleDescription"
       ],
       "Resource": [
-        "arn:aws:iam::${ACCOUNT_ID}:role/marino-pavers-*",
-        "arn:aws:iam::${ACCOUNT_ID}:role/produ-*",
-        "arn:aws:iam::${ACCOUNT_ID}:role/dev-*",
-        "arn:aws:iam::${ACCOUNT_ID}:role/Router*",
-        "arn:aws:iam::${ACCOUNT_ID}:role/Media*",
-        "arn:aws:iam::${ACCOUNT_ID}:role/AdminApi*",
-        "arn:aws:iam::${ACCOUNT_ID}:role/ProcessImage*",
-        "arn:aws:iam::${ACCOUNT_ID}:role/ProcessVideo*",
-        "arn:aws:iam::${ACCOUNT_ID}:role/VideoComplete*",
-        "arn:aws:iam::${ACCOUNT_ID}:role/TranscodeRole*",
-        "arn:aws:iam::${ACCOUNT_ID}:role/Site*"
+        "arn:aws:iam::${ACCOUNT_ID}:role/*AdminApi*",
+        "arn:aws:iam::${ACCOUNT_ID}:role/*Media*",
+        "arn:aws:iam::${ACCOUNT_ID}:role/*ProcessImage*",
+        "arn:aws:iam::${ACCOUNT_ID}:role/*ProcessVideo*",
+        "arn:aws:iam::${ACCOUNT_ID}:role/*Router*",
+        "arn:aws:iam::${ACCOUNT_ID}:role/*Site*",
+        "arn:aws:iam::${ACCOUNT_ID}:role/*VideoComplete*",
+        "arn:aws:iam::${ACCOUNT_ID}:role/TranscodeRole*"
       ]
     },
     {
