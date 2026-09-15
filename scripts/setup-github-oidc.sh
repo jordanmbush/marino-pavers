@@ -98,8 +98,10 @@ fi
 
 # ── 3. Deploy policy ─────────────────────────────────────────────────────────
 # sst.config.ts creates: S3 (site + media), CloudFront + its KV store and
-# functions (the Router), ACM, two Lambdas with roles and log groups, an S3
-# notification, a Cognito user pool, and SSM parameters for SST state.
+# functions (the Router), ACM, four Lambdas with roles and log groups, S3
+# notifications, a Cognito user pool, the MediaConvert role the transcoder
+# assumes, the EventBridge rule that hears a job finish, and SSM parameters
+# for SST state.
 # ⚠️ A component that reaches a NEW service means adding it here and
 # re-running: the local profile is Admin, so the gap only shows in CI.
 DEPLOY_POLICY="$(
@@ -115,6 +117,7 @@ DEPLOY_POLICY="$(
         "cloudfront:*",
         "cloudfront-keyvaluestore:*",
         "cognito-idp:*",
+        "events:*",
         "lambda:*",
         "logs:*",
         "s3:*",
@@ -139,6 +142,9 @@ DEPLOY_POLICY="$(
         "arn:aws:iam::${ACCOUNT_ID}:role/Media*",
         "arn:aws:iam::${ACCOUNT_ID}:role/AdminApi*",
         "arn:aws:iam::${ACCOUNT_ID}:role/ProcessImage*",
+        "arn:aws:iam::${ACCOUNT_ID}:role/ProcessVideo*",
+        "arn:aws:iam::${ACCOUNT_ID}:role/VideoComplete*",
+        "arn:aws:iam::${ACCOUNT_ID}:role/TranscodeRole*",
         "arn:aws:iam::${ACCOUNT_ID}:role/Site*"
       ]
     },
