@@ -11,6 +11,7 @@ import type { S3Event } from "aws-lambda";
 import sharp from "sharp";
 import { processImage } from "./lib/image";
 import {
+  RENDITION_CACHE,
   deleteItemAndDerived,
   deleteStaleRenditions,
   readItem,
@@ -25,9 +26,6 @@ export type ProcessImageDeps = {
   now?: () => Date;
   logger?: Logger;
 };
-
-/** Renditions never change once written, so the CDN may keep them forever. */
-const RENDITION_CACHE = "public, max-age=31536000, immutable";
 
 /** S3 event keys are URL-encoded, with spaces as `+`. */
 const decodeKey = (key: string): string =>
@@ -66,6 +64,10 @@ const processOne = async (
     return;
   }
   const { id, ext } = parsed;
+  if (!(ext in EXTENSION_TYPES)) {
+    logger.info("ignoring an original this handler does not process", { key });
+    return;
+  }
 
   const original = await store.getObject(key);
   if (!original) {
@@ -105,6 +107,7 @@ const processOne = async (
   const item: MediaItem = {
     ...(existing ?? {
       id,
+      kind: "photo" as const,
       title: titleFromFilename(key.slice(key.lastIndexOf("/") + 1)),
       category: "patios",
       city: "",

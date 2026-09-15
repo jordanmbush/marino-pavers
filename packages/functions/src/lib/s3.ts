@@ -34,6 +34,17 @@ export interface ObjectStore {
    * admin API asks for an original to be processed a second time.
    */
   touchObject(key: string, contentType: string): Promise<void>;
+  /**
+   * Replaces an object's headers without moving its bytes. For anything
+   * written by a service other than us — MediaConvert's renditions — this is
+   * how they get the content type a browser will play and the long cache the
+   * rest of `renditions/` is served with.
+   */
+  setObjectHeaders(
+    key: string,
+    contentType: string,
+    cacheControl: string,
+  ): Promise<void>;
   /** A URL the browser can PUT the file to, valid for `expiresSeconds`. */
   presignPut(
     key: string,
@@ -99,6 +110,19 @@ export const createS3Store = (
         }),
       );
     }
+  },
+
+  async setObjectHeaders(key, contentType, cacheControl) {
+    await client.send(
+      new CopyObjectCommand({
+        Bucket: bucket,
+        CopySource: `${bucket}/${key.split("/").map(encodeURIComponent).join("/")}`,
+        Key: key,
+        MetadataDirective: "REPLACE",
+        ContentType: contentType,
+        CacheControl: cacheControl,
+      }),
+    );
   },
 
   async touchObject(key, contentType) {

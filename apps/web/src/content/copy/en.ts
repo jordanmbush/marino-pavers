@@ -107,10 +107,15 @@ export const en = {
     showing:
       "Showing {shown} of {total} recent projects. Want to see something specific, a paver line, a pattern, a whole backyard? Ask and we’ll send photos from jobs like yours.",
     close: "Close",
-    previous: "Previous photo",
-    next: "Next photo",
+    previous: "Previous",
+    next: "Next",
     project: "{category} project",
     viewLarger: "View larger: {alt}",
+    play: "Play",
+    pause: "Pause",
+    soundOn: "Turn sound on",
+    soundOff: "Turn sound off",
+    videoUnsupported: "This browser can’t play the video.",
   },
 
   /** The closing block on every page; pages may pass their own title and lead. */

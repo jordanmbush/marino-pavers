@@ -23,6 +23,7 @@ const ID_B = "bbbbbbbbbbbbbbbb";
 const item = (id: string, overrides: Partial<MediaItem> = {}): MediaItem => ({
   id,
   status: "ready",
+  kind: "photo",
   title: id,
   category: "patios",
   city: "",

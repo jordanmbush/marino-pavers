@@ -1,14 +1,10 @@
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useEffect, useRef } from "react";
-import {
-  SIZES,
-  fallbackSrc,
-  srcSet,
-  type ReadyMediaItem,
-} from "@marino/domain";
+import type { ReadyMediaItem } from "@marino/domain";
 import { Button } from "@/components/ui/Button";
 import type { GalleryCopy } from "@/content/copy";
 import { fill } from "@/services/locale";
+import { LightboxMedia } from "./LightboxMedia";
 
 type Props = {
   items: ReadyMediaItem[];
@@ -100,16 +96,12 @@ export const Lightbox = ({
           </div>
 
           <div className="relative">
-            <img
+            <LightboxMedia
               key={item.id}
-              src={fallbackSrc(mediaBase, item)}
-              srcSet={srcSet(mediaBase, item)}
-              sizes={SIZES.lightbox}
-              width={item.image.width}
-              height={item.image.height}
+              item={item}
+              mediaBase={mediaBase}
+              copy={copy}
               alt={alt}
-              decoding="async"
-              className="mx-auto max-h-[78dvh] w-auto object-contain"
             />
             {items.length > 1 && (
               <>

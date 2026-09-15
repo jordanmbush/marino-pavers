@@ -6,13 +6,19 @@
  * One CloudFront distribution (the Router) fronts three things on one origin:
  *
  *   /            the static Astro build, from its own S3 bucket
- *   /media/*     the photo bucket: originals the client uploaded, the WebP
- *                renditions the processor made, and manifest.json
+ *   /media/*     the media bucket: the WebP renditions and transcoded MP4s
+ *                the processors made, and manifest.json. Originals, the
+ *                per-item records and the transcoder's captured frames sit
+ *                outside the published prefixes and stay private.
  *   /api/*       the admin Lambda (Function URL)
  *
- * Uploading an original to `originals/` in the media bucket fires the image
- * processor, which writes renditions and rebuilds manifest.json; the site
- * reads that manifest at runtime, so a new photo needs no deploy.
+ * Uploading an original to `originals/` in the media bucket fires one of two
+ * processors, chosen by the file's extension. A photo is resized in the
+ * Lambda itself. A video is handed to MediaConvert, which writes the MP4
+ * renditions and captures a frame; a second Lambda hears the job finish,
+ * turns that frame into the poster through the same sharp code a photo
+ * takes, and only then is the item ready. Either way the manifest is
+ * rebuilt and the site reads it at runtime, so nothing needs a deploy.
  *
  * AWS account 652346859306 (its own member account in the org so hosting
  * costs are isolated), SSO profile `marino-pavers`, region us-west-1. ACM
@@ -139,27 +145,153 @@ export default $config({
       },
     });
 
-    // Fires on every original the client uploads. sharp is a native module,
-    // so it is installed into the bundle rather than bundled by esbuild.
-    // 2 GB is about CPU, not memory: Lambda scales CPU with memory, and a
-    // 20-megapixel JPEG resized four ways is a few seconds at this size.
+    /**
+     * The transcoder's identity. MediaConvert is not a Lambda: it reads the
+     * original and writes its outputs as itself, so it needs its own role
+     * with its own access to the media bucket.
+     */
+    const transcodeRole = new aws.iam.Role("TranscodeRole", {
+      assumeRolePolicy: JSON.stringify({
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Principal: { Service: "mediaconvert.amazonaws.com" },
+            Action: "sts:AssumeRole",
+          },
+        ],
+      }),
+    });
+    new aws.iam.RolePolicy("TranscodeRolePolicy", {
+      role: transcodeRole.id,
+      policy: $resolve([media.arn]).apply(([bucketArn]) =>
+        JSON.stringify({
+          Version: "2012-10-17",
+          Statement: [
+            {
+              Effect: "Allow",
+              Action: ["s3:GetObject"],
+              Resource: `${bucketArn}/originals/*`,
+            },
+            {
+              Effect: "Allow",
+              // Where the renditions and the captured frames go, and nowhere
+              // else: the transcoder can never touch items/ or the manifest.
+              Action: ["s3:PutObject"],
+              Resource: [`${bucketArn}/renditions/*`, `${bucketArn}/frames/*`],
+            },
+          ],
+        }),
+      ),
+    });
+
+    /**
+     * Uploads fan out to one of two handlers by extension.
+     *
+     * S3 allows several notification configurations on one bucket as long as
+     * their filters don't overlap, and a prefix plus a suffix is one filter —
+     * hence one configuration per extension rather than one per handler.
+     * Anything else dropped into `originals/` matches nothing and is ignored,
+     * which is the behaviour we want for a stray file.
+     *
+     * sharp is a native module, so it is installed into the bundle rather
+     * than bundled by esbuild. 2 GB is about CPU, not memory: Lambda scales
+     * CPU with memory, and a 20-megapixel JPEG resized four ways is a few
+     * seconds at this size.
+     */
+    const processImage = {
+      handler: "packages/functions/src/process-image.handler",
+      architecture: "arm64" as const,
+      memory: "2048 MB" as const,
+      timeout: "2 minutes" as const,
+      link: [media],
+      environment: { MEDIA_BUCKET: media.name },
+      nodejs: { install: ["sharp"] },
+    };
+
+    /**
+     * This one only hands the file to MediaConvert — it never reads a byte of
+     * it — so it is small and quick regardless of how long the clip is.
+     */
+    const processVideo = {
+      handler: "packages/functions/src/process-video.handler",
+      architecture: "arm64" as const,
+      memory: "512 MB" as const,
+      timeout: "30 seconds" as const,
+      link: [media],
+      environment: {
+        MEDIA_BUCKET: media.name,
+        MEDIACONVERT_ROLE_ARN: transcodeRole.arn,
+        STAGE: $app.stage,
+      },
+      permissions: [
+        {
+          actions: ["mediaconvert:CreateJob"],
+          resources: ["*"],
+        },
+        // Handing a role to MediaConvert is itself a permission.
+        { actions: ["iam:PassRole"], resources: [transcodeRole.arn] },
+      ],
+    };
+
     media.notify({
       notifications: [
-        {
-          name: "ProcessImage",
-          events: ["s3:ObjectCreated:*"],
+        ...["jpg", "jpeg", "png", "webp"].map((ext) => ({
+          name: `ProcessImage${ext}`,
+          events: ["s3:ObjectCreated:*"] as const,
           filterPrefix: "originals/",
-          function: {
-            handler: "packages/functions/src/process-image.handler",
-            architecture: "arm64",
-            memory: "2048 MB",
-            timeout: "2 minutes",
-            link: [media],
-            environment: { MEDIA_BUCKET: media.name },
-            nodejs: { install: ["sharp"] },
-          },
-        },
+          filterSuffix: `.${ext}`,
+          function: processImage,
+        })),
+        ...["mp4", "mov"].map((ext) => ({
+          name: `ProcessVideo${ext}`,
+          events: ["s3:ObjectCreated:*"] as const,
+          filterPrefix: "originals/",
+          filterSuffix: `.${ext}`,
+          function: processVideo,
+        })),
       ],
+    });
+
+    /**
+     * A transcode finishes minutes after the upload did, on MediaConvert's
+     * clock rather than ours, so the only way to hear about it is to listen.
+     * This is the second half of `process-video`: it captures the poster
+     * through the same sharp pipeline a photo takes, fills in the item and
+     * rebuilds the manifest.
+     */
+    const videoComplete = new sst.aws.Function("VideoComplete", {
+      handler: "packages/functions/src/video-complete.handler",
+      architecture: "arm64",
+      memory: "2048 MB",
+      timeout: "2 minutes",
+      link: [media],
+      environment: { MEDIA_BUCKET: media.name },
+      nodejs: { install: ["sharp"] },
+    });
+    const jobStateRule = new aws.cloudwatch.EventRule("VideoJobState", {
+      eventPattern: JSON.stringify({
+        source: ["aws.mediaconvert"],
+        "detail-type": ["MediaConvert Job State Change"],
+        detail: {
+          // PROGRESSING and STATUS_UPDATE fire constantly and say nothing the
+          // handler acts on; filtering here keeps them out of the bill.
+          status: ["COMPLETE", "ERROR", "CANCELED"],
+          // Job state changes are account-wide, so without this every stage
+          // in the account would wake for every other stage's transcodes.
+          userMetadata: { stage: [$app.stage] },
+        },
+      }),
+    });
+    new aws.cloudwatch.EventTarget("VideoJobStateTarget", {
+      rule: jobStateRule.name,
+      arn: videoComplete.arn,
+    });
+    new aws.lambda.Permission("VideoJobStateInvoke", {
+      action: "lambda:InvokeFunction",
+      function: videoComplete.name,
+      principal: "events.amazonaws.com",
+      sourceArn: jobStateRule.arn,
     });
 
     // The admin API. CORS is handled inside the handler (so a dev server on

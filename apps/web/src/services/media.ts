@@ -1,12 +1,16 @@
 import {
   ADMIN_API,
+  VIDEO_SIZES,
   apiErrorSchema,
   createUploadResponseSchema,
   itemResponseSchema,
   listItemsResponseSchema,
+  fallbackSrc,
+  isVideo,
   manifestSchema,
   okResponseSchema,
   readyItems,
+  videoUrl,
   type ApiError,
   type CreateUploadRequest,
   type CreateUploadResponse,
@@ -55,6 +59,50 @@ export const fetchManifestItems = async (): Promise<
 export const prefetchManifestItems = async (): Promise<ReadyMediaItem[]> => {
   if (!/^https?:\/\//.test(mediaBase())) return [];
   return (await fetchManifestItems()) ?? [];
+};
+
+/** Seconds as the ISO 8601 duration schema.org asks for: 72 → "PT1M12S". */
+const isoDuration = (seconds: number): string => {
+  const total = Math.max(1, Math.round(seconds));
+  const minutes = Math.floor(total / 60);
+  const rest = total % 60;
+  return `PT${minutes > 0 ? `${minutes}M` : ""}${rest > 0 || minutes === 0 ? `${rest}S` : ""}`;
+};
+
+/**
+ * The gallery's videos as structured data, or null when there are none.
+ *
+ * Only what the page prerendered is described — a clip uploaded since the
+ * last deploy plays for a reader but is not claimed here, which is the
+ * honest thing to put in front of a crawler. The words come in as `name`
+ * because the page knows its language and this layer does not.
+ */
+export const videoListJsonLd = (
+  items: readonly ReadyMediaItem[],
+  name: (item: ReadyMediaItem) => string,
+  absolute: (url: string) => string,
+): Record<string, unknown> | null => {
+  const base = mediaBase();
+  const videos = items.filter(isVideo);
+  if (videos.length === 0 || !/^https?:\/\//.test(base)) return null;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: videos.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      item: {
+        "@type": "VideoObject",
+        name: name(item),
+        description: name(item),
+        thumbnailUrl: absolute(fallbackSrc(base, item)),
+        contentUrl: absolute(videoUrl(base, item, VIDEO_SIZES.lightbox)),
+        uploadDate: item.createdAt,
+        duration: isoDuration(item.video.durationSeconds),
+      },
+    })),
+  };
 };
 
 export class ApiFailure extends Error {
@@ -122,6 +170,12 @@ export const createAdminClient = (getToken: () => Promise<string | null>) => {
       }),
     deleteItem: (id: string) =>
       request(okResponseSchema, ADMIN_API.item(id), { method: "DELETE" }),
+    retryItem: async (id: string): Promise<MediaItem> =>
+      (
+        await request(itemResponseSchema, ADMIN_API.retry(id), {
+          method: "POST",
+        })
+      ).item,
     rebuildManifest: () =>
       request(okResponseSchema, ADMIN_API.manifest, { method: "POST" }),
   };

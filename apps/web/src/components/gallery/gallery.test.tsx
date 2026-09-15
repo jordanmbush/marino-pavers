@@ -1,11 +1,11 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import type { ReadyMediaItem } from "@marino/domain";
+import type { ReadyMediaItem, ReadyVideoItem } from "@marino/domain";
 import type { GalleryCopy } from "@/content/copy";
 import { EmptyTiles } from "./EmptyTiles";
 import { Gallery } from "./Gallery";
 import { Lightbox } from "./Lightbox";
-import { PhotoCard } from "./PhotoCard";
+import { MediaCard } from "./MediaCard";
 
 /**
  * The island never imports a dictionary: every visible word comes in through
@@ -26,15 +26,21 @@ const copy: GalleryCopy = {
   empty: "Las fotos vienen en camino.",
   showing: "Mostrando {shown} de {total}.",
   close: "Cerrar",
-  previous: "Foto anterior",
-  next: "Foto siguiente",
+  previous: "Anterior",
+  next: "Siguiente",
   project: "Proyecto de {category}",
   viewLarger: "Ver más grande: {alt}",
+  play: "Reproducir",
+  pause: "Pausar",
+  soundOn: "Activar el sonido",
+  soundOff: "Silenciar el sonido",
+  videoUnsupported: "Este navegador no puede reproducir el video.",
 };
 
 const photo = (overrides: Partial<ReadyMediaItem> = {}): ReadyMediaItem => ({
   id: "0123456789abcdef",
   status: "ready",
+  kind: "photo",
   title: "",
   category: "pool-decks",
   city: "Chandler",
@@ -54,6 +60,20 @@ const photo = (overrides: Partial<ReadyMediaItem> = {}): ReadyMediaItem => ({
   ...overrides,
 });
 
+const video = (overrides: Partial<ReadyVideoItem> = {}): ReadyVideoItem => ({
+  ...photo(),
+  id: "abcdef0123456789",
+  kind: "video",
+  original: { key: "originals/x.mp4", contentType: "video/mp4", bytes: 1 },
+  video: {
+    width: 1920,
+    height: 1080,
+    heights: [480, 1080],
+    durationSeconds: 12,
+  },
+  ...overrides,
+});
+
 const noop = () => undefined;
 
 describe("EmptyTiles", () => {
@@ -63,21 +83,19 @@ describe("EmptyTiles", () => {
   });
 });
 
-describe("PhotoCard", () => {
+describe("MediaCard", () => {
   it("names an untitled photo after its category, in the page's language", () => {
     const html = renderToStaticMarkup(
-      <PhotoCard item={photo()} mediaBase="/media" copy={copy} onOpen={noop} />,
+      <MediaCard item={photo()} mediaBase="/media" copy={copy} onOpen={noop} />,
     );
     expect(html).toContain('alt="Proyecto de Decks de alberca"');
-    expect(html).toContain(
-      'aria-label="Ver más grande: Proyecto de Decks de alberca"',
-    );
+    expect(html).toContain("Ver más grande: Proyecto de Decks de alberca");
     expect(html).not.toContain("Pool Decks");
   });
 
   it("prefers the client's title when there is one", () => {
     const html = renderToStaticMarkup(
-      <PhotoCard
+      <MediaCard
         item={photo({ title: "Casa Ortega", id: "fedcba9876543210" })}
         mediaBase="/media"
         copy={copy}
@@ -86,6 +104,57 @@ describe("PhotoCard", () => {
     );
     expect(html).toContain('alt="Casa Ortega"');
     expect(html).toContain("Decks de alberca");
+  });
+
+  it("plays a video quietly, at the small rendition, over its poster", () => {
+    const html = renderToStaticMarkup(
+      <MediaCard item={video()} mediaBase="/media" copy={copy} onOpen={noop} />,
+    );
+    expect(html).toContain("/renditions/abcdef0123456789/r0/v480.mp4");
+    expect(html).not.toContain("v1080.mp4");
+    // The poster is the captured frame, rendered as a photo.
+    expect(html).toMatch(
+      /poster="[^"]*\/renditions\/abcdef0123456789\/r0\/480\.webp"/,
+    );
+    expect(html).toContain("loop=");
+    expect(html).toContain('preload="none"');
+    // No browser autoplays a video that isn't muted and inline.
+    expect(html).toContain("muted=");
+    expect(html).toMatch(/playsinline=/i);
+  });
+
+  it("gives a video one control, labelled from copy", () => {
+    const html = renderToStaticMarkup(
+      <MediaCard item={video()} mediaBase="/media" copy={copy} onOpen={noop} />,
+    );
+    // Nothing is playing until the island hydrates, so the control offers play.
+    expect(html).toContain('aria-label="Reproducir"');
+    expect(html).not.toContain("Play");
+    // Still openable, and the open target is not wrapped around the control.
+    expect(html).toContain("Ver más grande");
+  });
+
+  it("gives a photo no video element and a video no stray img", () => {
+    expect(
+      renderToStaticMarkup(
+        <MediaCard
+          item={photo()}
+          mediaBase="/media"
+          copy={copy}
+          onOpen={noop}
+        />,
+      ),
+    ).not.toContain("<video");
+    expect(
+      renderToStaticMarkup(
+        <MediaCard
+          item={video()}
+          mediaBase="/media"
+          copy={copy}
+          onOpen={noop}
+        />,
+      ),
+    ).not.toContain("<img");
   });
 });
 
@@ -102,10 +171,40 @@ describe("Lightbox", () => {
       />,
     );
     expect(html).toContain('aria-label="Cerrar"');
-    expect(html).toContain('aria-label="Foto anterior"');
-    expect(html).toContain('aria-label="Foto siguiente"');
+    expect(html).toContain('aria-label="Anterior"');
+    expect(html).toContain('aria-label="Siguiente"');
     expect(html).toContain("Decks de alberca");
     expect(html).not.toContain("Close");
+  });
+
+  it("hands a video the big rendition and the browser's own controls", () => {
+    const html = renderToStaticMarkup(
+      <Lightbox
+        items={[video()]}
+        index={0}
+        mediaBase="/media"
+        copy={copy}
+        onClose={noop}
+        onStep={noop}
+      />,
+    );
+    expect(html).toContain("/renditions/abcdef0123456789/r0/v1080.mp4");
+    expect(html).toContain("controls=");
+    expect(html).not.toContain("v480.mp4");
+  });
+
+  it("falls back to the rendition that exists when 1080 was never made", () => {
+    const html = renderToStaticMarkup(
+      <Lightbox
+        items={[video({ video: { ...video().video, heights: [480] } })]}
+        index={0}
+        mediaBase="/media"
+        copy={copy}
+        onClose={noop}
+        onStep={noop}
+      />,
+    );
+    expect(html).toContain("/renditions/abcdef0123456789/r0/v480.mp4");
   });
 });
 
@@ -129,6 +228,15 @@ describe("Gallery", () => {
     );
     expect(html).toContain(copy.empty);
     expect(html).not.toContain("on their way");
+  });
+
+  it("mixes photos and videos into one grid", () => {
+    const html = renderToStaticMarkup(
+      <Gallery initialItems={[photo(), video()]} copy={copy} />,
+    );
+    expect(html.match(/<figure/g)?.length).toBe(2);
+    expect(html).toContain("<video");
+    expect(html).toContain("<img");
   });
 
   it("caps the home-page strip at the limit", () => {

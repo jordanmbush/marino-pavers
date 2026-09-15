@@ -31,6 +31,7 @@ const event = (...keys: string[]): S3Event => ({ Records: keys.map(record) });
 const pending = (): MediaItem => ({
   id: ID,
   status: "pending",
+  kind: "photo",
   title: "Desert Ridge patio",
   category: "pool-decks",
   city: "Phoenix",

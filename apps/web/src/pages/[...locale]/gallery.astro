@@ -4,8 +4,8 @@ import { Gallery } from "@/components/gallery/Gallery";
 import Contact from "@/components/sections/Contact.astro";
 import PageIntro from "@/components/ui/PageIntro.astro";
 import { i18n } from "@/services/i18n";
-import { localeParams } from "@/services/locale";
-import { prefetchManifestItems } from "@/services/media";
+import { fill, localeParams } from "@/services/locale";
+import { prefetchManifestItems, videoListJsonLd } from "@/services/media";
 
 /** Builds `/gallery` and `/es/gallery`; see `[...locale]/index.astro`. */
 export const getStaticPaths = () => localeParams();
@@ -13,9 +13,25 @@ export const getStaticPaths = () => localeParams();
 const { t } = i18n(Astro.currentLocale);
 const page = t.galleryPage;
 const items = await prefetchManifestItems();
+
+/**
+ * Search results can carry a video thumbnail, but only for a video the page
+ * actually describes — so the clips that were in the library at build time
+ * are named here, in this page's language.
+ */
+const jsonLd =
+  videoListJsonLd(
+    items,
+    (item) =>
+      item.title ||
+      fill(t.gallery.project, {
+        category: t.gallery.categories[item.category],
+      }),
+    (url) => new URL(url, Astro.site).href,
+  ) ?? undefined;
 ---
 
-<Site title={page.title} description={page.description}>
+<Site title={page.title} description={page.description} jsonLd={jsonLd}>
   <PageIntro {...page.hero} />
 
   <div class="shell pb-20 lg:pb-28">

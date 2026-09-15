@@ -15,7 +15,7 @@ import { fill } from "@/services/locale";
 import { mediaBase } from "@/services/media";
 import { EmptyTiles } from "./EmptyTiles";
 import { Lightbox } from "./Lightbox";
-import { PhotoCard } from "./PhotoCard";
+import { MediaCard } from "./MediaCard";
 import { useManifest } from "./useManifest";
 
 type Props = {
@@ -104,7 +104,7 @@ export const Gallery = ({
       ) : (
         <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item, i) => (
-            <PhotoCard
+            <MediaCard
               key={item.id}
               item={item}
               mediaBase={base}

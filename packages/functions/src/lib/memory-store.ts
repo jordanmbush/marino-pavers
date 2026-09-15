@@ -37,6 +37,12 @@ export const createMemoryStore = (): MemoryStore => {
     async listKeys(prefix) {
       return [...objects.keys()].filter((key) => key.startsWith(prefix)).sort();
     },
+    async setObjectHeaders(key, contentType, cacheControl) {
+      const object = objects.get(key);
+      if (!object) throw new Error(`No such key: ${key}`);
+      objects.set(key, { ...object, contentType, cacheControl });
+    },
+
     async touchObject(key, contentType) {
       const object = objects.get(key);
       if (!object) throw new Error(`No such key: ${key}`);
