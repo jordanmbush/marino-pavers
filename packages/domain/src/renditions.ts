@@ -1,5 +1,10 @@
-import { renditionKey } from "./keys";
-import { RENDITION_WIDTHS, type MediaItem, type ReadyMediaItem } from "./media";
+import { renditionKey, videoRenditionKey } from "./keys";
+import {
+  RENDITION_WIDTHS,
+  type MediaItem,
+  type ReadyMediaItem,
+  type ReadyVideoItem,
+} from "./media";
 
 /**
  * Which widths to render for an original, ascending. Never upscales: every
@@ -34,6 +39,27 @@ export const srcSet = (mediaBase: string, item: ReadyMediaItem): string =>
 /** The default `src`: the largest rendition, for browsers that ignore srcset. */
 export const fallbackSrc = (mediaBase: string, item: ReadyMediaItem): string =>
   renditionUrl(mediaBase, item, largestWidth(item));
+
+/**
+ * The rendition nearest a wanted height without going over, so a source that
+ * only ever reached 480 is played at 480 in the lightbox rather than asking
+ * for a 1080 that was never written. Falls back to the smallest there is.
+ */
+export const pickVideoHeight = (
+  item: ReadyVideoItem,
+  wanted: number,
+): number => {
+  const fits = item.video.heights.filter((height) => height <= wanted);
+  return fits.length > 0 ? Math.max(...fits) : Math.min(...item.video.heights);
+};
+
+/** URL of the MP4 a surface should play, given the height it wants. */
+export const videoUrl = (
+  mediaBase: string,
+  item: ReadyVideoItem,
+  wanted: number,
+): string =>
+  `${mediaBase.replace(/\/$/, "")}/${videoRenditionKey(item.id, item.rotation, pickVideoHeight(item, wanted))}`;
 
 /**
  * `sizes` strings for the layouts the site uses. Named here so the gallery

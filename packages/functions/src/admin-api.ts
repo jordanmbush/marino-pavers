@@ -3,6 +3,7 @@ import {
   createUploadRequestSchema,
   extensionFor,
   isReady,
+  kindForUploadType,
   newMediaId,
   originalKey,
   reorderRequestSchema,
@@ -51,6 +52,7 @@ type Result = APIGatewayProxyStructuredResultV2;
 type Ctx = Required<AdminApiDeps> & { cors: Headers };
 
 const ITEM_PATH = /^\/api\/admin\/items\/([a-f0-9]{16})$/;
+const RETRY_PATH = /^\/api\/admin\/items\/([a-f0-9]{16})\/retry$/;
 
 type Issues = { issues: Array<{ path: PropertyKey[]; message: string }> };
 
@@ -85,6 +87,7 @@ const createUpload = async (
   const item: MediaItem = {
     id,
     status: "pending",
+    kind: kindForUploadType(request.contentType),
     title: request.title || titleFromFilename(request.filename),
     category: request.category,
     city: request.city,
@@ -185,6 +188,37 @@ const update = async (
   return json(200, { item }, ctx.cors);
 };
 
+/**
+ * Run the processing again. Nothing here does the work: writing the original
+ * over itself fires the same notification the upload did, so the file takes
+ * exactly the path it took the first time. That is what makes this the one
+ * answer to a transcode that failed, a photo whose processor timed out, and
+ * an item stuck pending because an event was lost.
+ */
+const retry = async (id: string, ctx: Ctx): Promise<Result> => {
+  const existing = await readItem(ctx.store, id, ctx.logger);
+  if (!existing) return error(404, "not_found", "No such item.", ctx.cors);
+
+  const item: MediaItem = {
+    ...existing,
+    status: "pending",
+    updatedAt: ctx.now().toISOString(),
+  };
+  // As with a rotation, the manifest is left alone: it keeps naming the
+  // renditions that are still in the bucket until new ones replace them.
+  delete item.image;
+  delete item.video;
+  delete item.error;
+  delete item.jobId;
+
+  await writeItem(ctx.store, item);
+  await ctx.store.touchObject(
+    existing.original.key,
+    existing.original.contentType,
+  );
+  return json(200, { item }, ctx.cors);
+};
+
 const remove = async (id: string, ctx: Ctx): Promise<Result> => {
   const existing = await readItem(ctx.store, id, ctx.logger);
   if (!existing) return error(404, "not_found", "No such photo.", ctx.cors);
@@ -226,6 +260,10 @@ const route = async (
     if (method === "PATCH") return update(event, id, ctx);
     if (method === "DELETE") return remove(id, ctx);
     return notAllowed();
+  }
+  const retrying = RETRY_PATH.exec(path);
+  if (retrying) {
+    return method === "POST" ? retry(retrying[1]!, ctx) : notAllowed();
   }
   if (path === ADMIN_API.manifest) {
     return method === "POST" ? rebuild(ctx) : notAllowed();

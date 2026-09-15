@@ -2,6 +2,7 @@ import {
   ITEMS_PREFIX,
   MANIFEST_KEY,
   ORIGINALS_PREFIX,
+  framePrefix,
   buildManifest,
   itemKey,
   mediaItemSchema,
@@ -16,6 +17,9 @@ import { consoleLogger, type Logger } from "./logger";
 import type { ObjectStore } from "./s3";
 
 const JSON_TYPE = "application/json";
+
+/** Renditions never change once written, so the CDN may keep them forever. */
+export const RENDITION_CACHE = "public, max-age=31536000, immutable";
 
 /** Parsed and validated, or null for a missing or unreadable record. */
 export const readItem = async (
@@ -63,9 +67,10 @@ export const listItems = async (
 };
 
 /**
- * Removes the record, every rendition and the original. Works without the
- * record: the original is found by prefix (`originals/{id}.`) rather than by
- * reading `original.key`, so a half-written item can still be cleaned up.
+ * Removes the record, every rendition, any frame a transcode left behind and
+ * the original. Works without the record: the original is found by prefix
+ * (`originals/{id}.`) rather than by reading `original.key`, so a
+ * half-written item can still be cleaned up.
  */
 export const deleteItemAndDerived = async (
   store: ObjectStore,
@@ -73,6 +78,7 @@ export const deleteItemAndDerived = async (
 ): Promise<void> => {
   await store.deleteObject(itemKey(id));
   await store.deleteByPrefix(renditionPrefix(id));
+  await store.deleteByPrefix(framePrefix(id));
   await store.deleteByPrefix(`${ORIGINALS_PREFIX}${id}.`);
 };
 

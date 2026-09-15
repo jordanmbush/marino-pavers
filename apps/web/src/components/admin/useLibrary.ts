@@ -10,11 +10,13 @@ import { createAdminClient } from "@/services/media";
 
 const POLL_MS = 3000;
 const POLL_LIMIT = 40;
+/** A transcode runs on MediaConvert's clock, and a long clip takes minutes. */
+const VIDEO_POLL_LIMIT = 120;
 
 /**
  * The item list and every action on it. While anything is still `pending`
- * (the processor hasn't finished) the list re-polls so the thumbnail appears
- * on its own, up to two minutes.
+ * (a processor hasn't finished) the list re-polls so the thumbnail appears
+ * on its own — two minutes for a photo, six for a video.
  */
 export const useLibrary = (onAuthLost: () => void) => {
   const client = useMemo(() => createAdminClient(getIdToken), []);
@@ -52,19 +54,23 @@ export const useLibrary = (onAuthLost: () => void) => {
     void refresh();
   }, [refresh]);
 
-  const pending = items?.some((item) => item.status === "pending") ?? false;
+  const waiting = items?.filter((item) => item.status === "pending") ?? [];
+  const pending = waiting.length > 0;
+  const limit = waiting.some((item) => item.kind === "video")
+    ? VIDEO_POLL_LIMIT
+    : POLL_LIMIT;
   useEffect(() => {
     if (!pending) {
       polls.current = 0;
       return undefined;
     }
-    if (polls.current >= POLL_LIMIT) return undefined;
+    if (polls.current >= limit) return undefined;
     const timer = window.setTimeout(() => {
       polls.current += 1;
       void refresh();
     }, POLL_MS);
     return () => window.clearTimeout(timer);
-  }, [pending, items, refresh]);
+  }, [pending, limit, items, refresh]);
 
   /** Resolves true once the change is stored; false means it wasn't, and `error` says why. */
   const update = useCallback(
@@ -108,6 +114,25 @@ export const useLibrary = (onAuthLost: () => void) => {
     [client, fail, items, refresh],
   );
 
+  const retry = useCallback(
+    async (id: string) => {
+      try {
+        const restarted = await client.retryItem(id);
+        setItems((current) =>
+          current
+            ? sortItems(
+                current.map((item) => (item.id === id ? restarted : item)),
+              )
+            : current,
+        );
+        setError(null);
+      } catch (cause) {
+        fail(cause);
+      }
+    },
+    [client, fail],
+  );
+
   const remove = useCallback(
     async (id: string) => {
       try {
@@ -122,5 +147,5 @@ export const useLibrary = (onAuthLost: () => void) => {
     [client, fail],
   );
 
-  return { client, items, error, refresh, update, move, remove };
+  return { client, items, error, refresh, update, move, remove, retry };
 };

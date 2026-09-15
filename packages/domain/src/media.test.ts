@@ -116,6 +116,7 @@ describe("editablePatch", () => {
   const item: MediaItem = {
     id: "0123456789abcdef",
     status: "ready",
+    kind: "photo",
     title: "Desert Ridge patio",
     category: "patios",
     city: "Phoenix",

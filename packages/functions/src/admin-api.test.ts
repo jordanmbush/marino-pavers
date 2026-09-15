@@ -75,6 +75,7 @@ const verifyToken = async (token: string) => {
 const ready = (id: string, overrides: Partial<MediaItem> = {}): MediaItem => ({
   id,
   status: "ready",
+  kind: "photo",
   title: id,
   category: "patios",
   city: "",

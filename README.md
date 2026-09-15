@@ -2,8 +2,8 @@
 
 The marketing site for [marinopavers.com](https://marinopavers.com): a static
 Astro build on S3 + CloudFront, in English and Spanish (`/es/`), with a hidden
-admin page where the client manages project photos. Conventions and
-architecture live in [CLAUDE.md](./CLAUDE.md).
+admin page where the client manages project photos and videos. Conventions
+and architecture live in [CLAUDE.md](./CLAUDE.md).
 
 ## Requirements
 
@@ -19,8 +19,8 @@ npm run dev              # http://localhost:4330 — gallery empty until pointed
 npm run tunnel -- --dev  # also expose it at https://dev.marinopavers.com
 ```
 
-To see real photos locally, deploy the dev stage once and copy its outputs
-into `apps/web/.env` (see `apps/web/.env.example`).
+To see the real library locally, deploy the dev stage once and copy its
+outputs into `apps/web/.env` (see `apps/web/.env.example`).
 
 ## Verify
 
@@ -48,8 +48,9 @@ repo. A manual production deploy works too, with the same three exported.
 
 ```
 apps/web/            Astro site (pages, layouts, components, content, services)
-packages/domain/     photo-library model shared by the site and the Lambdas
-packages/functions/  process-image + admin-api Lambdas
+packages/domain/     media-library model shared by the site and the Lambdas
+packages/functions/  admin-api + the three processors (photo, video, transcode
+                     completion) — see CLAUDE.md → Media pipeline
 infra/               CloudFront edge code: 301s for retired URLs
 sst.config.ts        infrastructure
 scripts/             tunnel, admin invite, OIDC setup, build verification

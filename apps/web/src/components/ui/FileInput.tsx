@@ -10,6 +10,8 @@ type Props = {
   onFiles: (files: File[]) => void;
   className?: string;
   children?: string;
+  /** What may be dropped here, in words. The kit doesn't know the rules; it shows them. */
+  hint?: string;
 };
 
 /** A drop-zone styled file picker. The native input stays for keyboard and screen readers. */
@@ -21,6 +23,7 @@ export const FileInput = ({
   onFiles,
   className,
   children = "Choose photos",
+  hint,
 }: Props) => {
   const handle = (event: ChangeEvent<HTMLInputElement>) => {
     onFiles(Array.from(event.target.files ?? []));
@@ -39,9 +42,7 @@ export const FileInput = ({
       <span className="font-display font-medium text-taupe-900">
         {children}
       </span>
-      <span className="text-xs text-taupe-900/50">
-        JPEG, PNG or WebP · up to 25 MB each
-      </span>
+      {hint && <span className="text-xs text-taupe-900/50">{hint}</span>}
       <input
         id={id}
         type="file"

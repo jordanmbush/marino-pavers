@@ -100,10 +100,15 @@ export const es: Copy = {
     showing:
       "Mostrando {shown} de {total} proyectos recientes. ¿Quiere ver algo en específico, una línea de adoquín, un patrón, un patio completo? Pregunte y le enviamos fotos de trabajos como el suyo.",
     close: "Cerrar",
-    previous: "Foto anterior",
-    next: "Foto siguiente",
+    previous: "Anterior",
+    next: "Siguiente",
     project: "Proyecto de {category}",
     viewLarger: "Ver más grande: {alt}",
+    play: "Reproducir",
+    pause: "Pausar",
+    soundOn: "Activar el sonido",
+    soundOff: "Silenciar el sonido",
+    videoUnsupported: "Este navegador no puede reproducir el video.",
   },
 
   cta: {

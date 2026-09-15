@@ -2,8 +2,11 @@ import { useState } from "react";
 import {
   ACCEPTED_UPLOAD_TYPES,
   MAX_UPLOAD_BYTES,
+  MAX_VIDEO_BYTES,
   MEDIA_CATEGORIES,
   acceptedUploadTypeSchema,
+  kindForUploadType,
+  maxBytesFor,
   type MediaCategory,
 } from "@marino/domain";
 import { Field } from "@/components/ui/Field";
@@ -27,10 +30,20 @@ const CATEGORY_OPTIONS = MEDIA_CATEGORIES.map((c) => ({
   label: c.label,
 }));
 
+const megabytes = (bytes: number) => Math.round(bytes / (1024 * 1024));
+
+const ACCEPT = Object.keys(ACCEPTED_UPLOAD_TYPES).join(",");
+
+const HINT = `JPEG, PNG or WebP up to ${megabytes(MAX_UPLOAD_BYTES)} MB · MP4 or MOV up to ${megabytes(MAX_VIDEO_BYTES)} MB`;
+
 /**
- * Pick photos, tag them, send them. Each file gets its own presigned URL
- * and goes straight to S3; the processor takes it from there, and the list
- * below polls until the thumbnail shows.
+ * Pick photos and clips, tag them, send them. Each file gets its own
+ * presigned URL and goes straight to S3; a processor takes it from there,
+ * and the list below polls until the thumbnail shows.
+ *
+ * A video takes the longer road — it is handed to a transcoder and comes
+ * back a minute or two later — so the row says "processing" rather than
+ * pretending the work is done when the upload is.
  */
 export const UploadPanel = ({ client, onUploaded }: Props) => {
   const [category, setCategory] = useState<MediaCategory>("patios");
@@ -60,11 +73,18 @@ export const UploadPanel = ({ client, onUploaded }: Props) => {
         const index = start + i;
         const type = acceptedUploadTypeSchema.safeParse(file.type);
         if (!type.success) {
-          setRow(index, { state: "failed", note: "Only JPEG, PNG or WebP." });
+          setRow(index, {
+            state: "failed",
+            note: "Only JPEG, PNG, WebP, MP4 or MOV.",
+          });
           return;
         }
-        if (file.size > MAX_UPLOAD_BYTES) {
-          setRow(index, { state: "failed", note: "Over 25 MB." });
+        const limit = maxBytesFor(kindForUploadType(type.data));
+        if (file.size > limit) {
+          setRow(index, {
+            state: "failed",
+            note: `Over ${megabytes(limit)} MB.`,
+          });
           return;
         }
         try {
@@ -97,8 +117,9 @@ export const UploadPanel = ({ client, onUploaded }: Props) => {
         <span className="eyebrow text-taupe-700">Add photos</span>
         <h2 className="mt-2 text-xl">Upload from a job</h2>
         <p className="mt-1 text-sm text-taupe-900/60">
-          Set the category and location first — they apply to every photo in
-          this batch and can be changed later.
+          Set the category and location first — they apply to everything in this
+          batch and can be changed later. Videos take a minute or two to process
+          after they finish uploading.
         </p>
       </div>
 
@@ -135,12 +156,13 @@ export const UploadPanel = ({ client, onUploaded }: Props) => {
 
       <FileInput
         id="upload-files"
-        accept={Object.keys(ACCEPTED_UPLOAD_TYPES).join(",")}
+        accept={ACCEPT}
+        hint={HINT}
         multiple
         disabled={busy}
         onFiles={(files) => void send(files)}
       >
-        {busy ? "Uploading…" : "Choose photos"}
+        {busy ? "Uploading…" : "Choose photos or videos"}
       </FileInput>
 
       {rows.length > 0 && (

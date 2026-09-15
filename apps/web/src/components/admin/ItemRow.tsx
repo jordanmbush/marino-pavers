@@ -1,4 +1,11 @@
-import { ArrowDown, ArrowUp, Check, LoaderCircle, Trash2 } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUp,
+  Check,
+  LoaderCircle,
+  RefreshCw,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
 import {
   MEDIA_CATEGORIES,
@@ -24,6 +31,8 @@ type Props = {
   onUpdate: (patch: EditableItem) => Promise<boolean>;
   onMove: (delta: -1 | 1) => void;
   onDelete: () => void;
+  /** Run the processing again — the way back from a transcode that failed. */
+  onRetry: () => void;
 };
 
 const CATEGORY_OPTIONS = MEDIA_CATEGORIES.map((c) => ({
@@ -44,6 +53,7 @@ export const ItemRow = ({
   onUpdate,
   onMove,
   onDelete,
+  onRetry,
 }: Props) => {
   const [draft, setDraft] = useState<ItemDraft>(() => draftOf(item));
   const [saving, setSaving] = useState(false);
@@ -76,7 +86,7 @@ export const ItemRow = ({
   const confirmDelete = () => {
     if (
       window.confirm(
-        `Delete "${item.title || "this photo"}"? This can't be undone.`,
+        `Delete "${item.title || "this item"}"? This can't be undone.`,
       )
     )
       onDelete();
@@ -126,6 +136,14 @@ export const ItemRow = ({
           checked={draft.featured}
           onChange={(e) => edit({ featured: e.target.checked })}
         />
+        {item.status === "failed" && (
+          <p
+            className="rounded-tile border border-taupe-700/30 bg-taupe-700/5 px-3 py-2 text-xs text-taupe-700 sm:col-span-2"
+            role="alert"
+          >
+            {item.error ?? "This didn’t finish processing."}
+          </p>
+        )}
       </div>
 
       <div className="flex gap-2 sm:flex-col">
@@ -151,10 +169,21 @@ export const ItemRow = ({
           variant="ghost"
           size="sm"
           onClick={confirmDelete}
-          aria-label="Delete photo"
+          aria-label="Delete"
         >
           <Trash2 className="h-4 w-4 text-taupe-700" />
         </Button>
+        {item.status === "failed" && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onRetry}
+            aria-label="Try processing again"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Retry
+          </Button>
+        )}
         <Button
           size="sm"
           onClick={() => void save()}

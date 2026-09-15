@@ -2,15 +2,16 @@
 
 Marketing site for a Phoenix paver, turf and outdoor-living contractor, built as
 a **static site** with one dynamic thing: the client manages the project photos
-themselves, and a new photo shows on the site without a deploy.
+and videos themselves, and a new one shows on the site without a deploy.
 
 ## The constraints everything follows from
 
 1. **Static.** `astro build` writes HTML to disk; S3 + CloudFront serve it.
-   There is no origin server. The two Lambdas exist only for photos.
-2. **The client owns the photos.** They upload from `/admin`; a Lambda makes
-   the renditions and rebuilds `manifest.json`; the gallery reads that manifest
-   at runtime. Nothing about a photo requires a rebuild.
+   There is no origin server. The Lambdas exist only for the media library.
+2. **The client owns the library.** They upload from `/admin`; a Lambda makes
+   the renditions (or hands a video to MediaConvert) and rebuilds
+   `manifest.json`; the gallery reads that manifest at runtime. Nothing about
+   a photo or a clip requires a rebuild.
 3. **SEO is a first-class requirement.** Every public page is real prerendered
    HTML with a title, description, canonical and LocalBusiness JSON-LD
    (`src/layouts/Base.astro`). Islands add behaviour; they never replace content.
@@ -54,12 +55,16 @@ the cap, split the module — there is no allowlist.
   `photos/README.md` says which library photo each is and how to swap one.
   Astro crops and resizes them at build (`<Image fit="cover">`), so the
   pages never depend on the manifest or on a photo surviving the admin.
-- `packages/domain/` — the photo library as data: item and manifest schemas,
-  bucket key layout, rendition math, sort order, the admin API contract.
+- `packages/domain/` — the media library as data: item and manifest schemas,
+  bucket key layout, rendition math, sort order, the admin API contract. An
+  item's `kind` is `photo` or `video`; both carry an `image` (a video's is its
+  poster), and a video also carries the MP4 renditions it was transcoded to.
 - `packages/functions/` — `process-image` (S3 event → sharp → renditions +
-  manifest) and `admin-api` (Function URL, Cognito-verified).
+  manifest), `process-video` (S3 event → a MediaConvert job), `video-complete`
+  (EventBridge → poster + renditions + manifest) and `admin-api` (Function
+  URL, Cognito-verified).
 - `sst.config.ts` — all infrastructure. One CloudFront Router serves `/` (site
-  bucket), `/media/*` (photo bucket: renditions + manifest only) and `/api/*`
+  bucket), `/media/*` (media bucket: renditions + manifest only) and `/api/*`
   (admin Lambda).
 - `infra/redirects.ts` — the CloudFront Function code the Router runs before
   routing: retired URLs (`/about`, `/contact` → `/`, `/our-work` → `/gallery`)
@@ -68,6 +73,10 @@ the cap, split the module — there is no allowlist.
 - `scripts/verify-build.sh` — what a correct `dist/` looks like: static, every
   page in every language, canonical + hreflang, sitemap without `/admin`, no
   dictionary in the browser bundle. CI runs it after the build.
+- The gallery page emits `VideoObject` structured data for the clips that
+  existed at build time (`videoListJsonLd` in `services/media.ts`). Only what
+  was prerendered is described: a clip uploaded since the last deploy plays
+  for a reader but is not claimed to a crawler.
 
 ## Languages
 
@@ -101,15 +110,41 @@ and the sitemap lists both. How it fits together:
 - The language switcher is plain links to the page's alternates; a script
   carries `?category=` and `#anchor` across so a reader keeps their place.
 
-## Photo pipeline
+## Media pipeline
+
+Both kinds take the same first step and the same last one. Which processor
+runs in between is decided by the uploaded file's extension, in the S3
+notification filters — not in any handler.
 
 ```
-/admin  →  POST /api/admin/uploads  →  presigned PUT to originals/{id}.jpg
+/admin  →  POST /api/admin/uploads  →  presigned PUT to originals/{id}.{ext}
         ←  pending item written to items/{id}.json
-S3 event →  process-image: renditions/{id}/r{rotation}/{480,960,1440,2048}.webp
-                           + placeholder, dims  →  item ready  →  manifest.json
-site     →  GET /media/manifest.json (60 s cache)  →  <img srcset sizes>
+
+ photo   S3 event →  process-image: renditions/{id}/r{rot}/{480,960,1440,2048}.webp
+                                    + placeholder, dims  →  ready  →  manifest.json
+
+ video   S3 event →  process-video: submits a MediaConvert job, records jobId,
+                                    stays pending (never reads the file)
+         MediaConvert → renditions/{id}/r{rot}/v{480,1080}.mp4
+                      → frames/{id}/r{rot}/frame.*.jpg
+         EventBridge → video-complete: last frame → the same sharp code a photo
+                                    takes → the same .webp renditions → ready
+                                    → manifest.json, frames swept
+
+site     →  GET /media/manifest.json (60 s cache)  →  <img srcset> / <video>
 ```
+
+**A video's poster is a photo.** The captured frame goes through the same
+`processImage` and lands under the same rendition keys, so `item.image` means
+one thing for both kinds. That is why the grid, the lightbox, the admin
+thumbnail, every `srcset` and every blur placeholder have no video branch —
+only `MediaCard` and `LightboxMedia` choose between an `<img>` and a
+`<video>`, and `isReady` refuses to publish a video missing either half.
+
+**Video renditions are picked by where they are going, not by bandwidth** —
+`<video>` has no `srcset`. The grid plays 480p (every tile at once, muted,
+looping, paused the moment it leaves the viewport) and the lightbox plays
+1080p with the browser's own controls. `VIDEO_SIZES` names the two.
 
 Cognito user pool, admin-created users only (`scripts/create-admin.sh`). The
 admin page signs in with `USER_PASSWORD_AUTH` over plain fetch — no AWS SDK in
@@ -145,7 +180,8 @@ empty. Recover with `npx astro dev stop && npx astro dev --background` from
 
 ## Infrastructure
 
-SST v4 → S3 + CloudFront + Lambda + Cognito in AWS account `652346859306`
+SST v4 → S3 + CloudFront + Lambda + Cognito + MediaConvert in AWS account
+`652346859306`
 (`marino-pavers` SSO profile, `us-west-1`). DNS is Cloudflare-authoritative;
 SST's Cloudflare adapter writes the records on the production stage only.
 `npm run deploy:dev` needs nothing but the SSO login; production needs
@@ -194,3 +230,44 @@ a tab opened before that change needs one hard refresh.
   attaches the listener; `PhotoCard` also checks `img.complete` on mount.
 - **TypeScript stays on 6.0.x.** TS 7 ships no JS API yet; typescript-eslint and
   `astro check` can't run on it.
+- **S3 refuses overlapping notification filters**, which is why the split
+  between the two processors is one configuration per extension
+  (`originals/` + `.jpg`, `originals/` + `.mp4`, …) rather than one per
+  handler. A shared prefix is allowed _as long as the suffixes don't
+  overlap_, and two suffixes overlap when some string could end with both —
+  so `.jpg` and `.jpeg` are fine, but `.jpg` and `jpg` would not be. Adding a
+  format means a row in `sst.config.ts` and a row in that handler's
+  `EXTENSION_TYPES`; a file matching no filter is silently ignored, which is
+  the right answer for a stray upload and a baffling one when you forgot the
+  row.
+- **MediaConvert's `Rotate` can't compose with the camera's.** A phone writes
+  orientation into the container, and MediaConvert ignores it unless `Rotate`
+  is `AUTO` — so rotation 0 means AUTO, and a client-chosen angle _replaces_
+  it rather than adding to it (`rotateFor` in `lib/transcode.ts`). That is
+  only correct because the client reaches for those buttons exactly when AUTO
+  got it wrong, i.e. when there was no usable metadata to compose with.
+- **The poster frame is rendered at rotation 0.** The turning already
+  happened in the transcode, so `processImage(frame, 0)` — passing the item's
+  rotation there would turn it twice. The item's rotation still _names_ the
+  key, which is what stops a year-long cache serving the old orientation.
+- **Captured frames live outside `renditions/`.** The Router publishes that
+  prefix; `frames/{id}/…` is scaffolding, read once to build the poster and
+  deleted in the same breath. Anything written under `renditions/` is public
+  the moment it lands.
+- **MediaConvert's outputs arrive unlabelled.** They are written by
+  MediaConvert, not by `putObject`, so they carry neither the year-long
+  `Cache-Control` the rest of `renditions/` is served with nor a content type
+  you can rely on — and an `.mp4` served as `binary/octet-stream` is a video
+  that silently will not play. `video-complete` fixes both with a self-copy
+  (`setObjectHeaders`) before publishing, which is server-side: no bytes pass
+  through the Lambda. If that copy fails the item fails; it is not worth
+  publishing a video nobody can watch.
+- **A transcode can finish for a job nobody is waiting on.** Rotating twice
+  in quick succession puts two jobs in flight; `video-complete` writes only
+  when `item.jobId` matches the event's, or the loser would overwrite the
+  winner's record minutes later.
+- **React is unreliable about `muted` across hydration**, and no browser
+  autoplays an unmuted video. Both call sites pass `muted` _and_
+  `useMutedAutoplay` sets `video.muted` imperatively on mount; dropping
+  either one gives you a grid of frozen posters on some browsers and not
+  others.

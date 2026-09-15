@@ -12,6 +12,7 @@ import type { MediaItem } from "./media";
 const make = (id: string, overrides: Partial<MediaItem> = {}): MediaItem => ({
   id: id.padStart(16, "0"),
   status: "ready",
+  kind: "photo",
   title: id,
   category: "patios",
   city: "",
