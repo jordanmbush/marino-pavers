@@ -117,6 +117,12 @@ fi
 # component name is an AccessDenied in CI and nowhere else. None of these
 # patterns match the SSO roles, the Organizations role, or this deploy role
 # itself, which is what keeps the escalation paths shut.
+#
+# The instance-profile actions look out of place on a set of Lambda roles.
+# They are there because the AWS provider walks a role's instance profiles
+# before deleting it, whether or not a Lambda role could have one — so
+# retiring a component fails without them, on the delete rather than the
+# create.
 DEPLOY_POLICY="$(
   cat <<JSON
 {
@@ -144,7 +150,8 @@ DEPLOY_POLICY="$(
       "Action": [
         "iam:AttachRolePolicy", "iam:CreateRole", "iam:DeleteRole", "iam:DeleteRolePolicy",
         "iam:DetachRolePolicy", "iam:GetRole", "iam:GetRolePolicy", "iam:ListAttachedRolePolicies",
-        "iam:ListRolePolicies", "iam:ListRoleTags", "iam:PutRolePolicy", "iam:TagRole",
+        "iam:ListInstanceProfilesForRole", "iam:ListRolePolicies", "iam:ListRoleTags",
+        "iam:PutRolePolicy", "iam:RemoveRoleFromInstanceProfile", "iam:TagRole",
         "iam:UntagRole", "iam:UpdateAssumeRolePolicy", "iam:UpdateRole", "iam:UpdateRoleDescription"
       ],
       "Resource": [
